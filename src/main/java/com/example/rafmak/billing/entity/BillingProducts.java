@@ -33,5 +33,7 @@ public class BillingProducts {
 	private Double itemTotal;
 	
 	private Integer i;
+	
+	private Integer sdds;
 
 }

@@ -32,5 +32,6 @@ public class BillingProducts {
 	
 	private Double itemTotal;
 	
+	private Integer i;
 
 }

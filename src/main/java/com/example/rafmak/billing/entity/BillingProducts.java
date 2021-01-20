@@ -22,7 +22,7 @@ public class BillingProducts {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-    private String pid;
+        private String pid;
 	
 	private String description;
 	
@@ -32,6 +32,7 @@ public class BillingProducts {
 	
 	private Double itemTotal;
 	
+	proivate Integer nesto;
 	
 
 }

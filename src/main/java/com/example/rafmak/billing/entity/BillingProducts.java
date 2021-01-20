@@ -1,6 +1,5 @@
 package com.example.rafmak.billing.entity;
 
-import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,6 +32,6 @@ public class BillingProducts {
 	
 	private Double itemTotal;
 	
-	private Double nesto;
+	
 
 }

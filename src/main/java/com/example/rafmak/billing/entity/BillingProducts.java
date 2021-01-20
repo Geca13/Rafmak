@@ -30,5 +30,7 @@ public class BillingProducts {
 	private Double qty;
 	
 	private Double price;
+	
+	private Double itemTotal;
 
 }

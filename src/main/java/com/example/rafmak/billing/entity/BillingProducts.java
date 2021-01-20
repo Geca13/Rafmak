@@ -32,6 +32,6 @@ public class BillingProducts {
 	
 	private Double itemTotal;
 	
-	private Double itemTotal2;
+	
 
 }

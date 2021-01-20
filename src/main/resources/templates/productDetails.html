@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <style>
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" ><span sec:authentication="principal.username">User</span></a> 
+  <a class="navbar-brand" ><span sec:authentication="principal.authorities">User</span></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+    <a class="nav-item nav-link" 
+         th:href="@{/profile}"
+                    sec:authentication="principal.username"
+    > Welcome <span >User</span></a>
+    
+   
+      <a th:href="@{/profile/cart}" class="nav-item nav-link" > My Shopping Cart</a>
+      <a th:href="@{/products}" class="nav-item nav-link" >Products</a>
+      <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
+      
+    </div>
+  </div>
+  
+</nav>
+
+<div class="container">
+  
+  <div th:if="${param.emptyPost}">
+     <div class="alert alert-info">Sorry but you didn't write anything in the comment box </div>
+    </div>
+    
+    <div th:if="${param.post}">
+     <div class="alert alert-success">Your post was published successfully , thank you!!!</div>
+    </div>
+
+ <h1>Product Details</h1>
+ 
+ 
+  <table class="table table-striped" th:object="${product}">
+  
+      <tr>
+        <th></th>
+      <td> <img th:src="*{'data:image/png;base64,'+{image}}" style="width:350px"></td>   
+      </tr>
+      <tr>
+        <th>Product Name</th>
+        <td><b th:text="*{productName}"></b></td>
+      </tr>
+      <tr>
+        <th>Price</th>
+        <td th:text="*{productPrice}"></td>
+      </tr>
+      <tr>
+        <th>Category</th>
+        <td th:text="*{category.productCategory}"></td>
+      </tr>
+      <tr>
+        <th>Manufacturer</th>
+        <td th:text="*{manufacturer.manufacturerName}"></td>
+      </tr>
+      <tr>
+        <th>Origin</th>
+        <td th:text="*{country.countryName}"></td>
+      </tr>
+      
+    </table>
+    <div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER')">
+    <a th:href="@{/shoppingCart/{id}(id=${product.id})}" class="btn btn-success btn-sm">Add to Cart</a>
+    </div>
+    <br>
+    <div sec:authorize="hasRole('ROLE_ADMIN')">
+        <a th:href="@{/showUpdateProductForm/{id}(id=${product.id})}" class="btn btn-outline-success">Update</a>
+        <a th:href="@{/deleteProduct/{id}(id=${product.id})}" class="btn btn-outline-danger">Delete</a> 
+       </div>
+    <br>
+    
+    <a th:href="@{/products}" class="nav-item nav-link" >All Products</a>
+    <hr>
+    
+    <br>
+    
+    <form action="#" th:action="@{/addComment/{id}(id=${product.id})}" th:object="${comment1}" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+    <label for="exampleFormControlTextarea1"></label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" th:field="*{userComment}"  rows="3"placeholder="Type your comment here..."></textarea>
+    </div>
+    <button class="btn btn-primary" type="submit">Post Comment</button>
+  </form>
+    
+    <br>
+    <br>
+    <h3>Comments</h3>
+    <hr>
+    <table class="table table-striped" th:object="${comment}">
+    
+    <tr th:each="com: ${comment}">
+        
+        <td th:text="${#temporals.format(com.time, 'yyyy-MM-dd HH:mm:ss')}"></td>
+         <td th:text="${com.user?.firstName+ ' ' + com.user?.lastName}"></td>
+         <td th:text="${com.userComment}"></td>
+       
+      </tr>
+    
+    </table>
+    
+    <hr>
+    <div th:if = "${totalPages > 1}">
+ 
+    <div class = "row col-sm-10">
+     <div class = "row col-sm-2">
+     Total Rows: [[${totalItems}]]
+     </div>
+     
+     
+     <div class = "row col-sm-2">
+        <a th:if="${currentPage > 1}" th:href="@{'/products/productDetails/'+${id}+'/pg/' + ${currentPage - 1}}">Previous</a>
+<span th:unless="${currentPage > 1}">Previous</span>
+        
+     
+     </div>
+     
+     <div class = "row col-sm-2">
+        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+           <a th:if="${currentPage != i}" th:href = "@{'/products/productDetails/'+${id}+'/pg/' + ${i}}">[[${i}]]</a>
+           <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
+        </span>
+     
+     </div>
+     
+     <div class = "row col-sm-2">
+     
+     <a th:if="${currentPage < totalPages}" th:href="@{'/products/productDetails/'+${id}+'/pg/' + ${currentPage + 1}}">Next</a>
+         <span th:unless="${currentPage < totalPages}">Next</span> &nbsp; &nbsp;
+     </div>
+     
+     
+    
+    <div class = "row col-sm-2">
+     
+     <a th:if="${currentPage < totalPages}" th:href="@{'/products/productDetails/'+${id}+'/pg/' + ${currentPage + 1}}">Last</a>
+         <span th:unless="${currentPage < totalPages}">Last</span> &nbsp; &nbsp;
+     </div>
+    
+    </div>
+ 
+ </div >
+  <hr>
+    <br>
+    
+    <hr>
+    
+  
+</div>
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
+  </script>
+</body>
+
+</html>

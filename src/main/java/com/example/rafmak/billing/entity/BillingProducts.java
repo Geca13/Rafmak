@@ -32,6 +32,5 @@ public class BillingProducts {
 	
 	private Double itemTotal;
 	
-	private String nesto;
 
 }

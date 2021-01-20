@@ -31,6 +31,7 @@ public class BillingProducts {
 	private Double price;
 	
 	private Double itemTotal;
-	nestojhgfhjgjhkjhjkkkj
+	
+	private Double itemTotal2;
 
 }

@@ -32,7 +32,7 @@ public class BillingProducts {
 	
 	private Double itemTotal;
 	
-	proivate Integer nesto;
+	
 	
 
 }

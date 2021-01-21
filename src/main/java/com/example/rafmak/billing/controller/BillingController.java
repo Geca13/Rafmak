@@ -3,6 +3,7 @@ package com.example.rafmak.billing.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,9 +34,10 @@ public class BillingController {
 	}
 	
 	@PostMapping("/bill")
-	public String createBill(@AuthenticationPrincipal UsersDetails userD) {
+	public String createBill(@AuthenticationPrincipal UsersDetails userD,@Param (value = "id")String id,
+			@Param(value = "qty")String qty,@Param(value = "price") String price) {
 	
-		services.createBill(userD);
+		services.createBill(userD, id, qty, price);
 		
 		        return "redirect:/bill";
 	}

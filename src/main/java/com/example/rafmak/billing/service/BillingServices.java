@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import com.example.rafmak.billing.entity.Bill;
 import com.example.rafmak.billing.entity.BillingProducts;
 import com.example.rafmak.billing.repository.BillRepository;
+import com.example.rafmak.billing.repository.BillingProductsRepository;
+import com.example.rafmak.product.entity.MeasuredProduct;
+import com.example.rafmak.product.entity.Product;
 import com.example.rafmak.product.repository.MeasuredProductRepository;
 import com.example.rafmak.product.repository.ProductRepository;
 import com.example.rafmak.product.repository.QtyHistoryRepository;
@@ -36,22 +39,60 @@ public class BillingServices {
 	@Autowired
 	QtyHistoryRepository qhRepository;
 	
+	@Autowired
+	BillingProductsRepository bpRepository;
 	
-	public Bill createBill(@AuthenticationPrincipal UsersDetails userD) {
+    public Bill createBill(@AuthenticationPrincipal UsersDetails userD,String id, String qty, String price) {
+	    
+	     Bill bill = new Bill();
+		 String userEmail = userD.getUsername();
+         Users user = userRepository.findByEmail(userEmail);
+		 List<BillingProducts> products = new ArrayList<>();
+		   products.add(createBillProduct(id, qty, price));
 		
-		String userEmail = userD.getUsername();
-        Users user = userRepository.findByEmail(userEmail);
-		List<BillingProducts> products = new ArrayList<>();
-		Bill bill = new Bill();
-		  bill.setUser(user);
+		   bill.setUser(user);
 		  bill.setProducts(products);
+		  Double total = 0.00;
+		  for (BillingProducts billingProducts : products) {
+			total = total + billingProducts.getItemTotal();
+			bill.setTotal(total);
+			bill.setTax(bill.getTotal()*0.152);
+		}
 		  bill.setTime(LocalDateTime.now());
-		  bill.setTax(0.00);
-		  bill.setTotal(0.00);
-		
-		     return billRepository.save(bill);
+		  
+		 return billRepository.save(bill);
 	}
 	
+	public BillingProducts createBillProduct(String id, String qty, String price) {
+		String xid = id.substring(1) ;
+		BillingProducts product = new BillingProducts();
+		if(xid.startsWith("*")) {
+			MeasuredProduct mp = mpRepository.findById(xid).get();
+			product.setPid(mp.getId());
+			product.setDescription(mp.getDescription());
+			product.setPrice(mp.getPrice());
+			product.setQty(Double.parseDouble(qty));
+			product.setItemTotal(mp.getPrice()*Double.parseDouble(qty));
+			return bpRepository.save(product);
+		}else {
+			Integer pid = Integer.valueOf(xid);
+			Product p = productRepository.findById(pid).get();
+			product.setPid(String.valueOf(p.getId()));
+			product.setDescription(p.getDescription());
+			product.setQty(Double.valueOf(qty));
+			 if(price == null) {
+			    product.setPrice(p.getRegularPrice());
+			    product.setItemTotal(p.getRegularPrice() * Double.valueOf(qty));
+			 }else if(price.equalsIgnoreCase("g")) {
+				product.setPrice(p.getPriceOnPack());
+				product.setItemTotal(p.getPriceOnPack() * Double.valueOf(qty));
+			 }else if(price.equalsIgnoreCase("d")) {
+				product.setPrice(p.getDiscPrice());
+				product.setItemTotal(p.getDiscPrice() * Double.valueOf(qty));
+			 }
+		}
+		
+		return bpRepository.save(product);
+		}
 	
-
 }

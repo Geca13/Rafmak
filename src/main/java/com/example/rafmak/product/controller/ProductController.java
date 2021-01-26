@@ -62,17 +62,17 @@ public class ProductController {
 	}
 	
 	@GetMapping("/addQuantity/{id}")
-	public String getQtyForm(Model model,@PathVariable("id")Integer id) {
+	public String getQtyForm(Model model,@PathVariable("id")String id) {
 		
 		model.addAttribute("qtyHistory", new QtyHistory());
-		model.addAttribute("product", productRepository.findById(id).get());
+		model.addAttribute("product", productRepository.findById(id));
 		
 		return "addQtyToProduct";
 		
 	}
 	
 	@PostMapping("/addQuantity/{id}")
-	public String addQuantity(@PathVariable("id")Integer id,@ModelAttribute("qtyHistory")QtyHistory qtyHistory) {
+	public String addQuantity(@PathVariable("id")String id,@ModelAttribute("qtyHistory")QtyHistory qtyHistory) {
 		
 		productService.addingQty(id, qtyHistory);
 		
@@ -83,7 +83,7 @@ public class ProductController {
 	
 	
 	@GetMapping("/createMeasuredProduct/{id}")
-	public String createMProduct(@PathVariable("id") Integer id) {
+	public String createMProduct(@PathVariable("id") String id) {
 		
 		productService.createNewMesuredProduct(id);
 		
@@ -104,7 +104,7 @@ public class ProductController {
 	public String getQtyToMpForm(Model model , @PathVariable("id") String id ,@Param(value = "number")Integer number) {
 	
 	
-		model.addAttribute("product", mpRepository.findById(id).get());
+		model.addAttribute("product", mpRepository.findById(id));
 		
 		return "addQtyToMeasuredProduct";
 	}

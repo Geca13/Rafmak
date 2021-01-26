@@ -30,7 +30,7 @@ public class Bill {
 	private Integer id;
 	
 	@ManyToMany
-	private List<BillingProducts> products ;
+	private List<BillingProducts> products;
 	
 	private Double total;
 	
@@ -38,8 +38,11 @@ public class Bill {
 	
 	private LocalDateTime time;
 	
+	private Boolean printed;
+	
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private Users user;
+	
 
 }

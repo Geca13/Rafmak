@@ -42,32 +42,20 @@ public class BillingServices {
 	@Autowired
 	BillingProductsRepository bpRepository;
 	
-    public Bill createBill(@AuthenticationPrincipal UsersDetails userD,String id, String qty, String price) {
-	    
-	     Bill bill = new Bill();
-		 String userEmail = userD.getUsername();
-         Users user = userRepository.findByEmail(userEmail);
-		 List<BillingProducts> products = new ArrayList<>();
-		   products.add(createBillProduct(id, qty, price));
-		
-		   bill.setUser(user);
-		  bill.setProducts(products);
-		  Double total = 0.00;
-		  for (BillingProducts billingProducts : products) {
-			total = total + billingProducts.getItemTotal();
-			bill.setTotal(total);
-			bill.setTax(bill.getTotal()*0.152);
-		}
-		  bill.setTime(LocalDateTime.now());
-		  
-		 return billRepository.save(bill);
+	public Product findProduct(String id) {
+		return productRepository.findById(id);
 	}
 	
-	public BillingProducts createBillProduct(String id, String qty, String price) {
-		String xid = id.substring(1) ;
+	public MeasuredProduct findMeasuredProduct(String id) {
+		return mpRepository.findById(id);
+		
+	}
+  /*  
+	public BillingProducts createBillProduct(String id) {
+	//	String xid = id.substring(1) ;
 		BillingProducts product = new BillingProducts();
-		if(xid.startsWith("*")) {
-			MeasuredProduct mp = mpRepository.findById(xid).get();
+		if(id.startsWith("*")) {
+		  MeasuredProduct mp = findMeasuredProduct(id);
 			product.setPid(mp.getId());
 			product.setDescription(mp.getDescription());
 			product.setPrice(mp.getPrice());
@@ -75,8 +63,8 @@ public class BillingServices {
 			product.setItemTotal(mp.getPrice()*Double.parseDouble(qty));
 			return bpRepository.save(product);
 		}else {
-			Integer pid = Integer.valueOf(xid);
-			Product p = productRepository.findById(pid).get();
+		//  Integer pid = Integer.valueOf(xid);
+		  Product p = findProduct(id);
 			product.setPid(String.valueOf(p.getId()));
 			product.setDescription(p.getDescription());
 			product.setQty(Double.valueOf(qty));
@@ -89,10 +77,45 @@ public class BillingServices {
 			 }else if(price.equalsIgnoreCase("d")) {
 				product.setPrice(p.getDiscPrice());
 				product.setItemTotal(p.getDiscPrice() * Double.valueOf(qty));
+				
 			 }
 		}
 		
 		return bpRepository.save(product);
 		}
+	
+	public List<BillingProducts> billProducts(String id, String qty, String price){
+		
+		List<BillingProducts> products = new ArrayList<>();
+		
+		products.add(createBillProduct(id, qty, price));
+		
+		return products;
+		
+	}
+	public Bill createBill(@AuthenticationPrincipal UsersDetails userD,String id, String qty, String price) {
+	    
+	     Bill bill = new Bill();
+		 String userEmail = userD.getUsername();
+         Users user = userRepository.findByEmail(userEmail);
+		 List<BillingProducts> products = billProducts(id, qty, price);
+		//   products.add(createBillProduct(id, qty, price));
+		
+		  bill.setUser(user);
+		  
+		  Double total = 0.00;
+		  for (BillingProducts billingProducts : products) {
+			total = total + billingProducts.getItemTotal();
+			bill.setTotal(total);
+			bill.setTax(bill.getTotal()*0.152);
+		}
+		  bill.setTime(LocalDateTime.now());
+		  
+		 return billRepository.save(bill);
+	}
+	
+	
+	*/
+	
 	
 }

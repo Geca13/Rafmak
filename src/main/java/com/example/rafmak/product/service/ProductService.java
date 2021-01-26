@@ -33,7 +33,9 @@ public class ProductService {
 	
 	public Product saveProduct(Product product) {
 		
+		List<Product> products = productRepository.findAll();
 	    Product newProduct = new Product();
+	    newProduct.setId(String.valueOf(products.size()+1));
 		newProduct.setDescription(product.getDescription());
 		newProduct.setMesurmentSize(product.getMesurmentSize());
 		newProduct.setRegularPrice(product.getRegularPrice());
@@ -57,9 +59,9 @@ public class ProductService {
 		       return productRepository.save(newProduct);
 	}
 	
-	public QtyHistory addingQty(Integer id, QtyHistory history) {
+	public QtyHistory addingQty(String id, QtyHistory history) {
 		
-		Product product = productRepository.findById(id).get();
+		Product product = productRepository.findById(id);
 	
 		 newQty(product, history.getQty(),LocalDate.now());
 		
@@ -72,9 +74,9 @@ public class ProductService {
 	
 	
 	
-	public MeasuredProduct createNewMesuredProduct(Integer id) {
+	public MeasuredProduct createNewMesuredProduct(String id) {
 		
-		Product product = productRepository.findById(id).get();
+		Product product = productRepository.findById(id);
 		MeasuredProduct newMeasuredProduct = new MeasuredProduct();
 		  newMeasuredProduct.setId("*"+product.getId());
 		  newMeasuredProduct.setDescription(product.getDescription());
@@ -91,10 +93,10 @@ public class ProductService {
 	
 	public MeasuredProduct addQtyToMeasuredProducts(String id,Integer number) {
 		
-		MeasuredProduct mp = mpRepository.findById(id).get();
+		MeasuredProduct mp = mpRepository.findById(id);
 		String str = mp.getId().substring(1);
-		Integer pid = Integer.parseInt(str);
-		Product product = productRepository.findById(pid).get();
+		
+		Product product = productRepository.findById(str);
 		mp.setMetric(mp.getMetric()+(number * Double.parseDouble(product.getMesurmentSize())));
 		mp.setTotalWorth(mp.getTotalWorth()+(number*product.getRegularPrice()));
 		mpRepository.save(mp);

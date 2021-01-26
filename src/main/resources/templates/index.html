@@ -39,7 +39,13 @@
 <a href="/" th:href="@{/addProduct}">Create new Product</a>
 <a href="/" th:href="@{/products}">All Products</a>
 <a href="/" th:href="@{/allMesuredProducts}">All Measured Products</a>
-<a href="/" th:href="@{/bill}">Create bill</a>
+
+<a href="/" th:href="@{/newBill/{id}(id=${bill?.id})}">Create bill</a>
+ <form action="#" th:action="@{/createBill}" th:object="${bill}" method="post">
+
+<button type="submit" class="btn btn-info col-2">Pay</button>
+  
+  </form>
  
 </div>
 

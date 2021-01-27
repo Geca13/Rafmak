@@ -1,5 +1,6 @@
 package com.example.rafmak.billing.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import com.example.rafmak.product.entity.MeasuredProduct;
 import com.example.rafmak.product.entity.Product;
 import com.example.rafmak.product.repository.MeasuredProductRepository;
 import com.example.rafmak.product.repository.ProductRepository;
+import com.example.rafmak.product.service.ProductService;
 import com.example.rafmak.users.entity.Users;
 import com.example.rafmak.users.repository.UsersRepository;
 import com.example.rafmak.users.service.UsersDetails;
@@ -38,6 +40,8 @@ public class BillingController {
 	BillRepository billRepository;
 	@Autowired
 	UsersRepository userRepository;
+	@Autowired
+	ProductService productService;
 	
 	@PostMapping("/createBill")
 	public String createBill(@AuthenticationPrincipal UsersDetails userD) {
@@ -131,9 +135,16 @@ public class BillingController {
 			    if(productRepository.existsById(billingProducts.getPid())) {
 				 Product product = productRepository.findById(billingProducts.getPid());
 			 product.setTotalQty(product.getTotalQty() - billingProducts.getQty());
-			 
+		      
 			 productRepository.save(product);
+			 productService.newQtyToProduct(product, - billingProducts.getQty(), LocalDate.now(),product.getTotalQty());
 			 }
+			    if(mpRepository.existsById(billingProducts.getPid())) {
+			    	MeasuredProduct product = mpRepository.findById(billingProducts.getPid());
+			    	product.setTotalQty(product.getTotalQty()- billingProducts.getQty());
+			    	mpRepository.save(product);
+			    	productService.newQtyToMeasuredProduct(product, - billingProducts.getQty(), LocalDate.now(), product.getTotalQty());
+			    }
 		}
 		   billRepository.save(bill);
 		    return "redirect:/";

@@ -36,11 +36,16 @@
 
 <h1>HELOOOO</h1>
 <a href="/" th:href="@{/addEmployee}">Create new Employee</a>
+<br>
 <a href="/" th:href="@{/addProduct}">Create new Product</a>
+<br>
 <a href="/" th:href="@{/products}">All Products</a>
+<br>
+<a href="/" th:href="@{/productsQtyHistory}">Products Qty History</a>
+<br>
 <a href="/" th:href="@{/allMesuredProducts}">All Measured Products</a>
+<br>
 
-<a href="/" th:href="@{/newBill/{id}(id=${bill?.id})}">Create bill</a>
 
  <form action="#" th:action="@{/createBill}" th:object="${bill}" method="post">
 

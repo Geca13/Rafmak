@@ -1,7 +1,5 @@
-
-
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
   <meta charset="UTF-8">
@@ -14,7 +12,11 @@
     </style>
 </head>
 
+
+
 <body>
+
+<div class="container">
 
 <nav class="navbar navbar-dark bg-dark">
   <a class="navbar-brand" ><span sec:authentication="principal.username">User</span></a>
@@ -37,77 +39,63 @@
     </div>
   </div>
 </nav>
-
-<div class="container">
-
-  <h1>Shipping options</h1>
-
- <form action="#" th:action="@{/confirmAndPay/{id}(id=${cart.id})}" th:object="${cart}"class="form-horizontal" method="post">
+  
+  <h1>User list</h1>
+ <form th:action="@{/productsQtyHistory}">
+  
+  <input type="hidden" name="sortField" th:value="${sortField}" />
+  <input type="hidden" name="sortDir" th:value="${sortDir}" />
+  
+  Filter: <input type="text" name="pid" id="search" size="50"  required />
+    &nbsp;
+    <input type="submit" value="Search" />
+    &nbsp;
+    <a href="/" th:href="@{/productsQtyHistory}">All</a>
+<br> <br>
+  
+  <table class="table table-striped table-dark">
+  <thead>
+    <tr>
+      <th scope="col">
+    Product Id 
+      </th>
+      <th scope="col">
+      Product Description
+       </th>
+      <th scope="col">
+     Quantity movement
+      </th>
       
-    <div class="form-group has-feedback">
-      <div class="form-group">
-        
-        <div class="col-sm-10">
-          <span th:text="${user?.firstName + ' ' + user?.lastName}" /></span>
-          </div>
-        </div>
-        </div>
-     
-    <a th:href="@{/profile/{id}/newAddress(id=${user.id})}" class="nav-item nav-link" >Add an Address...</a>
-    
-  <div class="form-group">
-    <label for="exampleFormControlSelect2">Select Shipping Address</label>
-    <select class="form-control" th:field="*{address.id}"  id="exampleFormControlSelect2">
-    
-      <option th:each="adr : ${listaddress}"
+      <th scope="col">
+      Available qty
+      </th>
       
-      th:value="${adr.id}"
-            th:text="${adr.streetName + ' ' + adr.streetNumber + ' ' + adr.city + ' ' + adr.zipCode }"/>
-       </select>
-   </div>
-   <br/><br/>
-   <div class="form-group">
-    <label for="exampleFormControlSelect2">Select Shipping Option</label>
-    <select class="form-control" th:field="*{option}"  id="exampleFormControlSelect2">
-    
-      <option th:each="adr : ${options}"
+      <th scope="col">
+     Changing history date
+      </th>
+             
+       
       
-      th:value="${adr.id}"
-            th:text="${adr.transporter + ' ' + adr.days + ' ' + adr.price }"/>
-       </select>
-   </div>
-  <table class="table table-striped"  >
-   <tr>
-        <th>TOTAL</th>
-        <td><b th:text="${cart.total}"></b></td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="qty : ${history}">
+      
+      <td th:text="${qty.product?.id}"></td>
+      <td th:text="${qty.product.description}"></td>
+      
+      <td th:text="${qty.qty}"></td>
+      <td th:text="${qty.newQty}"></td>  
+      <td th:text="${#temporals.format(qty.date, 'yyyy-MM-dd')}"></td> 
+ 
       </tr>
+    
       
-       </table>
-       <br/>
-     <button class="btn btn-primary" type="submit">NEXT STEP</button>
-  </form>
-  <!--  
-  <ul>
-  <li th:each="adr : ${listaddress}">
-    <input type="radio" 
-     th:value="${adr.id}" />
-    <label  th:text= "${adr.streetName + ' ' + adr.streetNumber + ' ' + adr.city + ' ' + adr.zipCode }">Wireframe</label>
-  </li>
-</ul>
-  
-  --> 
-  
-  
-  
-  
-  
-  
-  
-  <br>
-  <a th:href="@{/}" class="nav-item nav-link" >Continue shopping...</a>
-  
+    
+  </tbody>
+</table>
+</form>
 </div>
-
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">

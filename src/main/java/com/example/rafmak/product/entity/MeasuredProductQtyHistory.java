@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -19,27 +18,29 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class QtyHistory {
+public class MeasuredProductQtyHistory {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@ManyToOne
-	private Product product;
+	private MeasuredProduct measuredProduct;
 	
-	private Double qty;
+    private Double qty;
 	
 	private LocalDate date;
 	
-	private Double newQty;
+	private Double newMPQty;
 
-	public QtyHistory(Product product, Double qty, LocalDate date, Double newQty) {
+	public MeasuredProductQtyHistory(MeasuredProduct measuredProduct, Double qty, LocalDate date, Double newMPQty) {
 		super();
-		this.product = product;
+		this.measuredProduct = measuredProduct;
 		this.qty = qty;
 		this.date = date;
-		this.newQty = newQty;
+		this.newMPQty = newMPQty;
 	}
 	
+	
+
 }

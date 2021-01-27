@@ -12,4 +12,5 @@ public interface MeasuredProductRepository extends JpaRepository<MeasuredProduct
 
 	MeasuredProduct findById(String id);
 	
+	boolean existsById(String id);
 }

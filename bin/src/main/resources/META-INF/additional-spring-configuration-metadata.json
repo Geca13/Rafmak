@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "spring.datasource.autoCommit",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.autoCommit'"
+  },
+  {
+    "name": "spring.datasource.autoCommit",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.autoCommit'"
+  },
+  {
+    "name": "spring.datasource.autoCommit",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.autoCommit'"
+  },
+  {
+    "name": "destination.email",
+    "type": "java.lang.String",
+    "description": "A description for 'destination.email'"
+  }
+]}

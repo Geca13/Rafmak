@@ -88,7 +88,7 @@ public class BillingController {
 	          bprod1.setDescription(product.getDescription());
 		      bprod1.setQty(bprod.getQty());
 		      bprod1.setPrice(product.getPrice());
-		      bprod1.setItemTotal(product.getPrice() * bprod.getPrice()); 
+		      bprod1.setItemTotal(product.getPrice() * bprod.getQty()); 
 		      bprod1.setItemTax(bprod1.getItemTotal() * 0.1525);
 		          bpRepository.save(bprod1);
 		}else {

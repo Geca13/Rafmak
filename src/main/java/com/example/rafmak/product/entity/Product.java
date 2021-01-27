@@ -29,7 +29,7 @@ public class Product {
 	
 	private String mesurmentSize;
 	
-	private Double regularPrice;
+	private Double price;
 	
 	private Double priceOnPack;
 	

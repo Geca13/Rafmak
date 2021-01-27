@@ -21,8 +21,7 @@ import lombok.NoArgsConstructor;
 public class BillingProducts {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private String id;
 	
 	private String pid;
 	
@@ -33,6 +32,8 @@ public class BillingProducts {
 	private Double price;
 	
 	private Double itemTotal;
+	
+	private Double itemTax;
 	
 	
 	

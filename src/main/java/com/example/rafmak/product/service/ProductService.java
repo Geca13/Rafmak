@@ -38,7 +38,7 @@ public class ProductService {
 	    newProduct.setId(String.valueOf(products.size()+1));
 		newProduct.setDescription(product.getDescription());
 		newProduct.setMesurmentSize(product.getMesurmentSize());
-		newProduct.setRegularPrice(product.getRegularPrice());
+		newProduct.setPrice(product.getPrice());
 		newProduct.setPriceOnPack(product.getPriceOnPack());
 		newProduct.setDiscPrice(product.getPriceOnPack() * 0.9);
 		newProduct.setTotalQty(product.getTotalQty());
@@ -81,8 +81,8 @@ public class ProductService {
 		  newMeasuredProduct.setId("*"+product.getId());
 		  newMeasuredProduct.setDescription(product.getDescription());
 		  newMeasuredProduct.setMetric(Double.parseDouble(product.getMesurmentSize()));
-		  newMeasuredProduct.setPrice(product.getRegularPrice()/newMeasuredProduct.getMetric());
-	      newMeasuredProduct.setTotalWorth(product.getRegularPrice());
+		  newMeasuredProduct.setPrice(product.getPrice()/newMeasuredProduct.getMetric());
+	      newMeasuredProduct.setTotalWorth(product.getPrice());
 		   newQty(product, -1, LocalDate.now());
 		   product.setTotalQty(product.getTotalQty()-1);
 		    productRepository.save(product);
@@ -98,7 +98,7 @@ public class ProductService {
 		
 		Product product = productRepository.findById(str);
 		mp.setMetric(mp.getMetric()+(number * Double.parseDouble(product.getMesurmentSize())));
-		mp.setTotalWorth(mp.getTotalWorth()+(number*product.getRegularPrice()));
+		mp.setTotalWorth(mp.getTotalWorth()+(number*product.getPrice()));
 		mpRepository.save(mp);
 		newQty(product, -number, LocalDate.now());
 		product.setTotalQty(product.getTotalQty()-number);

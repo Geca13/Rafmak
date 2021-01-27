@@ -1,19 +1,15 @@
 package com.example.rafmak.billing.controller;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.BrokenBarrierException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
 import com.example.rafmak.billing.entity.Bill;
 import com.example.rafmak.billing.entity.BillingProducts;
 import com.example.rafmak.billing.repository.BillRepository;
@@ -23,7 +19,6 @@ import com.example.rafmak.product.entity.MeasuredProduct;
 import com.example.rafmak.product.entity.Product;
 import com.example.rafmak.product.repository.MeasuredProductRepository;
 import com.example.rafmak.product.repository.ProductRepository;
-import com.example.rafmak.product.service.ProductService;
 import com.example.rafmak.users.entity.Users;
 import com.example.rafmak.users.repository.UsersRepository;
 import com.example.rafmak.users.service.UsersDetails;
@@ -33,16 +28,12 @@ public class BillingController {
 	
 	@Autowired
 	BillingServices services;
-	
 	@Autowired
 	ProductRepository productRepository;
-	
 	@Autowired
 	MeasuredProductRepository mpRepository;
-	
 	@Autowired 
 	BillingProductsRepository bpRepository;
-	
 	@Autowired
 	BillRepository billRepository;
 	@Autowired
@@ -56,19 +47,17 @@ public class BillingController {
 		bill.setUser(user);
 		bill.setPrinted(false);
 		billRepository.save(bill);
-		
-		return "redirect:/bill/"+bill.getId();
-		
+		     return "redirect:/bill/"+bill.getId();
 	}
 	
 	@GetMapping("/bill/{bid}")
 	public String findProducts(Model model,@PathVariable("bid")Integer bid,@Param(value = "id")String id) {
 		
 		model.addAttribute("product", productRepository.findById(id));
-	//	model.addAttribute("product", mpRepository.findById(id));
-		
+		if(productRepository.findById(id)==null) {
+		    model.addAttribute("product", mpRepository.findById(id));
+		}
 		Bill bill = billRepository.findById(bid).get();
-		
 		model.addAttribute("bill", bill);
 		
 		List<BillingProducts> products = bill.getProducts();
@@ -77,29 +66,79 @@ public class BillingController {
 		BillingProducts bprod1 = new BillingProducts();
 		model.addAttribute("bprod1", bprod1);
 		
-		return "newBill";
+		Double total = bill.getTotal();
+		model.addAttribute("total", total);
 		
+		Double tax = bill.getTax();
+		model.addAttribute("tax", tax);
+		
+		     return "newBill";
 	}
-	
 	
 	@PostMapping("/createProduct/{bid}/{id}")
 	public String addToList(BillingProducts bprod,@PathVariable("bid")Integer bid,@PathVariable(value = "id")String id) {
 		Bill bill = billRepository.findById(bid).get();
+		List<BillingProducts> products = bpRepository.findAll();
 		BillingProducts bprod1 = new BillingProducts();
 		
-		
-	        Product product = productRepository.findById(id);
+		if(id.startsWith("*")) {
+	        MeasuredProduct product = mpRepository.findById(id);
+	          bprod1.setId(String.valueOf(products.size()+1));
+		      bprod1.setPid(product.getId());
+	          bprod1.setDescription(product.getDescription());
+		      bprod1.setQty(bprod.getQty());
+		      bprod1.setPrice(product.getPrice());
+		      bprod1.setItemTotal(product.getPrice() * bprod.getPrice()); 
+		      bprod1.setItemTax(bprod1.getItemTotal() * 0.1525);
+		          bpRepository.save(bprod1);
+		}else {
+			Product product = productRepository.findById(id);
+			  bprod1.setId(String.valueOf(products.size()+1));
 		      bprod1.setPid(product.getId());
 	          bprod1.setDescription(product.getDescription());
 		      bprod1.setQty(bprod.getQty());
 		      bprod1.setPrice(bprod.getPrice());
-		      bprod1.setItemTotal(bprod.getPrice() * bprod.getPrice()); 
-		   bpRepository.save(bprod1);
-	//	}
-		 bill.getProducts().add(bprod1);
-		   billRepository.save(bill);
+		      bprod1.setItemTotal(bprod.getQty() * bprod.getPrice()); 
+		      bprod1.setItemTax(bprod1.getItemTotal() * 0.1525);
+		          bpRepository.save(bprod1);
+		}
+		      bill.getProducts().add(bprod1);
+		    Double total = 0.00;
+		    Double tax = 0.00;
+		 
+		 for (BillingProducts billingProducts : bill.getProducts()) {
+			total = total + billingProducts.getItemTotal();
+			tax = tax +billingProducts.getItemTax();
+		}
+		 
+		     bill.setTotal(total);
+		     bill.setTax(tax);
+		         billRepository.save(bill);
 		           return "redirect:/bill/"+bill.getId();
-		
 	}
 	
+	@PostMapping("/print/{id}")
+	public String printBill(@PathVariable("id")Integer id) {
+		Bill bill = billRepository.findById(id).get();
+		  bill.setTime(LocalDateTime.now());
+		  bill.setPrinted(true);
+		   billRepository.save(bill);
+		    return "redirect:/";
+	}
+	
+	@GetMapping("/removeProduct/{bid}/{id}")
+	public String removeProductFromBill(@PathVariable("bid")Integer bid,@PathVariable(value = "id")String id) {
+		Bill bill = billRepository.findById(bid).get();
+		BillingProducts product = bpRepository.findById(id).get();
+		if(bill.getPrinted() == true) {
+			return "redirect:/bill/"+bill.getId()+"?theBillIsPrinted"; 
+		}
+		   if(bill.getProducts().contains(product)) {
+			  bill.getProducts().remove(product);
+			  bill.setTotal(bill.getTotal()-product.getItemTotal());
+			  bill.setTax(bill.getTax()-product.getItemTax());
+			}
+		  billRepository.save(bill);
+		    return "redirect:/bill/"+bill.getId();
+	}
 }

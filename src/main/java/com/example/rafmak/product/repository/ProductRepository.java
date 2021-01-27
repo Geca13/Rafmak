@@ -9,4 +9,6 @@ import com.example.rafmak.product.entity.Product;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
 	Product findById(String id);
+
+	boolean existsById(String id);
 }

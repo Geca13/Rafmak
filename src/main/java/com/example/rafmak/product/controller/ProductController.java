@@ -110,7 +110,7 @@ public class ProductController {
 	}
 	
 	@PostMapping("addQtyToMP/{id}")
-	public String addQtyToMProducts(@PathVariable("id")String id,@Param(value = "number")Integer number) {
+	public String addQtyToMProducts(@PathVariable("id")String id,@Param(value = "number")Double number) {
 		
 		productService.addQtyToMeasuredProducts(id, number);
 		

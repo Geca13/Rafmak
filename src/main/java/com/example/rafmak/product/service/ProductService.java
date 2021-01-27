@@ -72,18 +72,16 @@ public class ProductService {
 		 return qhRepository.save(history);
 	}
 	
-	
-	
 	public MeasuredProduct createNewMesuredProduct(String id) {
 		
 		Product product = productRepository.findById(id);
 		MeasuredProduct newMeasuredProduct = new MeasuredProduct();
 		  newMeasuredProduct.setId("*"+product.getId());
 		  newMeasuredProduct.setDescription(product.getDescription());
-		  newMeasuredProduct.setMetric(Double.parseDouble(product.getMesurmentSize()));
-		  newMeasuredProduct.setPrice(product.getPrice()/newMeasuredProduct.getMetric());
+		  newMeasuredProduct.setTotalQty(Double.parseDouble(product.getMesurmentSize()));
+		  newMeasuredProduct.setPrice(product.getPrice()/newMeasuredProduct.getTotalQty());
 	      newMeasuredProduct.setTotalWorth(product.getPrice());
-		   newQty(product, -1, LocalDate.now());
+		   newQty(product, -1.00, LocalDate.now());
 		   product.setTotalQty(product.getTotalQty()-1);
 		    productRepository.save(product);
 		
@@ -91,13 +89,13 @@ public class ProductService {
 		
 	}
 	
-	public MeasuredProduct addQtyToMeasuredProducts(String id,Integer number) {
+	public MeasuredProduct addQtyToMeasuredProducts(String id,Double number) {
 		
 		MeasuredProduct mp = mpRepository.findById(id);
 		String str = mp.getId().substring(1);
 		
 		Product product = productRepository.findById(str);
-		mp.setMetric(mp.getMetric()+(number * Double.parseDouble(product.getMesurmentSize())));
+		mp.setTotalQty(mp.getTotalQty()+(number * Double.parseDouble(product.getMesurmentSize())));
 		mp.setTotalWorth(mp.getTotalWorth()+(number*product.getPrice()));
 		mpRepository.save(mp);
 		newQty(product, -number, LocalDate.now());
@@ -107,8 +105,7 @@ public class ProductService {
 		
 	}
 	
-	
-	public void newQty(Product product,Integer qty,LocalDate date) {
+	public void newQty(Product product,Double qty,LocalDate date) {
 		QtyHistory qh = new QtyHistory( product, qty, date);
 		  qhRepository.save(qh);
 	}

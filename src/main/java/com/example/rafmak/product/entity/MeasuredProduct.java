@@ -22,7 +22,7 @@ public class MeasuredProduct {
 	
 	private Double price;
 	
-	private Double metric;
+	private Double totalQty;
 	
 	private Double totalWorth;
 

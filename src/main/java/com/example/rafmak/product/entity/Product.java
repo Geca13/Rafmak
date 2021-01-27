@@ -35,7 +35,7 @@ public class Product {
 	
 	private Double discPrice;
 	
-	private Integer totalQty;
+	private Double totalQty;
 	
 	@ManyToOne
 	private Manufacturer manufacturer;

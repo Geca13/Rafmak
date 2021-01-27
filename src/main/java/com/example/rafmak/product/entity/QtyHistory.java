@@ -28,11 +28,11 @@ public class QtyHistory {
 	@ManyToOne
 	private Product product;
 	
-	private Integer qty;
+	private Double qty;
 	
 	private LocalDate date;
 	
-	public QtyHistory(Product product, Integer qty, LocalDate date) {
+	public QtyHistory(Product product, Double qty, LocalDate date) {
 		super();
 		this.product = product;
 		this.qty = qty;

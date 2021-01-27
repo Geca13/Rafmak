@@ -127,6 +127,14 @@ public class BillingController {
 		Bill bill = billRepository.findById(id).get();
 		  bill.setTime(LocalDateTime.now());
 		  bill.setPrinted(true);
+		  for (BillingProducts billingProducts : bill.getProducts()) {
+			    if(productRepository.existsById(billingProducts.getPid())) {
+				 Product product = productRepository.findById(billingProducts.getPid());
+			 product.setTotalQty(product.getTotalQty() - billingProducts.getQty());
+			 
+			 productRepository.save(product);
+			 }
+		}
 		   billRepository.save(bill);
 		    return "redirect:/";
 	}

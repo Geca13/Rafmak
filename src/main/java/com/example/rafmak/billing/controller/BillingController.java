@@ -76,7 +76,7 @@ public class BillingController {
 	}
 	
 	@PostMapping("/createProduct/{bid}/{id}")
-	public String addToList(BillingProducts bprod,@PathVariable("bid")Integer bid,@PathVariable(value = "id")String id) {
+	public String addToList(BillingProducts bprod,@PathVariable("bid")Integer bid,@PathVariable(value = "id")String id,@Param(value = "priceType")String priceType) {
 		Bill bill = billRepository.findById(bid).get();
 		List<BillingProducts> products = bpRepository.findAll();
 		BillingProducts bprod1 = new BillingProducts();
@@ -96,9 +96,14 @@ public class BillingController {
 			  bprod1.setId(String.valueOf(products.size()+1));
 		      bprod1.setPid(product.getId());
 	          bprod1.setDescription(product.getDescription());
-		      bprod1.setQty(bprod.getQty());
-		      bprod1.setPrice(bprod.getPrice());
-		      bprod1.setItemTotal(bprod.getQty() * bprod.getPrice()); 
+	          bprod1.setQty(bprod.getQty());
+	          if(priceType.isEmpty()  || priceType.equalsIgnoreCase("m")) {
+	        	  bprod1.setPrice(product.getPrice());
+	          }else if(priceType.equalsIgnoreCase("g")) {
+	        	  bprod1.setPrice(product.getPriceOnPack());
+	          }
+	          bpRepository.save(bprod1);
+		      bprod1.setItemTotal(bprod1.getQty() * bprod1.getPrice()); 
 		      bprod1.setItemTax(bprod1.getItemTotal() * 0.1525);
 		          bpRepository.save(bprod1);
 		}

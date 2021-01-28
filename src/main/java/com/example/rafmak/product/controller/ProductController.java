@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import com.example.rafmak.product.entity.MeasuredProductQtyHistory;
 import com.example.rafmak.product.entity.Product;
 import com.example.rafmak.product.entity.QtyHistory;
 import com.example.rafmak.product.repository.CategoryRepository;
@@ -127,6 +129,16 @@ public class ProductController {
 		model.addAttribute("history", history);
 	
 		return "productHistoryPage";
+		
+	}
+	@GetMapping("/measuredProductsQtyHistory")
+	public String measuredProductsHistory(Model model,@Param(value = "pid")String pid) {
+		
+		List<MeasuredProductQtyHistory> history = productService.findQtyByMPid(pid);
+		
+		model.addAttribute("history", history);
+	
+		return "measuredProductHistoryPage";
 		
 	}
 }

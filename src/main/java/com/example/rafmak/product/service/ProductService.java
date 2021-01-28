@@ -125,6 +125,14 @@ public class ProductService {
 		return qhRepository.findAll();
 	}
 	
+	public List<MeasuredProductQtyHistory> findQtyByMPid(String id) {
+		
+		if(id != null) {
+			return mpqhRepository.findAllByMeasuredProductId(id);
+		}
+		return mpqhRepository.findAll();
+	}
+	
 	public  void newQtyToProduct(Product product,Double qty,LocalDate date, Double newQty) {
 		QtyHistory qh = new QtyHistory( product, qty, date,newQty);
 		  qhRepository.save(qh);

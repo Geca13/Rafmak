@@ -98,6 +98,8 @@
       
       <th scope="col"> Price</th>
       
+      <th scope="col"> Price on Pack</th>
+      
       <th scope="col"> Remaining Qty</th>
       
       
@@ -109,6 +111,7 @@
       <td th:text="${product?.id}"></td> 
       <td th:text="${product?.description}"></td>
       <td th:text="${product?.price}"></td>
+      <td th:text="${product?.priceOnPack}"></td>
       <td th:text="${product?.totalQty}"></td>
       
      </table>
@@ -134,7 +137,7 @@
     </div>
   </div>
    
-   <button type="submit" class="btn btn-info col-2">Create Bill</button>
+   <button type="submit" class="btn btn-info col-2">+ Add</button>
   </div>
   
    </form>

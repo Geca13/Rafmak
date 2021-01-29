@@ -64,6 +64,9 @@ public class RafmakApplication {
 				categoryRepository.save(new Category(1,"Coats"));
 				categoryRepository.save(new Category(2,"Hardeners"));
 				categoryRepository.save(new Category(3,"Thinners"));
+				categoryRepository.save(new Category(4,"Paints"));	
+				
+				
 				
 				maRepository.save(new ManufacturerAddress (1,"Zuiveringweg","89","Lelystad","8203",countryRepository.findById(4).get())); 
 				maRepository.save(new ManufacturerAddress (2,"Pensalantie","210","Jeppo","66850 ",countryRepository.findById(2).get()));	

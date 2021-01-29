@@ -4,14 +4,17 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.aspectj.weaver.NewConstructorTypeMunger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import com.example.rafmak.billing.entity.Bill;
 import com.example.rafmak.billing.entity.BillingProducts;
+import com.example.rafmak.billing.entity.Company;
 import com.example.rafmak.billing.repository.BillRepository;
 import com.example.rafmak.billing.repository.BillingProductsRepository;
+import com.example.rafmak.billing.repository.CompanyRepository;
 import com.example.rafmak.product.entity.MeasuredProduct;
 import com.example.rafmak.product.entity.Product;
 import com.example.rafmak.product.repository.MeasuredProductRepository;
@@ -42,6 +45,9 @@ public class BillingServices {
 	@Autowired
 	BillingProductsRepository bpRepository;
 	
+	@Autowired
+	CompanyRepository companyRepository;
+	
 	public Product findProduct(String id) {
 		return productRepository.findById(id);
 	}
@@ -50,6 +56,22 @@ public class BillingServices {
 		return mpRepository.findById(id);
 		
 	}
+	
+	public Company saveNewCustomer(Company company) {
+		Company newCustomer = new Company();
+		
+		newCustomer.setCompanyName(company.getCompanyName());
+		newCustomer.setAccountNumber(company.getAccountNumber());
+		newCustomer.setPhoneNumber(company.getPhoneNumber());
+		newCustomer.setEmail(company.getEmail());
+		newCustomer.setEmail(company.getEmail());
+		newCustomer.setStreetAddress(company.getStreetAddress());
+	    newCustomer.setZipCode(company.getZipCode());
+	    newCustomer.setCity(company.getCity());
+	    
+		return companyRepository.save(newCustomer);
+	}
+	
   /*  
 	public BillingProducts createBillProduct(String id) {
 	//	String xid = id.substring(1) ;

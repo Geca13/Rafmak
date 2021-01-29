@@ -14,8 +14,6 @@
 
 <body>
 
-
-
 <nav class="navbar navbar-dark bg-dark">
   <a class="navbar-brand" ><span sec:authentication="principal.username">User</span></a>
   <a class="navbar-brand" ><span sec:authentication="principal.authorities">User</span></a>
@@ -28,38 +26,50 @@
          th:href="@{/profile}"
                     sec:authentication="principal.username"
     > Welcome <span >User</span></a>
-       <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
-     </div>
+    
+   
+      <a th:href="@{/products}" class="nav-item nav-link" >Grid view</a>
+      <a th:href="@{/product}" class="nav-item nav-link" >Table view</a>
+      <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
+      
+    </div>
   </div>
 </nav>
+
 <div class="container">
 
-<h1>HELOOOO</h1>
-<a href="/" th:href="@{/addEmployee}">Create new Employee</a>
-<br>
-<a href="/" th:href="@{/addProduct}">Create new Product</a>
-<br>
-<a href="/" th:href="@{/products}">All Products</a>
-<br>
-<a href="/" th:href="@{/productsQtyHistory}">Products Qty History</a>
-<br>
-<a href="/" th:href="@{/allMesuredProducts}">All Measured Products</a>
-<br>
-<a href="/" th:href="@{/measuredProductsQtyHistory}">Measured Products Qty History</a>
-<br>
-<a href="/" th:href="@{/createPaintMix}">New PaintMix</a>
-<br>
-<a href="/" th:href="@{/createNewCustomer}">New Customer</a>
-<br>
 
-
- <form action="#" th:action="@{/createBill}" th:object="${bill}" method="post">
-
-<button type="submit" class="btn btn-info col-2">Create Bill</button>
+ <h1>Add new PaintMix</h1>
+  
+  <form action="#" th:action="@{/createPaintMix}" th:object="${mix}" method="post" enctype="multipart/form-data">
+  
+  <div class="form-group row">
+    <label for="inputProductName" class="col-sm-2 col-form-label">Product Name</label>
+    <div class="col-sm-10">
+      <input type="text" th:field="*{description}" class="form-control" id="inputProductName">
+    </div>
+  </div>
+  
+  <div class="form-group row">
+    <label for="inputProductProce" class="col-sm-2 col-form-label">Weight in Kg</label>
+    <div class="col-sm-10">
+      <input type="text" th:field="*{weight}" class="form-control" id="inputProductPrice">
+    </div>
+  </div>
+  
+  <div class="form-group row">
+    <label for="inputProductProce" class="col-sm-2 col-form-label">Worth</label>
+    <div class="col-sm-10">
+      <input type="text" th:field="*{worth}" class="form-control" id="inputProductPrice">
+    </div>
+  </div>
+  
+  
+ <button type="submit" class="btn btn-info col-2">Save PaintMix</button>
   
   </form>
- 
-</div>
+  <br>
+ </div>
 
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

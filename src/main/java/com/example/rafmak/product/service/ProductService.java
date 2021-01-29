@@ -15,12 +15,14 @@ import com.example.rafmak.product.entity.Category;
 import com.example.rafmak.product.entity.Manufacturer;
 import com.example.rafmak.product.entity.MeasuredProduct;
 import com.example.rafmak.product.entity.MeasuredProductQtyHistory;
+import com.example.rafmak.product.entity.PaintMix;
 import com.example.rafmak.product.entity.Product;
 import com.example.rafmak.product.entity.QtyHistory;
 import com.example.rafmak.product.repository.CategoryRepository;
 import com.example.rafmak.product.repository.ManufacturerRepository;
 import com.example.rafmak.product.repository.MeasuredProductQtyHistoryRepository;
 import com.example.rafmak.product.repository.MeasuredProductRepository;
+import com.example.rafmak.product.repository.PaintMixRepository;
 import com.example.rafmak.product.repository.ProductRepository;
 import com.example.rafmak.product.repository.QtyHistoryRepository;
 
@@ -39,6 +41,9 @@ public class ProductService {
 	QtyHistoryRepository qhRepository;
 	@Autowired
 	MeasuredProductQtyHistoryRepository mpqhRepository;
+	@Autowired
+	PaintMixRepository mixRepository;
+	
 	
 	public Product saveProduct(Product product) {
 		
@@ -68,17 +73,6 @@ public class ProductService {
 		       return productRepository.save(newProduct);
 	}
 	
-	public QtyHistory addingQty(String id, QtyHistory history) {
-		
-		Product product = productRepository.findById(id);
-		
-		 product.setTotalQty(product.getTotalQty()+history.getQty());
-		 
-		 productRepository.save(product);
-		 newQtyToProduct(product, history.getQty(),LocalDate.now(),product.getTotalQty());
-		 return qhRepository.save(history);
-	}
-	
 	public MeasuredProduct createNewMesuredProduct(String id) {
 		
 		Product product = productRepository.findById(id);
@@ -87,6 +81,7 @@ public class ProductService {
 		  newMeasuredProduct.setDescription(product.getDescription());
 		  newMeasuredProduct.setTotalQty(Double.parseDouble(product.getMesurmentSize()));
 		  newMeasuredProduct.setPrice(product.getPrice()/newMeasuredProduct.getTotalQty());
+		  newMeasuredProduct.setPriceOnPack(product.getPrice()/newMeasuredProduct.getTotalQty());
 	      newMeasuredProduct.setTotalWorth(product.getPrice());
 	      
 	       product.setTotalQty(product.getTotalQty()-1);
@@ -95,7 +90,27 @@ public class ProductService {
 		    newQtyToProduct(product, -1.00, LocalDate.now(),product.getTotalQty());
 		    newQtyToMeasuredProduct(newMeasuredProduct, Double.parseDouble(product.getMesurmentSize()), LocalDate.now(), newMeasuredProduct.getTotalQty());
 	         	return mpRepository.save(newMeasuredProduct);
+	}
+	
+	public PaintMix createNewPaintMix(PaintMix mix) {
 		
+		PaintMix paintMix = new PaintMix();
+		paintMix.setDescription(mix.getDescription());
+		paintMix.setWeight(mix.getWeight());
+		paintMix.setWorth(mix.getWorth());
+		
+		     return mixRepository.save(paintMix);
+	}
+	
+	 public QtyHistory addingQty(String id, QtyHistory history) {
+		
+		Product product = productRepository.findById(id);
+		
+		 product.setTotalQty(product.getTotalQty()+history.getQty());
+		 
+		 productRepository.save(product);
+		 newQtyToProduct(product, history.getQty(),LocalDate.now(),product.getTotalQty());
+		 return qhRepository.save(history);
 	}
 	
 	public MeasuredProduct addQtyToMeasuredProducts(String id,Double number) {

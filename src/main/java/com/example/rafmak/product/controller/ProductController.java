@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.rafmak.product.entity.MeasuredProductQtyHistory;
+import com.example.rafmak.product.entity.PaintMix;
 import com.example.rafmak.product.entity.Product;
 import com.example.rafmak.product.entity.QtyHistory;
 import com.example.rafmak.product.repository.CategoryRepository;
@@ -84,8 +85,6 @@ public class ProductController {
 		
 	}
 	
-	
-	
 	@GetMapping("/createMeasuredProduct/{id}")
 	public String createMProduct(@PathVariable("id") String id) {
 		
@@ -102,6 +101,22 @@ public class ProductController {
 		
 		return "allMeasProducts";
 		
+	}
+	
+	@GetMapping("/createPaintMix")
+	public String createMixForm(Model model) {
+		
+		model.addAttribute("mix", new PaintMix());
+		
+		return "addNewPaint";
+	}
+	
+	@PostMapping("/createPaintMix")
+	public String completeCreatingPaintMix(@ModelAttribute("mix")PaintMix mix) {
+		
+		productService.createNewPaintMix(mix);
+		
+		return "redirect:/";
 	}
 	
 	@GetMapping("addQtyToMP/{id}")

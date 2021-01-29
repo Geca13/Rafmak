@@ -9,10 +9,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.example.rafmak.billing.entity.Bill;
 import com.example.rafmak.billing.entity.BillingProducts;
+import com.example.rafmak.billing.entity.Company;
 import com.example.rafmak.billing.repository.BillRepository;
 import com.example.rafmak.billing.repository.BillingProductsRepository;
 import com.example.rafmak.billing.service.BillingServices;
@@ -164,5 +166,22 @@ public class BillingController {
 			}
 		  billRepository.save(bill);
 		    return "redirect:/bill/"+bill.getId();
+	}
+	
+	@GetMapping("/createNewCustomer")
+	public String addNewCustomerForm(Model model) {
+		
+		model.addAttribute("company", new Company());
+		
+		return "addNewCustomer";
+	}
+	
+	@PostMapping("/createNewCustomer")
+	public String processCustomerForm(@ModelAttribute("company")Company company) {
+		
+		services.saveNewCustomer(company);
+		
+		return "redirect:/";
+		
 	}
 }

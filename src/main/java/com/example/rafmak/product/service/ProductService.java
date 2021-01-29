@@ -79,7 +79,6 @@ public class ProductService {
 		Product product = productRepository.findById(id);
 		MeasuredProduct newMeasuredProduct = new MeasuredProduct();
 		  newMeasuredProduct.setId("*"+product.getId());
-		    
 		  newMeasuredProduct.setDescription(product.getDescription());
 		  newMeasuredProduct.setTotalQty(Double.parseDouble(product.getMesurmentSize()));
 		  newMeasuredProduct.setPrice(product.getPrice()/newMeasuredProduct.getTotalQty());
@@ -94,13 +93,27 @@ public class ProductService {
 		    newQtyToMeasuredProduct(newMeasuredProduct, Double.parseDouble(product.getMesurmentSize()), LocalDate.now(), newMeasuredProduct.getTotalQty());
 	         	return mpRepository.save(newMeasuredProduct);
 	}
+	public MeasuredProduct createGroupMeasuredProduct(String id) {
+		
+		MeasuredProduct newMeasuredProduct = new MeasuredProduct();
+		
+		  newMeasuredProduct.setId(id);
+		  newMeasuredProduct.setDescription("");
+		  newMeasuredProduct.setTotalQty(0.00);
+		  newMeasuredProduct.setPrice(0.00);
+		  newMeasuredProduct.setPriceOnPack(0.00);
+	      newMeasuredProduct.setTotalWorth(0.00);
+	      
+            	return mpRepository.save(newMeasuredProduct);
+    }
+	
 	
 	public PaintMix createNewPaintMix(PaintMix mix) {
 		
 		PaintMix paintMix = new PaintMix();
-		paintMix.setDescription(mix.getDescription());
-		paintMix.setWeight(mix.getWeight());
-		paintMix.setWorth(mix.getWorth());
+		  paintMix.setDescription(mix.getDescription());
+		  paintMix.setWeight(mix.getWeight());
+		  paintMix.setWorth(mix.getWorth());
 		
 		     return mixRepository.save(paintMix);
 	}
@@ -160,5 +173,7 @@ public class ProductService {
 		MeasuredProductQtyHistory history = new MeasuredProductQtyHistory(measuredProduct, qty, date, newQty);
 		mpqhRepository.save(history);
 	}
+	
+	
 
 }

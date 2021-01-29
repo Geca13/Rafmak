@@ -75,9 +75,11 @@ public class ProductService {
 	
 	public MeasuredProduct createNewMesuredProduct(String id) {
 		
+		List<MeasuredProduct> products = mpRepository.findAll();
 		Product product = productRepository.findById(id);
 		MeasuredProduct newMeasuredProduct = new MeasuredProduct();
 		  newMeasuredProduct.setId("*"+product.getId());
+		    
 		  newMeasuredProduct.setDescription(product.getDescription());
 		  newMeasuredProduct.setTotalQty(Double.parseDouble(product.getMesurmentSize()));
 		  newMeasuredProduct.setPrice(product.getPrice()/newMeasuredProduct.getTotalQty());
@@ -86,6 +88,7 @@ public class ProductService {
 	      
 	       product.setTotalQty(product.getTotalQty()-1);
 		    mpRepository.save(newMeasuredProduct);
+		    
 		    productRepository.save(product);
 		    newQtyToProduct(product, -1.00, LocalDate.now(),product.getTotalQty());
 		    newQtyToMeasuredProduct(newMeasuredProduct, Double.parseDouble(product.getMesurmentSize()), LocalDate.now(), newMeasuredProduct.getTotalQty());

@@ -148,13 +148,14 @@ public class BillingController {
 			    if(productRepository.existsById(billingProducts.getPid())) {
 				 Product product = productRepository.findById(billingProducts.getPid());
 			 product.setTotalQty(product.getTotalQty() - billingProducts.getQty());
-		      
+			 
 			 productRepository.save(product);
 			 productService.newQtyToProduct(product, - billingProducts.getQty(), LocalDate.now(),product.getTotalQty());
 			 }
 			    if(mpRepository.existsById(billingProducts.getPid())) {
 			    	MeasuredProduct product = mpRepository.findById(billingProducts.getPid());
 			    	product.setTotalQty(product.getTotalQty()- billingProducts.getQty());
+			    	product.setTotalQty(product.getTotalWorth()-billingProducts.getItemTotal());
 			    	mpRepository.save(product);
 			    	productService.newQtyToMeasuredProduct(product, - billingProducts.getQty(), LocalDate.now(), product.getTotalQty());
 			    }

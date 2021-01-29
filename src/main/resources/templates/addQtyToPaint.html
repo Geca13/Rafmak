@@ -14,8 +14,6 @@
 
 <body>
 
-
-
 <nav class="navbar navbar-dark bg-dark">
   <a class="navbar-brand" ><span sec:authentication="principal.username">User</span></a>
   <a class="navbar-brand" ><span sec:authentication="principal.authorities">User</span></a>
@@ -28,40 +26,45 @@
          th:href="@{/profile}"
                     sec:authentication="principal.username"
     > Welcome <span >User</span></a>
-       <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
-     </div>
+    
+   
+      <a th:href="@{/products}" class="nav-item nav-link" >Grid view</a>
+      <a th:href="@{/product}" class="nav-item nav-link" >Table view</a>
+      <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
+      
+    </div>
   </div>
 </nav>
+
 <div class="container">
 
-<h1>HELOOOO</h1>
-<a href="/" th:href="@{/addEmployee}">Create new Employee</a>
-<br>
-<a href="/" th:href="@{/addProduct}">Create new Product</a>
-<br>
-<a href="/" th:href="@{/products}">All Products</a>
-<br>
-<a href="/" th:href="@{/productsQtyHistory}">Products Qty History</a>
-<br>
-<a href="/" th:href="@{/allMesuredProducts}">All Measured Products</a>
-<br>
-<a href="/" th:href="@{/measuredProductsQtyHistory}">Measured Products Qty History</a>
-<br>
-<a href="/" th:href="@{/createPaintMix}">New PaintMix</a>
-<br>
-<a href="/" th:href="@{/createNewCustomer}">New Customer</a>
-<br>
-<a href="/" th:href="@{/createCustomMP}">Custom measured products</a>
-<br>
 
+ <h1>Add Product</h1>
+  
+  <form action="#" th:action="@{/addQtyToMP/{id}(id=${product.id})}"  method="post" enctype="multipart/form-data">
+  
 
- <form action="#" th:action="@{/createBill}" th:object="${bill}" method="post">
-
-<button type="submit" class="btn btn-info col-2">Create Bill</button>
+<div class="form-group row">
+    <label for="inputProductProce" class="col-sm-2 col-form-label">Qty</label>
+    <div class="col-sm-10">
+      <input type="text" th:name="paint" class="form-control" id="inputEmail4" >
+    </div>
+  </div>
+  
+  <div class="form-group row">
+    <label for="inputProductProce" class="col-sm-2 col-form-label">Qty</label>
+    <div class="col-sm-10">
+      <input type="text" th:name="number" class="form-control" id="inputEmail4" >
+    </div>
+  </div>
+  
+ 
+  
+ <button type="submit" class="btn btn-info col-2">Add Quantity</button>
   
   </form>
- 
-</div>
+  <br>
+ </div>
 
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

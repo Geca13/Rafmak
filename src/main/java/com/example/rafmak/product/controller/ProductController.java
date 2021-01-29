@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.example.rafmak.product.entity.MeasuredProduct;
 import com.example.rafmak.product.entity.MeasuredProductQtyHistory;
 import com.example.rafmak.product.entity.PaintMix;
 import com.example.rafmak.product.entity.Product;
@@ -103,6 +104,23 @@ public class ProductController {
 		
 	}
 	
+	@GetMapping("/createCustomMP")
+	public String showCustomMeasuredProductForm(Model model) {
+		
+		model.addAttribute("product", new MeasuredProduct());
+		
+		return "addNewCustomMP";
+	}
+	
+	@PostMapping("/createCustomMP")
+	public String createCustomMeasuredProduct(@ModelAttribute("product")MeasuredProduct product) {
+		
+		productService.createGroupMeasuredProduct(product);
+		
+		return "redirect:/";
+		
+	}
+	
 	@GetMapping("/createPaintMix")
 	public String createMixForm(Model model) {
 		
@@ -120,18 +138,24 @@ public class ProductController {
 	}
 	
 	@GetMapping("addQtyToMP/{id}")
-	public String getQtyToMpForm(Model model , @PathVariable("id") String id ,@Param(value = "number")Integer number) {
+	public String getQtyToMpForm(Model model , @PathVariable("id") String id ,@Param(value = "number")Integer number,@Param(value = "paint")String paint) {
 	
-	
-		model.addAttribute("product", mpRepository.findById(id));
+	    MeasuredProduct product = mpRepository.findById(id);
+	    if(product.getDescription().equalsIgnoreCase("Akril") || product.getDescription().equalsIgnoreCase("Base")||product.getDescription().equalsIgnoreCase("Filler")) {
+	    	model.addAttribute("product", product);
+	    	List<Product> products = productRepository.findAllByDescription(product.getDescription());
+	    	model.addAttribute("products", products);
+	    	return "addQtyToPaint";
+	    }
+		model.addAttribute("product", product);
 		
 		return "addQtyToMeasuredProduct";
 	}
 	
 	@PostMapping("addQtyToMP/{id}")
-	public String addQtyToMProducts(@PathVariable("id")String id,@Param(value = "number")Double number) {
+	public String addQtyToMProducts(@PathVariable("id")String id,@Param(value = "number")Double number,@Param(value = "paint")String paint) {
 		
-		productService.addQtyToMeasuredProducts(id, number);
+		productService.addQtyToMeasuredProducts(id, number,paint);
 		
 		return "redirect:/";
 	}

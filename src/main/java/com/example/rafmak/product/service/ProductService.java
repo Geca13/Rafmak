@@ -60,6 +60,7 @@ public class ProductService {
 		
 		newQtyToProduct(newProduct, product.getTotalQty(), LocalDate.now(),newProduct.getTotalQty());
 	
+		
 	    if(categoryRepository.existsByCategoryName(product.getCategory().getCategoryName())) {
 			Category cat = categoryRepository.findByCategoryName(product.getCategory().getCategoryName());
 			 newProduct.setCategory(cat);
@@ -75,7 +76,7 @@ public class ProductService {
 	
 	public MeasuredProduct createNewMesuredProduct(String id) {
 		
-		List<MeasuredProduct> products = mpRepository.findAll();
+	//	List<MeasuredProduct> products = mpRepository.findAll();
 		Product product = productRepository.findById(id);
 		MeasuredProduct newMeasuredProduct = new MeasuredProduct();
 		  newMeasuredProduct.setId("*"+product.getId());
@@ -93,15 +94,14 @@ public class ProductService {
 		    newQtyToMeasuredProduct(newMeasuredProduct, Double.parseDouble(product.getMesurmentSize()), LocalDate.now(), newMeasuredProduct.getTotalQty());
 	         	return mpRepository.save(newMeasuredProduct);
 	}
-	public MeasuredProduct createGroupMeasuredProduct(String id) {
+	public MeasuredProduct createGroupMeasuredProduct(MeasuredProduct product) {
 		
 		MeasuredProduct newMeasuredProduct = new MeasuredProduct();
-		
-		  newMeasuredProduct.setId(id);
-		  newMeasuredProduct.setDescription("");
+		  newMeasuredProduct.setId(product.getId());
+		  newMeasuredProduct.setDescription(product.getDescription());
 		  newMeasuredProduct.setTotalQty(0.00);
-		  newMeasuredProduct.setPrice(0.00);
-		  newMeasuredProduct.setPriceOnPack(0.00);
+		  newMeasuredProduct.setPrice(product.getPrice());
+		  newMeasuredProduct.setPriceOnPack(product.getPriceOnPack());
 	      newMeasuredProduct.setTotalWorth(0.00);
 	      
             	return mpRepository.save(newMeasuredProduct);
@@ -129,9 +129,34 @@ public class ProductService {
 		 return qhRepository.save(history);
 	}
 	
-	public MeasuredProduct addQtyToMeasuredProducts(String id,Double number) {
+	public MeasuredProduct addQtyToMeasuredProducts(String id,Double number, String paint) {
 		
 		MeasuredProduct mp = mpRepository.findById(id);
+		
+		if(mp.getDescription().contains("Akril") || mp.getDescription().contains("Base")||mp.getDescription().contains("Filler")) {
+			List<Product> products = new ArrayList<>();
+			List<Product> productss = productRepository.findAll();
+			for (Product product : productss) {
+				if(product.getCategory().getCategoryName().equals(mp.getDescription())) {
+					products.add(product);
+				}
+			}
+			for (Product product : products) {
+				if(product.getDescription().contains(paint)) {
+					Product product1 = productRepository.findById(product.getId());
+					mp.setTotalQty(mp.getTotalQty()+(number * Double.parseDouble(product1.getMesurmentSize())));
+					mp.setTotalWorth(mp.getTotalWorth()+(number*product1.getPrice()));
+					mpRepository.save(mp);
+					
+					product.setTotalQty(product1.getTotalQty()-number);
+					productRepository.save(product1);
+					newQtyToProduct(product1, -number, LocalDate.now() ,product1.getTotalQty());
+				    newQtyToMeasuredProduct(mp, number * Double.parseDouble(product1.getMesurmentSize()), LocalDate.now(), mp.getTotalQty());
+
+					return mpRepository.save(mp);
+				}
+			}
+		}
 		String str = mp.getId().substring(1);
 		
 		Product product = productRepository.findById(str);

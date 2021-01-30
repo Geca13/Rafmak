@@ -12,6 +12,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.NaturalId;
+
 import com.example.rafmak.users.entity.Users;
 
 import lombok.AllArgsConstructor;
@@ -28,6 +30,8 @@ public class Bill {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	private Integer dailyBillCounter;
 	
 	@ManyToMany
 	private List<BillingProducts> products;

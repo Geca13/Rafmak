@@ -72,6 +72,27 @@ public class BillingServices {
 		return companyRepository.save(newCustomer);
 	}
 	
+	public Integer dailyBillCounter() {
+		List<Bill> bills = billRepository.findAll();
+		if(bills.isEmpty()) {
+			Bill bill = new Bill();
+			bill.setDailyBillCounter(1);
+			return bill.getDailyBillCounter();
+		}
+			
+		Bill lastBill = billRepository.findById(bills.size()).get();
+		
+		Bill bill = new Bill();
+		if (bill.getTime() != lastBill.getTime()) {
+			bill.setDailyBillCounter(1);
+		}else {
+			bill.setDailyBillCounter(lastBill.getDailyBillCounter()+1);
+		}
+		
+		return bill.getDailyBillCounter();
+		
+	}
+	
   /*  
 	public BillingProducts createBillProduct(String id) {
 	//	String xid = id.substring(1) ;

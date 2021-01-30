@@ -52,8 +52,10 @@ public class BillingController {
 		Bill bill = new Bill();
 		bill.setUser(user);
 		bill.setPrinted(false);
+		bill.setDailyBillCounter(services.dailyBillCounter());
 		billRepository.save(bill);
 		     return "redirect:/bill/"+bill.getId();
+		     
 	}
 	
 	@GetMapping("/bill/{bid}")

@@ -8,4 +8,5 @@ import com.example.rafmak.product.entity.PaintMix;
 @Repository
 public interface PaintMixRepository extends JpaRepository<PaintMix, Integer> {
 
+	PaintMix findByDescription(String description);
 }

@@ -76,7 +76,6 @@ public class ProductService {
 	
 	public MeasuredProduct createNewMesuredProduct(String id) {
 		
-	//	List<MeasuredProduct> products = mpRepository.findAll();
 		Product product = productRepository.findById(id);
 		MeasuredProduct newMeasuredProduct = new MeasuredProduct();
 		  newMeasuredProduct.setId("*"+product.getId());
@@ -100,13 +99,12 @@ public class ProductService {
 		  newMeasuredProduct.setId(product.getId());
 		  newMeasuredProduct.setDescription(product.getDescription());
 		  newMeasuredProduct.setTotalQty(0.00);
-		  newMeasuredProduct.setPrice(product.getPrice());
-		  newMeasuredProduct.setPriceOnPack(product.getPriceOnPack());
+		  newMeasuredProduct.setPrice(0.00);
+		  newMeasuredProduct.setPriceOnPack(0.00);
 	      newMeasuredProduct.setTotalWorth(0.00);
 	      
             	return mpRepository.save(newMeasuredProduct);
     }
-	
 	
 	public PaintMix createNewPaintMix(PaintMix mix) {
 		
@@ -144,10 +142,12 @@ public class ProductService {
 			for (Product product : products) {
 				if(product.getDescription().contains(paint)) {
 					Product product1 = productRepository.findById(product.getId());
-					mp.setTotalQty(mp.getTotalQty()+(number * Double.parseDouble(product1.getMesurmentSize())));
-					mp.setTotalWorth(mp.getTotalWorth()+(number*product1.getPrice()));
+					PaintMix mix = mixRepository.findByDescription(paint);
+					mp.setTotalQty(mp.getTotalQty()+(number * Double.valueOf(mix.getWeight())));
+					mp.setTotalWorth(mp.getTotalWorth()+(number * mix.getWorth()));
 					mpRepository.save(mp);
-					
+					mp.setPrice(mp.getTotalWorth()/mp.getTotalQty());
+					mp.setPriceOnPack(mp.getTotalWorth()/mp.getTotalQty());
 					product.setTotalQty(product1.getTotalQty()-number);
 					productRepository.save(product1);
 					newQtyToProduct(product1, -number, LocalDate.now() ,product1.getTotalQty());

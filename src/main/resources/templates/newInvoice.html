@@ -66,13 +66,13 @@
 
 <div class="row">
     <div class="col-sm">
-      <table class="table table-striped" th:object="${bill}">
+      <table class="table table-striped" th:object="${invoice}">
   
       <tr>
        
       <tr>
-        <th><h1>Bill Number</h1></th>
-        <td><h1 th:text="*{dailyBillCounter}"></h1></td>
+        <th><h1>Invoice Number</h1></th>
+        <td><h1 th:text="*{id}"></h1></td>
       </tr>
       
       
@@ -82,6 +82,7 @@
      
     </div>
     <div class="col-sm">
+    <!--  
       <form action="#" th:action="@{/findBillByDailyCounter}" th:object="${bill}" method="get">
 
 <div class="form-group row">
@@ -94,18 +95,12 @@
 <button type="submit" class="btn btn-info col-2">Create Bill</button>
   
   </form>
+  -->
     </div>
   </div>
 
 
-
-
-
-
-
-
- 
- <div th:if="${param.noMoreQty}">
+<div th:if="${param.noMoreQty}">
      <div class="alert alert-info">We are sorry but in this moment you can't increase the quantity , this is the maximum you can order ... </div>
     </div>
   
@@ -113,7 +108,7 @@
 
   <div class="row">
   <div class="col-4">
-  <form action="#" th:action="@{/bill/{id}(id=${bill.id})}" th:object="${bill}" class="form-horizontal" id="price" >
+  <form action="#" th:action="@{/invoice/{id}(id=${invoice.id})}" th:object="${invoice}" class="form-horizontal" id="price" >
      <div class="form-row">
      <div class="form-group col-md-4">
     <label for="inputProductProce" class="col-sm-2 col-form-label">Product</label>
@@ -127,7 +122,7 @@
    </form>
   </div>
   <div class="col-8">
-     <form action="#" th:action="@{/createProduct/{bid}/{id}(bid=${bill.id},id=${product?.id})}"  th:object="${bprod1}"class="form-horizontal" id="price" method="post" >
+     <form action="#" th:action="@{/createInvoiceProduct/{bid}/{id}(bid=${invoice.id},id=${product?.id})}"  th:object="${bprod1}"class="form-horizontal" id="price" method="post" >
        <div class="form-row">
     <table class="table table-sm table-striped table-dark" >
    <thead>
@@ -183,7 +178,7 @@
    </form>
   </div>
 </div>
-<form action="#" th:action="@{/print/{id}(id=${bill.id})}"  th:object="${bill}"class="form-horizontal" id="price" method="post" > 
+<form action="#" th:action="@{/printInvoice/{id}(id=${invoice.id})}"  th:object="${invoice}"class="form-horizontal" id="price" method="post" > 
   <table class="table table-striped table-dark">
   <thead>
     <tr>
@@ -209,7 +204,7 @@
        <td th:text="${product.qty}"></td>
       <td th:text="${product.itemTotal}"></td>
     <td>
-       <a th:href="@{/removeProduct/{bid}/{id}(bid=${bill.id},id=${product?.id})}" class="btn btn-outline-danger">Remove</a> 
+       <a th:href="@{/removeProductFromInvoice/{bid}/{id}(bid=${invoice.id},id=${product?.id})}" class="btn btn-outline-danger">Remove</a> 
       </td>
       
    </table>
@@ -217,7 +212,7 @@
   
       <tr>
         <th>Total</th>
-        <td><b th:text="${bill.total}"></b></td>
+        <td><b th:text="${invoice.total}"></b></td>
       </tr>
       
        </table>
@@ -226,7 +221,7 @@
   
       <tr>
         <th>DDV 18%</th>
-        <td><b th:text="${bill.tax}"></b></td>
+        <td><b th:text="${invoice.tax}"></b></td>
       </tr>
       
        </table>

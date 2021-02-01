@@ -1,4 +1,4 @@
-package com.example.rafmak.billing.entity;
+package com.example.rafmak.invoice.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,6 +34,12 @@ public class Company {
 	private String zipCode;
 	
 	private String city;
+	
+	private Double hasTotalDebt;
+	
+	private Double deptOverdue;
+	
+	private Double totalOnAllInvoices;
 		
 
 }

@@ -1,7 +1,6 @@
-package com.example.rafmak.billing.entity;
+package com.example.rafmak.invoice.entity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -13,8 +12,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.NaturalId;
-
+import com.example.rafmak.billing.entity.BillingProducts;
 import com.example.rafmak.users.entity.Users;
 
 import lombok.AllArgsConstructor;
@@ -26,13 +24,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Bill {
+public class Invoice {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	private Integer dailyBillCounter;
+	@ManyToOne
+	@JoinColumn(referencedColumnName = "id")
+	private Company company;
 	
 	@ManyToMany
 	private List<BillingProducts> products;
@@ -41,13 +41,12 @@ public class Bill {
 	
 	private Double tax;
 	
-	private LocalDate time;
+	private LocalDate issued;
 	
-	private Boolean printed;
+	private LocalDate arrival;
 	
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private Users user;
-	
 
 }

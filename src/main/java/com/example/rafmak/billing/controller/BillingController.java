@@ -1,7 +1,6 @@
 package com.example.rafmak.billing.controller;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -9,15 +8,15 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.example.rafmak.billing.entity.Bill;
+import com.example.rafmak.billing.entity.BillProductsList;
 import com.example.rafmak.billing.entity.BillingProducts;
+import com.example.rafmak.billing.repository.BillProductsListRepository;
 import com.example.rafmak.billing.repository.BillRepository;
 import com.example.rafmak.billing.repository.BillingProductsRepository;
 import com.example.rafmak.billing.service.BillingServices;
-import com.example.rafmak.invoice.entity.Company;
 import com.example.rafmak.product.entity.MeasuredProduct;
 import com.example.rafmak.product.entity.Product;
 import com.example.rafmak.product.repository.MeasuredProductRepository;
@@ -39,23 +38,25 @@ public class BillingController {
 	@Autowired 
 	BillingProductsRepository bpRepository;
 	@Autowired
-	BillRepository billRepository;
+	BillProductsListRepository bplRepository;
 	@Autowired
 	UsersRepository userRepository;
 	@Autowired
 	ProductService productService;
+	@Autowired
+	BillRepository billRepository;
 	
 	@PostMapping("/createBill")
 	public String createBill(@AuthenticationPrincipal UsersDetails userD) {
 		String userEmail = userD.getUsername();
         Users user = userRepository.findByEmail(userEmail);
-		Bill bill = new Bill();
+		BillProductsList bill = new BillProductsList();
 		bill.setUser(user);
+		bill.setTime(LocalDate.now());
 		bill.setPrinted(false);
 		bill.setDailyBillCounter(services.dailyBillCounter());
-		billRepository.save(bill);
+		bplRepository.save(bill);
 		     return "redirect:/bill/"+bill.getId();
-		     
 	}
 	
 	@GetMapping("/bill/{bid}")
@@ -65,7 +66,7 @@ public class BillingController {
 		if(productRepository.findById(id)==null) {
 		    model.addAttribute("product", mpRepository.findById(id));
 		}
-		Bill bill = billRepository.findById(bid).get();
+		BillProductsList bill = bplRepository.findById(bid).get();
 		model.addAttribute("bill", bill);
 		
 		List<BillingProducts> products = bill.getProducts();
@@ -88,13 +89,13 @@ public class BillingController {
 	
 	@GetMapping("findBillByDailyCounter")
 	public String findBillByDC(@Param(value = "id")Integer id,LocalDate date) {
-		Bill bill = services.findBillByCounter(id, date);
-		return "redirect:/bill/"+bill.getId();
+		BillProductsList list = services.findBillByCounter(id, date);
+		return "redirect:/bill/"+list.getId();
 	}
 	
 	@PostMapping("/createProduct/{bid}/{id}")
 	public String addToList(BillingProducts bprod,@PathVariable("bid")Integer bid,@PathVariable(value = "id")String id,@Param(value = "priceType")String priceType) {
-		Bill bill = billRepository.findById(bid).get();
+		BillProductsList list = bplRepository.findById(bid).get();
 		List<BillingProducts> products = bpRepository.findAll();
 		BillingProducts bprod1 = new BillingProducts();
 		
@@ -135,27 +136,28 @@ public class BillingController {
 		      bprod1.setItemTax(bprod1.getItemTotal() * 0.1525);
 		          bpRepository.save(bprod1);
 		}
-		      bill.getProducts().add(bprod1);
+		      list.getProducts().add(bprod1);
 		    Double total = 0.00;
 		    Double tax = 0.00;
 		 
-		 for (BillingProducts billingProducts : bill.getProducts()) {
+		 for (BillingProducts billingProducts : list.getProducts()) {
 			total = total + billingProducts.getItemTotal();
 			tax = tax +billingProducts.getItemTax();
 		}
 		 
-		     bill.setTotal(total);
-		     bill.setTax(tax);
-		         billRepository.save(bill);
-		           return "redirect:/bill/"+bill.getId();
+		     list.setTotal(total);
+		     list.setTax(tax);
+		         bplRepository.save(list);
+		           return "redirect:/bill/"+list.getId();
 	}
 	
 	@PostMapping("/print/{id}")
 	public String printBill(@PathVariable("id")Integer id) {
-		Bill bill = billRepository.findById(id).get();
-		  bill.setTime(LocalDate.now());
-		  bill.setPrinted(true);
-		  for (BillingProducts billingProducts : bill.getProducts()) {
+		Bill bill = new Bill();
+		BillProductsList list = bplRepository.findById(id).get();
+		  list.setTime(LocalDate.now());
+		  list.setPrinted(true);
+		  for (BillingProducts billingProducts : list.getProducts()) {
 			  
 			    if(productRepository.existsById(billingProducts.getPid())) {
 				 Product product = productRepository.findById(billingProducts.getPid());
@@ -173,29 +175,27 @@ public class BillingController {
 			    	productService.newQtyToMeasuredProduct(product, - billingProducts.getQty(), LocalDate.now(), product.getTotalQty());
 			    }
 		}
+		   bplRepository.save(list);
+		   bill.setList(list);
 		   billRepository.save(bill);
+		   
 		    return "redirect:/";
 	}
 	
 	@GetMapping("/removeProduct/{bid}/{id}")
 	public String removeProductFromBill(@PathVariable("bid")Integer bid,@PathVariable(value = "id")String id) {
-		Bill bill = billRepository.findById(bid).get();
+		BillProductsList list = bplRepository.findById(bid).get();
 		BillingProducts product = bpRepository.findById(id).get();
-		if(bill.getPrinted() == true) {
-			return "redirect:/bill/"+bill.getId()+"?theBillIsPrinted"; 
+		if(list.getPrinted() == true) {
+			return "redirect:/bill/"+list.getId()+"?theBillIsPrinted"; 
 		}
-		   if(bill.getProducts().contains(product)) {
-			  bill.getProducts().remove(product);
-			  bill.setTotal(bill.getTotal()-product.getItemTotal());
-			  bill.setTax(bill.getTax()-product.getItemTax());
+		   if(list.getProducts().contains(product)) {
+			  list.getProducts().remove(product);
+			  list.setTotal(list.getTotal()-product.getItemTotal());
+			  list.setTax(list.getTax()-product.getItemTax());
 			}
-		  billRepository.save(bill);
-		    return "redirect:/bill/"+bill.getId();
+		  bplRepository.save(list);
+		    return "redirect:/bill/"+list.getId();
 	}
-	
-	
-	
-	
-	
 	
 }

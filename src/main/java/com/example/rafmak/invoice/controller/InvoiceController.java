@@ -15,6 +15,7 @@ import com.example.rafmak.billing.entity.BillingProducts;
 import com.example.rafmak.billing.repository.BillingProductsRepository;
 import com.example.rafmak.invoice.entity.Company;
 import com.example.rafmak.invoice.entity.Invoice;
+import com.example.rafmak.invoice.repository.CompanyRepository;
 import com.example.rafmak.invoice.repository.InvoiceRepository;
 import com.example.rafmak.invoice.service.InvoiceServices;
 import com.example.rafmak.product.entity.MeasuredProduct;
@@ -43,6 +44,8 @@ public class InvoiceController {
 	BillingProductsRepository bpRepository;
 	@Autowired
 	ProductService productService;
+	@Autowired
+	CompanyRepository companyRepository;
 	
 	@GetMapping("/createNewCustomer")
 	public String addNewCustomerForm(Model model) {
@@ -72,7 +75,7 @@ public class InvoiceController {
     }
 	
 	@GetMapping("/invoice/{bid}")
-	public String findInvoiceProducts(Model model,@PathVariable("bid")Integer bid,@Param(value = "id")String id) {
+	public String findInvoiceProducts(Model model,@PathVariable("bid")Integer bid,@Param(value = "id")String id,@Param(value = "search")String search) {
 		
 		model.addAttribute("product", productRepository.findById(id));
 		if(productRepository.findById(id)==null) {
@@ -92,6 +95,9 @@ public class InvoiceController {
 		
 		Double tax = invoice.getTax();
 		model.addAttribute("tax", tax);
+		
+		List<Company> companies = companyRepository.findBySearch(search);
+		model.addAttribute("companies", companies);
 		
 		 return "newInvoice";
 	}
@@ -196,5 +202,24 @@ public class InvoiceController {
 		   invoiceRepository.save(invoice);
 		    return "redirect:/invoice/"+invoice.getId();
 	}
-
+	
+	@GetMapping("/findCompany/{bid}")
+	public String findCompanyForInvoice(@PathVariable("bid")Integer bid,@Param(value = "id")Integer id) {
+		Invoice invoice = invoiceRepository.findById(bid).get();
+	    Company company = companyRepository.findById(id).get();
+	    invoice.setCompany(company);
+	    invoiceRepository.save(invoice);
+		return "redirect:/invoice/"+invoice.getId();
+	}
+	
+	@GetMapping("/addCompanyToInvoice/{bid}/{id}")
+    public String addCompanyToInvoice(@PathVariable("bid")Integer bid,@PathVariable(value = "id")Integer id) {
+		Invoice invoice = invoiceRepository.findById(bid).get();
+		Company company = companyRepository.findById(id).get();
+		
+		
+		return "redirect:/invoice/"+invoice.getId();
+		
+	}
+	
 }

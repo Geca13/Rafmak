@@ -63,6 +63,15 @@ public class InvoiceController {
 		return "redirect:/";
 	}
 	
+	
+	
+	@GetMapping("/companies")
+	public String findCompanyForInvoice(Model model,@Param(value = "search") String search) {
+		List<Company> companies = services.findCompany(search);
+		model.addAttribute("companies", companies);
+		return "companyList";
+	}
+	
 	@PostMapping("/createInvoice")
 	public String createBill(@AuthenticationPrincipal UsersDetails userD) {
 		String userEmail = userD.getUsername();
@@ -159,6 +168,7 @@ public class InvoiceController {
 		 invoice.setTotal(total);
 		 invoice.setTax(tax);
 		 invoiceRepository.save(invoice);
+		 
 		           return "redirect:/invoice/"+invoice.getId();
 	}
 	
@@ -203,14 +213,7 @@ public class InvoiceController {
 		    return "redirect:/invoice/"+invoice.getId();
 	}
 	
-	@GetMapping("/findCompany/{bid}")
-	public String findCompanyForInvoice(@PathVariable("bid")Integer bid,@Param(value = "id")Integer id) {
-		Invoice invoice = invoiceRepository.findById(bid).get();
-	    Company company = companyRepository.findById(id).get();
-	    invoice.setCompany(company);
-	    invoiceRepository.save(invoice);
-		return "redirect:/invoice/"+invoice.getId();
-	}
+	
 	
 	@GetMapping("/addCompanyToInvoice/{bid}/{id}")
     public String addCompanyToInvoice(@PathVariable("bid")Integer bid,@PathVariable(value = "id")Integer id) {

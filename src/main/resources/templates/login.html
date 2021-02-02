@@ -9,68 +9,109 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <style>
+  body {
+  margin: 0;
+  padding: 0;
+  background: url(https://picsum.photos/2500/1500?image=1041);
+  background-size: cover;
+  font-family: sans-serif;
+}
+
+.box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 25rem;
+  padding: 2.5rem;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 0.625rem;
+}
+
+.box h2 {
+  margin: 0 0 1.875rem;
+  padding: 0;
+  color: #fff;
+  text-align: center;
+}
+
+.box .inputBox {
+  position: relative;
+}
+
+.box .inputBox input {
+  width: 100%;
+  padding: 0.625rem 0;
+  font-size: 1rem;
+  color: #fff;
+  letter-spacing: 0.062rem;
+  margin-bottom: 1.875rem;
+  border: none;
+  border-bottom: 0.065rem solid #fff;
+  outline: none;
+  background: transparent;
+}
+
+.box .inputBox label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.625rem 0;
+  font-size: 1rem;
+  color: #fff;
+  pointer-events: none;
+  transition: 0.5s;
+}
+
+h1{
+font-size: 200px;
+text-align: center;
+color: #ff00ff;
+font-family:Helvetica ;
+}
+
+.box .inputBox input:focus ~ label,
+.box .inputBox input:valid ~ label,
+.box .inputBox input:not([value=""]) ~ label {
+  top: -1.125rem;
+  left: 0;
+  color: #03a9f4;
+  font-size: 0.75rem;
+}
+
+.box input[type="submit"] {
+  border: none;
+  outline: none;
+  color: #fff;
+  background-color: #03a9f4;
+  padding: 0.625rem 1.25rem;
+  cursor: pointer;
+  border-radius: 0.312rem;
+  font-size: 1rem;
+}
+
+.box input[type="submit"]:hover {
+  background-color: #1cb1f5;
+}
   
     </style>
 </head>
 
 
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-warning">
-        <a class="navbar-brand" href="#">RAFMAK</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<body style="background-image: linear-gradient(to right, rgb(0, 174, 255), rgb(218, 231, 161));">
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto topnav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Shop Pre-Owned</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Shop New Cars</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Clearence Event</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Resources
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Carfax</a>
-                        <a class="dropdown-item" href="#">Carproof</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Omnivic</a>
-                    </div>
-                </li>
-                
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-primary text-white" type="button" href="#" data-toggle="modal" data-target="#myModal">Sign In/Register</a>                  
-                </li>
-                
-            </ul>
-        </div>
 
-            <!-- The Modal -->
-    <div class="modal" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
 
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Customer Sign In</h4>
-                    <button type="button" class="close" data-dismiss="modal">×</button>
-                </div>
-
-                <!-- Modal body -->
-                <div class="modal-body">
-                   <form th:action="@{/login}" method="post">
+<div class="container">
+<!--  
+<h1>RAFMAK</h1>
+-->
+ <br>
+    
+   <div class="box">
+  <h2>Login</h2>
+   <form th:action="@{/login}" method="post">
     
     <div th:if="${param.error}">
       <div class="alert alert-danger">Invalid username or
@@ -105,35 +146,20 @@
      </div>
      
      </form>
-                </div>
-                <div class="form-group">
+     
+     <div class="form-group">
       <span>New user? <a href="/" th:href="@{/signUpForm}">Register
         here</a></span>
      </div>
      
      <div class="form-group">
      <p> 
-     <a th:href="@{/forgotPassword}">Did you forget your password??? CLICK MEEE :-)</a>
+     <a th:href="@{/forgotPassword}"> Forgot your password??? CLICK MEEE :-)</a>
      </p>
      
      </div>
-     
-     
+</div>
 
-                
-            </div>
-        </div>
-    </div>
-            
-
-    </nav>
-
-
-<div class="container">
-
- <br>
-    
-   
 
 </div>
 

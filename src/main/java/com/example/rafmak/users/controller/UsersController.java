@@ -50,25 +50,27 @@ public class UsersController {
 	}
 	
 	@GetMapping("/")
-	public String logedIn(Model model,@ModelAttribute("user")Users user ) {
+	public String logedIn(@AuthenticationPrincipal UsersDetails userD,Model model ) {
 		
-		Users newUser = new Users();
-		model.addAttribute("newUser", newUser);
+		String userEmail = userD.getUsername();
+        Users user = userRepository.findByEmail(userEmail);
+		model.addAttribute("user", user);
 		
 		
 		 return "index";
 	}
 	@GetMapping("/addEmployee")
-	public String newEmployee(Model model,@ModelAttribute("user")Users user ) {
+	public String newEmployee(Model model,Users user,MultipartFile file ) {
 		
 		Users newUser = new Users();
-		model.addAttribute("newUser", newUser);
+		model.addAttribute("user", newUser);
+		model.addAttribute("file", file);
 		
 		return "addNewEmployee";
 	}
 	
 	@PostMapping("/addEmployee")
-	public String addNewEmployees(Model model,Users user, MultipartFile file) {
+	public String addNewEmployees(Model model,@ModelAttribute("user")Users user, MultipartFile file) {
 		
 		
 		try {
@@ -80,6 +82,15 @@ public class UsersController {
 		
 		return "redirect:/";
 		
+	}
+	
+	@GetMapping("/allUsers")
+	public String getAllUsers(Model model) {
+		
+		List<Users> allUsers = userRepository.findAll();
+		model.addAttribute("allUsers", allUsers);
+		
+		return "all_users";
 	}
 	
 	

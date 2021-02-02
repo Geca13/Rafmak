@@ -94,55 +94,6 @@
     
   
     
-    <h3>Previous orders</h3>
-    <div class="row">
-  <div class="col-xl-3" th:each="product : ${orders}">
-   <div class="card" style="width: 15rem;">
-    
-     <div class="card-body">
-      <h6>Ordered on</h6>
-      <p class="card-title" th:text = "${#temporals.format(product.date, 'yyyy-MM-dd')}"></p>
-      <hr>
-      <h6>Shipped to</h6>
-      <p class="card-text" th:text = "${product.address}"></p>
-      <p class="card-text" th:text = "${product.shipping}"></p>
-
-      <table class="table table-striped" >
-     
-        <tr th:each="p : ${product.products}">
-        <td valign="top">
-          <dl class="dl-horizontal">
-            <dt>Product </dt>
-            <dd th:text="${p.name}"></dd>
-            <dt>Product price</dt>
-            <dd th:text="${p.price}"></dd>
-            <dt>Ordered quantity</dt>
-            <dd th:text="${p.qty}"></dd>
-            
-            
-             
-          </dl>
-        </td>
-        
-      </tr>
-  
-    </table>
-    <h6>Total</h6>
-    <p class="card-text" th:text = "${product.total}"></p>
-    
-       </div>
-
-    </div>
-   </div>
-  </div>
- </div>
-    
-    
-    
-    
-    <a th:href="@{/profile/{id}/newAddress(id=${user.id})}">Set New Address</a>
-    
-    <a th:href="@{/products}" class="nav-item nav-link" >BACK TO PRODUCTS</a>
   
 </div>
 

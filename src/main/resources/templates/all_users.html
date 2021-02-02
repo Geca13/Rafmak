@@ -41,7 +41,7 @@
 </nav>
   
   <h1>User list</h1>
-  <form th:action="@{/users}">
+  <form th:action="@{/allUsers}">
   
   <input type="hidden" name="sortField" th:value="${sortField}" />
   <input type="hidden" name="sortDir" th:value="${sortDir}" />
@@ -87,14 +87,14 @@
     </tr>
   </thead>
   <tbody>
-    <tr th:each="users : ${listUsers}">
+    <tr th:each="users : ${allUsers}">
       <td th:text="${users.id}"></td>
       <td th:text="${users.firstName}"></td>
       <td th:text="${users.lastName}"></td>
       <td th:text="${users.age}"></td>
       <td th:text="${users.email}"></td>  
       <td th:text="${#temporals.format(users.date, 'yyyy-MM-dd')}"></td> 
-  <!--     <td> <img th:src="*{'data:image/png;base64,'+{product.image}}" style="width:200px"></td> --> 
+       <td> <img th:src="*{'data:image/png;base64,'+{users.image}}" style="width:200px"></td> 
       
       
       

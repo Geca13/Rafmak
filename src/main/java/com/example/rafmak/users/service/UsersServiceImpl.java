@@ -92,8 +92,8 @@ public class UsersServiceImpl implements UsersService {
 	public Users saveEmployee(Users user , MultipartFile file) throws InvalidPasswordException {
 		
 		UsersServiceImpl validator = new UsersServiceImpl();
-		Users user1 = new Users();
-		 
+		
+		 Users user1 = new Users();
 	     user1.setEmail(user.getEmail());
 		 user1.setPassword(passwordEncoder.encode(user.getPassword()));
 		    if(validator.validate(user.getPassword()) == false) {
@@ -108,7 +108,7 @@ public class UsersServiceImpl implements UsersService {
          user1.setRoles( Collections.singleton(role));
 		            
 		LocalDate date = LocalDate.now();
-		 user.setDate(date);
+		 user1.setDate(date);
 		 String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 	       if(fileName.contains("..")) {
 	       	System.out.println("not a valid file");
@@ -120,7 +120,7 @@ public class UsersServiceImpl implements UsersService {
 				e.printStackTrace();
 			}
 		
-		return usersRepository.save(user);
+		return usersRepository.save(user1);
 	}
 	
 	@Override

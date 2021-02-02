@@ -11,7 +11,7 @@ public interface UsersService extends UserDetailsService {
 	
 	Users saveAdmin(Users userDto) throws InvalidPasswordException;
 	
-	Users saveEmployee(Users userDto,MultipartFile file) throws InvalidPasswordException;
+	public Users saveEmployee(Users userDto,MultipartFile file) throws InvalidPasswordException;
 	
 	Users saveOwner(Users userDto) throws InvalidPasswordException;
 	

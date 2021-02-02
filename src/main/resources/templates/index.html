@@ -34,8 +34,14 @@
 </nav>
 <div class="container">
 
-<h1>HELOOOO</h1>
-<a href="/" th:href="@{/addEmployee}">Create new Employee</a>
+
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <a href="/" th:href="@{/addEmployee}">Create new Employee</a>
 <br>
 <a href="/" th:href="@{/addProduct}">Create new Product</a>
 <br>
@@ -70,7 +76,35 @@
   
   </form>
  
+    </div>
+    <div class="col-sm">
+      One of three columns
+    </div>
+    
+    
+    <div class="col-sm">
+     
+    <div class="card" style="width: 18rem;">
+  <img th:src="*{'data:image/png;base64,'+{user.image}}"class="card-img-top" src="..." alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
 </div>
+     
+     
+</div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<h1>HELOOOO</h1>
+
+
 
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

@@ -89,7 +89,58 @@
     <div class="card" style="width: 18rem;">
   <img th:src="*{'data:image/png;base64,'+{user.image}}"class="card-img-top" src="..." alt="Card image cap">
   <div class="card-body">
-    <h5 class="card-title">Card title</h5>
+    <table class="table table-striped"  >
+  
+      <tr>
+        <th>Total</th>
+        <td><b th:text="${invoicesTotal}"></b></td>
+      </tr>
+      
+       </table>
+       <table class="table table-striped"  >
+  
+      <tr>
+        <th>Total</th>
+        <td><b th:text="${invoicesTotalSum}"></b></td>
+      </tr>
+      
+       </table>
+       
+       <table class="table table-striped"  >
+  
+      <tr>
+        <th>Number of payed bills</th>
+        <td><b th:text="${numberPayedBills}"></b></td>
+      </tr>
+      
+       </table>
+       
+       <table class="table table-striped"  >
+  
+      <tr>
+        <th>Number of unpayed bills</th>
+        <td><b th:text="${numberUnPayedBills}"></b></td>
+      </tr>
+      
+       </table>
+       
+       <table class="table table-striped"  >
+  
+      <tr>
+        <th>Payed bills sum</th>
+        <td><b th:text="${payedBillsTotalSum}"></b></td>
+      </tr>
+      
+       </table>
+       
+       <table class="table table-striped"  >
+  
+      <tr>
+        <th>Unpayed bills sum</th>
+        <td><b th:text="${unpayedBillsTotalSum}"></b></td>
+      </tr>
+      
+       </table>
     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
     <a href="#" class="btn btn-primary">Go somewhere</a>
   </div>

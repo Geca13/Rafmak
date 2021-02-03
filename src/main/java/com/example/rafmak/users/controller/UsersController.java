@@ -1,5 +1,6 @@
 package com.example.rafmak.users.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.rafmak.invoice.entity.Invoice;
+import com.example.rafmak.invoice.repository.InvoiceRepository;
 import com.example.rafmak.users.entity.Address;
 import com.example.rafmak.users.entity.Country;
 import com.example.rafmak.users.entity.Users;
@@ -42,6 +45,8 @@ public class UsersController {
 	RoleRepository roleRepository;
 	@Autowired
 	UsersService usersService;
+	@Autowired
+	InvoiceRepository invoiceRepository ;
 	
 	@GetMapping("/login")
 	public String login(Model model ) {
@@ -54,8 +59,19 @@ public class UsersController {
 		
 		String userEmail = userD.getUsername();
         Users user = userRepository.findByEmail(userEmail);
-		model.addAttribute("user", user);
-		
+		   model.addAttribute("user", user);
+		Double invoicesTotalSum = usersServiceImpl.getInvoicesTotalByDayByUser(user);
+		   model.addAttribute("invoicesTotalSum", invoicesTotalSum);
+		Integer invoicesTotal = usersServiceImpl.getInvoicesTotalNumberByUser(user);
+	       model.addAttribute("invoicesTotal", invoicesTotal);
+		Integer numberPayedBills = usersServiceImpl.getPayedBillsTotalNumberByUser(user);
+		   model.addAttribute("numberPayedBills", numberPayedBills);
+		Integer numberUnPayedBills = usersServiceImpl.getUnpayedBillsTotalNumberByUser(user);
+		   model.addAttribute("numberUnPayedBills", numberUnPayedBills);
+		Double payedBillsTotalSum = usersServiceImpl.getPayedBillsTotalByDayByUser(user);
+		   model.addAttribute("payedBillsTotalSum", payedBillsTotalSum);
+		Double unpayedBillsTotalSum = usersServiceImpl.getUnpayedBillsTotalByDayByUser(user);
+		   model.addAttribute("unpayedBillsTotalSum", unpayedBillsTotalSum);
 		
 		 return "index";
 	}

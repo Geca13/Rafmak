@@ -10,6 +10,7 @@ import com.example.rafmak.invoice.entity.Company;
 import com.example.rafmak.invoice.entity.Invoice;
 import com.example.rafmak.invoice.repository.CompanyRepository;
 import com.example.rafmak.invoice.repository.InvoiceRepository;
+import com.example.rafmak.users.entity.Users;
 
 @Service
 public class InvoiceServices {
@@ -82,9 +83,11 @@ public class InvoiceServices {
 			}
 			
 		}
+	}
+		
 	
 		
-	   }
+	   
 	
    }
 	

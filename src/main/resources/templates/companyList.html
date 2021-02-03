@@ -71,7 +71,7 @@
       <td th:text="${company.deptOverdue}"></td>
      
     <td>
-       <a th:href="@{/addCompanyToInvoice/{bid}/{id}(bid=${invoice?.id},id=${company?.id})}" class="btn btn-outline-danger">Remove</a> 
+       <a th:href="@{/createInvoice/{id}(id=${company?.id})}" class="btn btn-outline-danger">Create Invoice</a> 
       </td>
       
    </table>

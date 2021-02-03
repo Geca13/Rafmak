@@ -1,5 +1,6 @@
 package com.example.rafmak.invoice.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +44,50 @@ public class InvoiceServices {
 			List<Company> companies = companyRepository.findBySearch(search);
 			return companies;
 		}
-		return null;
+		return companyRepository.findAll();
+	}
+	
+	public LocalDate invoiceDays(Integer id) {
+		LocalDate today = LocalDate.now();
+		LocalDate arrivalDate = today.plusDays(id);
+		return arrivalDate;
+	}
+	
+	public void calculateDept() {
 		
+	List<Invoice> invoices = invoiceRepository.findAll();
+	
+	for (Invoice invoice : invoices) {
 		
+		Company company = invoice.getCompany();
+		
+		company.setHasTotalDebt(company.getHasTotalDebt()+invoice.getTotal());
+		
+		companyRepository.save(company);
 		
 	}
-
 }
+	
+	public void calculateArivedDebt() {
+		
+		List<Invoice> invoices = invoiceRepository.findAll();
+		for (Invoice invoice : invoices) {
+			
+			Company company = invoice.getCompany();
+			
+			if(LocalDate.now().isAfter(invoice.getArrival())) {
+				company.setDeptOverdue(company.getDeptOverdue() +  invoice.getTotal());
+				
+				companyRepository.save(company);
+			}
+			
+		}
+	
+		
+	   }
+	
+   }
+	
+   
+
+

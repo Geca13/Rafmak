@@ -30,6 +30,10 @@ public class Invoice {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	private Integer shippingId;
+	
+	private String comment;
+	
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private Company company;

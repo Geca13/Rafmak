@@ -63,8 +63,6 @@ public class InvoiceController {
 		return "redirect:/";
 	}
 	
-	
-	
 	@GetMapping("/companies")
 	public String findCompanyForInvoice(Model model,@Param(value = "search") String search) {
 		List<Company> companies = services.findCompany(search);
@@ -72,14 +70,17 @@ public class InvoiceController {
 		return "companyList";
 	}
 	
-	@PostMapping("/createInvoice")
-	public String createBill(@AuthenticationPrincipal UsersDetails userD) {
+	@GetMapping("/createInvoice/{id}")
+	public String createBill(@AuthenticationPrincipal UsersDetails userD,@PathVariable("id")Integer id) {
 		String userEmail = userD.getUsername();
         Users user = userRepository.findByEmail(userEmail);
+        Company company = companyRepository.findById(id).get();
 		Invoice invoice = new Invoice();
+		invoice.setCompany(company);
 		invoice.setUser(user);
 		
 		invoiceRepository.save(invoice);
+		
 		     return "redirect:/invoice/"+invoice.getId();
     }
 	
@@ -105,8 +106,8 @@ public class InvoiceController {
 		Double tax = invoice.getTax();
 		model.addAttribute("tax", tax);
 		
-		List<Company> companies = companyRepository.findBySearch(search);
-		model.addAttribute("companies", companies);
+		Company company = invoice.getCompany();
+		model.addAttribute("company", company);
 		
 		 return "newInvoice";
 	}
@@ -173,11 +174,13 @@ public class InvoiceController {
 	}
 	
 	@PostMapping("/printInvoice/{id}")
-	public String printInvoice(@PathVariable("id")Integer id) {
-		Invoice invoice = invoiceRepository.findById(id).get();
-		  invoice.setIssued(LocalDate.now());
+	public String printInvoice(@PathVariable("id")Integer id,@ModelAttribute("invoice") Invoice invoice) {
+		Invoice invoice1 = invoiceRepository.findById(id).get();
+		  invoice1.setIssued(LocalDate.now());
+		  invoice1.setShippingId(invoice.getId());
+		  invoice1.setComment(invoice.getComment());
 		  
-		  for (BillingProducts billingProducts : invoice.getProducts()) {
+		  for (BillingProducts billingProducts : invoice1.getProducts()) {
 			  
 			    if(productRepository.existsById(billingProducts.getPid())) {
 				 Product product = productRepository.findById(billingProducts.getPid());
@@ -195,7 +198,10 @@ public class InvoiceController {
 			    	productService.newQtyToMeasuredProduct(product, - billingProducts.getQty(), LocalDate.now(), product.getTotalQty());
 			    }
 		}
-		  invoiceRepository.save(invoice);
+		  invoiceRepository.save(invoice1);
+		  Company company = invoice1.getCompany();
+		  company.setHasTotalDebt(company.getHasTotalDebt()+invoice1.getTotal());
+		  companyRepository.save(company);
 		    return "redirect:/";
 	}
 	
@@ -213,16 +219,19 @@ public class InvoiceController {
 		    return "redirect:/invoice/"+invoice.getId();
 	}
 	
-	
-	
-	@GetMapping("/addCompanyToInvoice/{bid}/{id}")
-    public String addCompanyToInvoice(@PathVariable("bid")Integer bid,@PathVariable(value = "id")Integer id) {
-		Invoice invoice = invoiceRepository.findById(bid).get();
-		Company company = companyRepository.findById(id).get();
-		
-		
+	@GetMapping("/findInvoiceById")
+	public String findInvoice(@Param(value = "id")Integer id) {
+		Invoice invoice = invoiceRepository.findById(id).get();
 		return "redirect:/invoice/"+invoice.getId();
-		
+	}
+	
+	@PostMapping("/setDays/{bid}")
+	public String setInvoiceDate (@PathVariable("bid")Integer bid,@Param("id")Integer id) {
+		Invoice invoice = invoiceRepository.findById(bid).get();
+		LocalDate date = services.invoiceDays(id);
+		invoice.setArrival(date);
+		invoiceRepository.save(invoice);
+		return "redirect:/invoice/"+invoice.getId();
 	}
 	
 }

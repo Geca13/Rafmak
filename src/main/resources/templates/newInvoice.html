@@ -63,51 +63,75 @@
     <div th:if="${param.beated}">
      <div class="alert alert-info">It looks like we dont have the asked quantity anyMore , someone got it right in front of your nose while you were doing the checkout process, if you had more then 1 try lowering the quantity to see if there is still something left... </div>
     </div>
-
-<div class="row">
-    <div class="col-sm">
-      <table class="table table-striped" th:object="${invoice}">
-  
-      <tr>
-       
-      <tr>
-        <th><h1>Invoice Number</h1></th>
-        <td><h1 th:text="*{id}"></h1></td>
-      </tr>
-      
-      
-    </table>
-    </div>
-    <div class="col-sm">
     
-  
-     
+    <div th:if="${param.noMoreQty}">
+     <div class="alert alert-info">We are sorry but in this moment you can't increase the quantity , this is the maximum you can order ... </div>
     </div>
-    <div class="col-sm">
-    <!--  
-      <form action="#" th:action="@{/findBillByDailyCounter}" th:object="${bill}" method="get">
+    
+    
+    
+    
+    <div class="row">
+  <div class="col">
+  
+   <form action="#" th:action="@{/setDays/{bid}(bid=${invoice.id})}" th:object="${invoice}" method="post" class="form-inline">
 
 <div class="form-group row">
-    <label for="inputProductProce" class="col-sm-2 col-form-label">Bill id:</label>
-    <div class="col-sm-10">
+    <label for="inputProductProce" class="col-sm-2 col-form-label">Set Maximim days</label>
+    <div class="col-sm-5">
       <input type="text" th:name="id" class="form-control" id="inputEmail4" >
     </div>
   </div>
 
-<button type="submit" class="btn btn-info col-2">Create Bill</button>
+<button type="submit"  class="btn btn-info col-2 d-none">Search</button>
   
   </form>
-  -->
+  
+  </div>
+  <div class="col"> 
+  
+  <form action="#" th:action="@{/findInvoiceById}" th:object="${invoice}" method="get" class="form-inline">
+
+<div class="form-group row">
+    <label for="inputProductProce" class="col-sm-2 col-form-label">Invoice id:</label>
+    <div class="col-sm-5">
+      <input type="text" th:name="id" class="form-control" id="inputEmail4" >
     </div>
   </div>
 
-
-<div th:if="${param.noMoreQty}">
-     <div class="alert alert-info">We are sorry but in this moment you can't increase the quantity , this is the maximum you can order ... </div>
-    </div>
+<button type="submit"  class="btn btn-info col-2 d-none">Search</button>
   
-
-
+  </form>
+  
+  </div>
+  <br><br>
+  <div class="w-100"></div>
+  <div class="col">
+  
+  <table class="table table-striped" th:object="${invoice}">
+  
+  <tr>
+     <th><h1>Invoice No:</h1></th>
+     <td><h1 th:text="*{id}"></h1></td>
+  </tr>
+      
+  </table>
+  
+  </div>
+  <div class="col">
+  
+  <table class="table table-striped"  >
+  
+      <tr>
+       <td><h1 th:text="${invoice?.company?.companyName}"></h1></td>
+      </tr>
+      
+  </table>
+  
+  </div>
+</div>
+    
+    
   <div class="row">
   <div class="col-4">
   <form action="#" th:action="@{/invoice/{id}(id=${invoice.id})}" th:object="${invoice}" class="form-horizontal" id="price" >
@@ -118,11 +142,12 @@
       <input type="text" th:name="id" class="form-control" id="inputEmail4" >
     </div>
   </div>
-   <button type="submit"class="btn btn-primary" >find</button>
+   <button type="submit"class="btn btn-primary d-none" >find</button>
      
   </div>
    </form>
   </div>
+  
   <div class="col-8">
      <form action="#" th:action="@{/createInvoiceProduct/{bid}/{id}(bid=${invoice.id},id=${product?.id})}"  th:object="${bprod1}"class="form-horizontal" id="price" method="post" >
        <div class="form-row">
@@ -139,9 +164,7 @@
       
       <th scope="col"> Remaining Qty</th>
       
-      
-      
-      </tr>
+    </tr>
   </thead>
   <tbody>
     <tr >
@@ -174,7 +197,7 @@
     </div>
   </div>
    
-   <button type="submit" class="btn btn-info col-2">+ Add</button>
+   <button type="submit" class="btn btn-info col-2 d-none">+ Add</button>
   </div>
   
    </form>
@@ -183,7 +206,8 @@
 
 
 <div class="col-sm">
-    
+   
+     
   
      
     </div>
@@ -217,13 +241,26 @@
       <td th:text="${product.itemTotal}"></td>
     <td>
        <a th:href="@{/removeProductFromInvoice/{bid}/{id}(bid=${invoice.id},id=${product?.id})}" class="btn btn-outline-danger">Remove</a> 
-      </td>
+      </td> 
       
    </table>
-   <table class="table table-striped"  >
+   
+   
+   <div class="row">
+    <div class="col">
+    
+    <div class="form-group">
+    <label for="exampleFormControlTextarea1"></label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" th:field="*{comment}"  rows="3"placeholder="Type your comment here..."></textarea>
+    </div>
+    
+    </div>
+    <div class="col">
+    
+     <table class="table table-striped"  >
   
       <tr>
-        <th>Total</th>
+        <th>TOTAL</th>
         <td><b th:text="${invoice.total}"></b></td>
       </tr>
       
@@ -237,7 +274,21 @@
       </tr>
       
        </table>
+    
+    </div>
+    <div class="w-100"></div>
+    <div class="col"></div>
+    <div class="col">
+       </div>
+  </div>
+   
+   
+   
+  
        
+       
+       
+       <button type="submit" class="btn btn-info col-2">PRINT</button>
        
      </form>  
        
@@ -246,42 +297,9 @@
     
     <hr>
     
-      <form action="#" th:action="@{/findCompany/{bid}(bid=${invoice.id})}" th:object="${invoice}" method="get">
-
-<div class="form-group row">
-    <label for="inputProductProce" class="col-sm-2 col-form-label">Company:</label>
-    <div class="col-sm-10">
-      <input type="text" th:name="id" class="form-control" id="inputEmail4" >
-    </div>
-  </div>
-  <button type="submit" class="btn btn-info col-2">Set Company</button>
-  </form>
-  
-   <table class="table table-striped table-dark">
-  <thead>
-    <tr>
-      <th scope="col">Id</th>
-      <th scope="col"> Company Name</th>
-      <th scope="col"> Total Debt</th>
-      <th scope="col"> Debt overdue</th>
-      
-    </tr>
-  </thead>
-  <tbody>
-    <tr th:each="company: ${companies}" >
-      <td th:text="${company.id}"></td> 
-      <td th:text="${company.companyName}"></td>
-      <td th:text="${company.hasTotalDebt}"></td>
-      <td th:text="${company.deptOverdue}"></td>
      
-    <td>
-       <a th:href="@{/addCompanyToInvoice/{bid}/{id}(bid=${invoice.id},id=${company?.id})}" class="btn btn-outline-danger">Remove</a> 
-      </td>
-      
-   </table>
-
  <hr>
-    <button type="submit" class="btn btn-info col-2">PRINT</button>
+    
      
      </div>
 

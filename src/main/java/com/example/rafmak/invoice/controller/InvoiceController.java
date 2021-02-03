@@ -201,7 +201,9 @@ public class InvoiceController {
 		  invoiceRepository.save(invoice1);
 		  Company company = invoice1.getCompany();
 		  company.setHasTotalDebt(company.getHasTotalDebt()+invoice1.getTotal());
+		  company.setTotalOnAllInvoices(company.getTotalOnAllInvoices()+invoice1.getTotal());
 		  companyRepository.save(company);
+		  
 		    return "redirect:/";
 	}
 	
@@ -233,7 +235,5 @@ public class InvoiceController {
 		invoiceRepository.save(invoice);
 		return "redirect:/invoice/"+invoice.getId();
 	}
-	
-	
 	
 }

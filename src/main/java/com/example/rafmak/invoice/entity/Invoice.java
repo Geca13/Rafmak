@@ -49,6 +49,8 @@ public class Invoice {
 	
 	private LocalDate arrival;
 	
+	private Boolean expired;
+	
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private Users user;

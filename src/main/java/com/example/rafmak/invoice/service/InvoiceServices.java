@@ -55,7 +55,32 @@ public class InvoiceServices {
 		LocalDate arrivalDate = today.plusDays(id);
 		return arrivalDate;
 	}
+	
+	public void findExpiredInvoices() {
+		List<Invoice> invoices = invoiceRepository.findAll();
+		for (Invoice invoice : invoices) {
+			
+			if(invoice.getArrival().isBefore(LocalDate.now())) {
+				invoice.setExpired(true);
+				invoiceRepository.save(invoice);
+			}
+			
+		}
+	}
 		
+	public void calculateDebtArrived() {
+		List<Company>companies = companyRepository.findAll();
+		
+		for (Company company : companies) {
+			
+			List<Invoice> invoices = invoiceRepository.findByCompanyAndExpired(company, true);
+			for (Invoice invoice : invoices) {
+				
+				
+			}
+			
+		}
+	}
 	   
 	
    }

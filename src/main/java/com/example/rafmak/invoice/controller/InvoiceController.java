@@ -78,6 +78,7 @@ public class InvoiceController {
 		Invoice invoice = new Invoice();
 		invoice.setCompany(company);
 		invoice.setUser(user);
+		invoice.setExpired(false);
 		
 		invoiceRepository.save(invoice);
 		

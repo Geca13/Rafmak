@@ -87,7 +87,10 @@
   
   </form>
   
+  
   </div>
+  
+  
   <div class="col"> 
   
   <form action="#" th:action="@{/findInvoiceById}" th:object="${invoice}" method="get" class="form-inline">
@@ -103,7 +106,17 @@
   
   </form>
   
+  <table class="table table-striped"  >
+  
+      <tr>
+       <td><h1 th:text="${days}"></h1></td>
+      </tr>
+      
+  </table>
+  
   </div>
+  
+  
   <br><br>
   <div class="w-100"></div>
   <div class="col">

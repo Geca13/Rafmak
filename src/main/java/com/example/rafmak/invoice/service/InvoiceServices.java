@@ -1,18 +1,14 @@
 package com.example.rafmak.invoice.service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.example.rafmak.invoice.entity.Company;
 import com.example.rafmak.invoice.entity.Invoice;
 import com.example.rafmak.invoice.repository.CompanyRepository;
 import com.example.rafmak.invoice.repository.InvoiceRepository;
-import com.example.rafmak.users.entity.Users;
 
 @Service
 public class InvoiceServices {
@@ -67,20 +63,32 @@ public class InvoiceServices {
 			
 		}
 	}
+	
+	public void calculateLateDateDebt() {
 		
-	public void transferExpiredInvoices() {
-		List<Company> companies = companyRepository.findAll();
+		List<Company>companies = companyRepository.findAll();
 		for (Company company : companies) {
-			
-		List<Invoice> invoices = invoiceRepository.findByExpired( true);
-			for (Invoice invoice : invoices) {
-				if(!company.getExpiredDate().contains(invoice)) {
-					company.getExpiredDate().add(invoice);
+			for (Invoice invoice : company.getExpiredDate()) {
+				Double sum = 0.00;
+				if(invoice.getExpired() == true) {
+					sum = sum + invoice.getTotal();
+					company.setDeptOverdue(sum);
 					companyRepository.save(company);
 				}
 			}
 		}
 	}
+	
+	public Long calculateDaysBetween() {
+		
+		Long days = 0L;
+	List<Invoice> invoices = invoiceRepository.findAll();
+	for (Invoice invoice : invoices) {
+			days = invoice.getIssued().until(invoice.getArrival(), ChronoUnit.DAYS);
+	}
+	return days;
+	}
+	
 	
 }
 	   

@@ -79,6 +79,8 @@ public class InvoiceController {
 		invoice.setCompany(company);
 		invoice.setUser(user);
 		invoice.setExpired(false);
+		invoice.setTotal(0.00);
+		invoice.setIssued(LocalDate.now());
 		
 		invoiceRepository.save(invoice);
 		
@@ -109,6 +111,7 @@ public class InvoiceController {
 		
 		Company company = invoice.getCompany();
 		model.addAttribute("company", company);
+		
 		
 		 return "newInvoice";
 	}
@@ -200,7 +203,10 @@ public class InvoiceController {
 			    }
 		}
 		  invoiceRepository.save(invoice1);
+		  
 		  Company company = invoice1.getCompany();
+		  
+		  company.getExpiredDate().add(invoice1);
 		  company.setHasTotalDebt(company.getHasTotalDebt()+invoice1.getTotal());
 		  company.setTotalOnAllInvoices(company.getTotalOnAllInvoices()+invoice1.getTotal());
 		  companyRepository.save(company);
@@ -229,11 +235,16 @@ public class InvoiceController {
 	}
 	
 	@PostMapping("/setDays/{bid}")
-	public String setInvoiceDate (@PathVariable("bid")Integer bid,@Param("id")Integer id) {
+	public String setInvoiceDate (@PathVariable("bid")Integer bid,@Param("id")Integer id, Model model) {
 		Invoice invoice = invoiceRepository.findById(bid).get();
 		LocalDate date = services.invoiceDays(id);
+		invoice.setIssued(LocalDate.now());
 		invoice.setArrival(date);
 		invoiceRepository.save(invoice);
+
+		Long days = services.calculateDaysBetween();
+		model.addAttribute("days", days);
+		
 		return "redirect:/invoice/"+invoice.getId();
 	}
 	

@@ -76,8 +76,8 @@ public class UsersController {
 		Double unpayedBillsTotalSum = usersServiceImpl.getUnpayedBillsTotalByDayByUser(user);
 		   model.addAttribute("unpayedBillsTotalSum", unpayedBillsTotalSum);
 		   invoiceServices.findExpiredInvoices();
-		   invoiceServices.transferExpiredInvoices();
-		
+		   invoiceServices.calculateLateDateDebt();
+		   
 		 return "index";
 	}
 	@GetMapping("/addEmployee")

@@ -68,22 +68,24 @@ public class InvoiceServices {
 		}
 	}
 		
-	public void calculateDebtArrived() {
-		List<Company>companies = companyRepository.findAll();
-		
+	public void transferExpiredInvoices() {
+		List<Company> companies = companyRepository.findAll();
 		for (Company company : companies) {
 			
-			List<Invoice> invoices = invoiceRepository.findByCompanyAndExpired(company, true);
+		List<Invoice> invoices = invoiceRepository.findByExpired( true);
 			for (Invoice invoice : invoices) {
-				
-				
+				if(!company.getExpiredDate().contains(invoice)) {
+					company.getExpiredDate().add(invoice);
+					companyRepository.save(company);
+				}
 			}
-			
 		}
 	}
+	
+}
 	   
 	
-   }
+   
 	
    
 

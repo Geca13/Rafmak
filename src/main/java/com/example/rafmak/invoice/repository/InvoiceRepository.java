@@ -19,6 +19,8 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
 	
 	List<Invoice> findByArrival(LocalDate date);
 	
-	List<Invoice>findByCompanyAndExpired(Company company,Boolean expired);
+	List<Invoice>findByExpired(Boolean expired);
+	
+	
 	
 }

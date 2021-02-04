@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.rafmak.invoice.entity.Invoice;
 import com.example.rafmak.invoice.repository.InvoiceRepository;
+import com.example.rafmak.invoice.service.InvoiceServices;
 import com.example.rafmak.users.entity.Address;
 import com.example.rafmak.users.entity.Country;
 import com.example.rafmak.users.entity.Users;
@@ -47,6 +48,8 @@ public class UsersController {
 	UsersService usersService;
 	@Autowired
 	InvoiceRepository invoiceRepository ;
+	@Autowired
+	InvoiceServices invoiceServices;
 	
 	@GetMapping("/login")
 	public String login(Model model ) {
@@ -72,6 +75,8 @@ public class UsersController {
 		   model.addAttribute("payedBillsTotalSum", payedBillsTotalSum);
 		Double unpayedBillsTotalSum = usersServiceImpl.getUnpayedBillsTotalByDayByUser(user);
 		   model.addAttribute("unpayedBillsTotalSum", unpayedBillsTotalSum);
+		   invoiceServices.findExpiredInvoices();
+		   invoiceServices.transferExpiredInvoices();
 		
 		 return "index";
 	}

@@ -1,5 +1,7 @@
 package com.example.rafmak.billing.entity;
 
+import java.time.LocalDate;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,5 +25,7 @@ public class Bill {
 	private Integer id;
 	@OneToOne
 	private BillProductsList list;
+	
+	private LocalDate created;
 	
 }

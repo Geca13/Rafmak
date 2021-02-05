@@ -177,6 +177,7 @@ public class BillingController {
 		}
 		   bplRepository.save(list);
 		   bill.setList(list);
+		   bill.setCreated(LocalDate.now());
 		   billRepository.save(bill);
 		   
 		    return "redirect:/";
@@ -196,6 +197,27 @@ public class BillingController {
 			}
 		  bplRepository.save(list);
 		    return "redirect:/bill/"+list.getId();
+	}
+	
+	@GetMapping("/todaysBills")
+	public String todaysBills(Model model) {
+		List <Bill> list = services.todaysBills();
+		model.addAttribute("bills", list);
+		return "bills";
+	}
+	
+	@GetMapping("/billsOnDate")
+	public String getBillsOnDate(Model model,@Param (value = "d")String d) {
+		List <Bill> list = services.billsOnDate(d);
+		model.addAttribute("bills", list);
+		return "bills";
+	}
+	
+	@GetMapping("/billsOnPeriod")
+	public String getBillsOnPeriod(Model model,@Param (value = "d1")String d1,@Param (value = "d2")String d2) {
+		List <Bill> list = services.billsOnPeriod(d1,d2);
+		model.addAttribute("bills", list);
+		return "bills";
 	}
 	
 }

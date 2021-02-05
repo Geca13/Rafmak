@@ -4,9 +4,11 @@ import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.example.rafmak.billing.entity.Bill;
 import com.example.rafmak.billing.entity.BillProductsList;
 import com.example.rafmak.billing.repository.BillProductsListRepository;
-
+import com.example.rafmak.billing.repository.BillRepository;
 import com.example.rafmak.billing.repository.BillingProductsRepository;
 import com.example.rafmak.invoice.repository.CompanyRepository;
 import com.example.rafmak.product.entity.MeasuredProduct;
@@ -40,6 +42,9 @@ public class BillingServices {
 	
 	@Autowired
 	CompanyRepository companyRepository;
+	
+	@Autowired
+	BillRepository billRepository;
 	
 	public Product findProduct(String id) {
 		return productRepository.findById(id);
@@ -78,5 +83,34 @@ public class BillingServices {
 		
 		   return list;
 	}
+	
+	public List<Bill> todaysBills(){
+		
+		List<Bill> bills = billRepository.findByCreated(LocalDate.now());
+		
+		return bills;
+		
+	}
+	
+    public List<Bill> billsOnDate(String date){
+		
+	LocalDate d = LocalDate.parse(date);
+    	
+		List<Bill> bills = billRepository.findByCreated(d);
+		
+		return bills;
+	}
+    
+    public List<Bill> billsOnPeriod(String startDate,String endDate){
+		
+    	LocalDate d1 = LocalDate.parse(startDate);
+    	LocalDate d2 = LocalDate.parse(endDate);
+        	
+    		List<Bill> bills = billRepository.findByCreatedBetween(d1,d2);
+    		
+    		return bills;
+    	}
+    
+  
 		
 }

@@ -1,7 +1,6 @@
 package com.example.rafmak.product.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
 import com.example.rafmak.product.entity.MeasuredProduct;
 import com.example.rafmak.product.entity.MeasuredProductQtyHistory;
 import com.example.rafmak.product.entity.PaintMix;
@@ -43,10 +41,8 @@ public class ProductController {
 	public String getAllProducts(Model model) {
 		
 	      model.addAttribute("listProducts", productRepository.findAll());
-		
-		return "all_products";
+		       return "all_products";
 	}
-	
 	
 	@GetMapping("/addProduct")
 	public String getNewProductForm(Model model) {
@@ -54,16 +50,13 @@ public class ProductController {
 		 model.addAttribute("product", new Product());
 		 model.addAttribute("categories", categoryRepository.findAll());
 		 model.addAttribute("manufacturers", manufacturerRepository.findAll());
-		
 		       return "addNewProduct";
-		
 	}
 	
 	@PostMapping("/addProduct")
 	public String saveNewProduct(@ModelAttribute("product")Product product) {
 		
 		productService.saveProduct(product);
-		
 		       return "redirect:/";
 	}
 	
@@ -72,35 +65,28 @@ public class ProductController {
 		
 		model.addAttribute("qtyHistory", new QtyHistory());
 		model.addAttribute("product", productRepository.findById(id));
-		
-		return "addQtyToProduct";
-		
+	           return "addQtyToProduct";
 	}
 	
 	@PostMapping("/addQuantity/{id}")
 	public String addQuantity(@PathVariable("id")String id,@ModelAttribute("qtyHistory")QtyHistory qtyHistory) {
 		
 		productService.addingQty(id, qtyHistory);
-		
-		return "redirect:/";
-		
+	           return "redirect:/";
 	}
 	
 	@GetMapping("/createMeasuredProduct/{id}")
 	public String createMProduct(@PathVariable("id") String id) {
 		
 		productService.createNewMesuredProduct(id);
-		
-		return "redirect:/";
-		
+		       return "redirect:/";
 	}
 	
 	@GetMapping("/allMesuredProducts")
 	public String findAllMeasuredProducts(Model model) {
 		
 		model.addAttribute("allMeasuredPr", mpRepository.findAll());
-		
-		return "allMeasProducts";
+		       return "allMeasProducts";
 		
 	}
 	
@@ -108,33 +94,28 @@ public class ProductController {
 	public String showCustomMeasuredProductForm(Model model) {
 		
 		model.addAttribute("product", new MeasuredProduct());
-		
-		return "addNewCustomMP";
+		       return "addNewCustomMP";
 	}
 	
 	@PostMapping("/createCustomMP")
 	public String createCustomMeasuredProduct(@ModelAttribute("product")MeasuredProduct product) {
 		
 		productService.createGroupMeasuredProduct(product);
-		
-		return "redirect:/";
-		
+		      return "redirect:/";
 	}
 	
 	@GetMapping("/createPaintMix")
 	public String createMixForm(Model model) {
 		
 		model.addAttribute("mix", new PaintMix());
-		
-		return "addNewPaint";
+		      return "addNewPaint";
 	}
 	
 	@PostMapping("/createPaintMix")
 	public String completeCreatingPaintMix(@ModelAttribute("mix")PaintMix mix) {
 		
 		productService.createNewPaintMix(mix);
-		
-		return "redirect:/";
+		       return "redirect:/";
 	}
 	
 	@GetMapping("addQtyToMP/{id}")
@@ -145,19 +126,17 @@ public class ProductController {
 	    	model.addAttribute("product", product);
 	    	List<Product> products = productRepository.findAllByDescription(product.getDescription());
 	    	model.addAttribute("products", products);
-	    	return "addQtyToPaint";
+	    	  return "addQtyToPaint";
 	    }
 		model.addAttribute("product", product);
-		
-		return "addQtyToMeasuredProduct";
+		      return "addQtyToMeasuredProduct";
 	}
 	
 	@PostMapping("addQtyToMP/{id}")
 	public String addQtyToMProducts(@PathVariable("id")String id,@Param(value = "number")Double number,@Param(value = "paint")String paint) {
 		
 		productService.addQtyToMeasuredProducts(id, number,paint);
-		
-		return "redirect:/";
+		      return "redirect:/";
 	}
 	
 	@GetMapping("/productsQtyHistory")
@@ -166,8 +145,7 @@ public class ProductController {
 		List<QtyHistory> history = productService.findQtyByPid(pid);
 		
 		model.addAttribute("history", history);
-	
-		return "productHistoryPage";
+	          return "productHistoryPage";
 		
 	}
 	@GetMapping("/measuredProductsQtyHistory")
@@ -176,8 +154,7 @@ public class ProductController {
 		List<MeasuredProductQtyHistory> history = productService.findQtyByMPid(pid);
 		
 		model.addAttribute("history", history);
-	
-		return "measuredProductHistoryPage";
-		
+	         return "measuredProductHistoryPage";
 	}
+	
 }

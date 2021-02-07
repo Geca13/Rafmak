@@ -3,13 +3,7 @@ package com.example.rafmak.product.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.example.rafmak.product.entity.Category;
 import com.example.rafmak.product.entity.Manufacturer;
@@ -44,7 +38,6 @@ public class ProductService {
 	@Autowired
 	PaintMixRepository mixRepository;
 	
-	
 	public Product saveProduct(Product product) {
 		
 		List<Product> products = productRepository.findAll();
@@ -60,8 +53,7 @@ public class ProductService {
 		
 		newQtyToProduct(newProduct, product.getTotalQty(), LocalDate.now(),newProduct.getTotalQty());
 	
-		
-	    if(categoryRepository.existsByCategoryName(product.getCategory().getCategoryName())) {
+		 if(categoryRepository.existsByCategoryName(product.getCategory().getCategoryName())) {
 			Category cat = categoryRepository.findByCategoryName(product.getCategory().getCategoryName());
 			 newProduct.setCategory(cat);
 		}
@@ -70,8 +62,7 @@ public class ProductService {
 			Manufacturer man = manufacturerRepository.findByManufacturerName(product.getManufacturer().getManufacturerName());
 			newProduct.setManufacturer(man);
 		}
-		
-		       return productRepository.save(newProduct);
+		      return productRepository.save(newProduct);
 	}
 	
 	public MeasuredProduct createNewMesuredProduct(String id) {
@@ -112,19 +103,16 @@ public class ProductService {
 		  paintMix.setDescription(mix.getDescription());
 		  paintMix.setWeight(mix.getWeight());
 		  paintMix.setWorth(mix.getWorth());
-		
-		     return mixRepository.save(paintMix);
+		       return mixRepository.save(paintMix);
 	}
 	
 	 public QtyHistory addingQty(String id, QtyHistory history) {
 		
 		Product product = productRepository.findById(id);
-		
 		 product.setTotalQty(product.getTotalQty()+history.getQty());
-		 
 		 productRepository.save(product);
 		 newQtyToProduct(product, history.getQty(),LocalDate.now(),product.getTotalQty());
-		 return qhRepository.save(history);
+		       return qhRepository.save(history);
 	}
 	
 	public MeasuredProduct addQtyToMeasuredProducts(String id,Double number, String paint) {
@@ -158,7 +146,6 @@ public class ProductService {
 			}
 		}
 		String str = mp.getId().substring(1);
-		
 		Product product = productRepository.findById(str);
 		mp.setTotalQty(mp.getTotalQty()+(number * Double.parseDouble(product.getMesurmentSize())));
 		mp.setTotalWorth(mp.getTotalWorth()+(number*product.getPrice()));
@@ -170,7 +157,6 @@ public class ProductService {
 	    newQtyToMeasuredProduct(mp, number * Double.parseDouble(product.getMesurmentSize()), LocalDate.now(), mp.getTotalQty());
 
 		return mpRepository.save(mp);
-		
 	}
 	
 	public List<QtyHistory> findQtyByPid(String pid) {
@@ -199,6 +185,4 @@ public class ProductService {
 		mpqhRepository.save(history);
 	}
 	
-	
-
 }

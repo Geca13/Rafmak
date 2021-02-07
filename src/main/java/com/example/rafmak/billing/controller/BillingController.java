@@ -172,6 +172,8 @@ public class BillingController {
 		   bplRepository.save(list);
 		   bill.setList(list);
 		   bill.setCreated(LocalDate.now());
+		   bill.setTax(list.getTax());
+		   bill.setTotal(list.getTotal());
 		   billRepository.save(bill);
 		   
 		    return "redirect:/";

@@ -26,6 +26,10 @@ public class Bill {
 	@OneToOne
 	private BillProductsList list;
 	
+    private Double total;
+	
+	private Double tax;
+	
 	private LocalDate created;
 	
 }

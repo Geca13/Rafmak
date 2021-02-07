@@ -10,6 +10,8 @@ import com.example.rafmak.product.entity.QtyHistory;
 public interface QtyHistoryRepository extends JpaRepository<QtyHistory, Integer> {
 
 	List<QtyHistory> findAllByProductId(String pid);
+	
+	List<QtyHistory> findByProductId(Integer id);
 
 	
 }

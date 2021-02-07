@@ -49,6 +49,8 @@ public class Invoice {
 	
 	private LocalDate arrival;
 	
+	private Boolean printed;
+	
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private Users user;

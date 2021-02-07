@@ -33,6 +33,8 @@ public class QtyHistory {
 	private LocalDate date;
 	
 	private Double newQty;
+	
+	
 
 	public QtyHistory(Product product, Double qty, LocalDate date, Double newQty) {
 		super();

@@ -84,6 +84,7 @@ public class InvoiceController {
 		invoice.setTotal(0.00);
 		invoice.setIssued(LocalDate.now());
 		invoice.setArrival(LocalDate.now().plusDays(1));
+		invoice.setPrinted(false);
 		
 		invoiceRepository.save(invoice);
 		
@@ -122,10 +123,39 @@ public class InvoiceController {
 	@PostMapping("/createInvoiceProduct/{bid}/{id}")
 	public String addToInvoiceList(BillingProducts bprod,@PathVariable("bid")Integer bid,@PathVariable(value = "id")String id,@Param(value = "priceType")String priceType) {
 		Invoice invoice = invoiceRepository.findById(bid).get();
+		 if(invoice.getPrinted()== true) {
+			 invoice.getCompany().setHasTotalDebt(invoice.getCompany().getHasTotalDebt()-invoice.getTotal());
+			 if(invoice.getArrival().isBefore(LocalDate.now())) {
+			 invoice.getCompany().setDeptOverdue(invoice.getCompany().getDeptOverdue()-invoice.getTotal());
+			 companyRepository.save(invoice.getCompany());
+			 }
+			 companyRepository.save(invoice.getCompany());
+			 
+			 for (BillingProducts billingProducts : invoice.getProducts()) {
+				  
+				    if(productRepository.existsById(billingProducts.getPid())) {
+					 Product product = productRepository.findById(billingProducts.getPid());
+				 product.setTotalQty(product.getTotalQty() + billingProducts.getQty());
+				 
+				 productRepository.save(product);
+				 productService.newQtyToProduct(product, + billingProducts.getQty(), LocalDate.now(),product.getTotalQty());
+				 }
+				    
+				    if(mpRepository.existsById(billingProducts.getPid())) {
+				    	MeasuredProduct product = mpRepository.findById(billingProducts.getPid());
+				    	product.setTotalQty(product.getTotalQty()+ billingProducts.getQty());
+				    	product.setTotalWorth(product.getTotalWorth()+ billingProducts.getItemTotal());
+				    	mpRepository.save(product);
+				    	productService.newQtyToMeasuredProduct(product, + billingProducts.getQty(), LocalDate.now(), product.getTotalQty());
+				    }
+			}
+			 
+		 }
 		List<BillingProducts> products = bpRepository.findAll();
 		BillingProducts bprod1 = new BillingProducts();
 		
 		if(id.startsWith("*")) {
+			
 	        MeasuredProduct product = mpRepository.findById(id);
 	        if(product.getDescription().equals("Akril")|| product.getDescription().equals("Base")) {
 	        	  bprod1.setId(String.valueOf(products.size()+1));
@@ -183,9 +213,12 @@ public class InvoiceController {
 	@PostMapping("/printInvoice/{id}")
 	public String printInvoice(@PathVariable("id")Integer id,@ModelAttribute("invoice") Invoice invoice) {
 		Invoice invoice1 = invoiceRepository.findById(id).get();
+		
+		
 		  invoice1.setIssued(LocalDate.now());
 		  invoice1.setShippingId(invoice.getId());
 		  invoice1.setComment(invoice.getComment());
+		  
 		  
 		  for (BillingProducts billingProducts : invoice1.getProducts()) {
 			  
@@ -211,8 +244,13 @@ public class InvoiceController {
 		  company.setHasTotalDebt(company.getHasTotalDebt()+invoice1.getTotal());
 		  company.setTotalOnAllInvoices(company.getTotalOnAllInvoices()+invoice1.getTotal());
 		  companyRepository.save(company);
-		  
+		  invoice1.setPrinted(true);
+		  invoiceRepository.save(invoice1);
+			  
 		    return "redirect:/";
+		    
+		
+		
 	}
 	
 	@GetMapping("/removeProductFromInvoice/{bid}/{id}")

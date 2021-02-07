@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import com.example.rafmak.billing.entity.Bill;
 import com.example.rafmak.billing.entity.BillingProducts;
 import com.example.rafmak.billing.repository.BillingProductsRepository;
 import com.example.rafmak.invoice.entity.Company;
@@ -66,21 +68,22 @@ public class InvoiceController {
 	@GetMapping("/companies")
 	public String findCompanyForInvoice(Model model,@Param(value = "search") String search) {
 		List<Company> companies = services.findCompany(search);
+		services.calculateLateDateDebt();
 		model.addAttribute("companies", companies);
 		return "companyList";
 	}
 	
 	@GetMapping("/createInvoice/{id}")
-	public String createBill(@AuthenticationPrincipal UsersDetails userD,@PathVariable("id")Integer id) {
+	public String createInvoice(@AuthenticationPrincipal UsersDetails userD,@PathVariable("id")Integer id) {
 		String userEmail = userD.getUsername();
         Users user = userRepository.findByEmail(userEmail);
         Company company = companyRepository.findById(id).get();
 		Invoice invoice = new Invoice();
 		invoice.setCompany(company);
 		invoice.setUser(user);
-		invoice.setExpired(false);
 		invoice.setTotal(0.00);
 		invoice.setIssued(LocalDate.now());
+		invoice.setArrival(LocalDate.now().plusDays(1));
 		
 		invoiceRepository.save(invoice);
 		
@@ -205,8 +208,6 @@ public class InvoiceController {
 		  invoiceRepository.save(invoice1);
 		  
 		  Company company = invoice1.getCompany();
-		  
-		  company.getExpiredDate().add(invoice1);
 		  company.setHasTotalDebt(company.getHasTotalDebt()+invoice1.getTotal());
 		  company.setTotalOnAllInvoices(company.getTotalOnAllInvoices()+invoice1.getTotal());
 		  companyRepository.save(company);
@@ -231,7 +232,7 @@ public class InvoiceController {
 	@GetMapping("/findInvoiceById")
 	public String findInvoice(@Param(value = "id")Integer id) {
 		Invoice invoice = invoiceRepository.findById(id).get();
-		return "redirect:/invoice/"+invoice.getId();
+		return "redirect:/invoice/"+invoice.getId(); 
 	}
 	
 	@PostMapping("/setDays/{bid}")
@@ -246,6 +247,27 @@ public class InvoiceController {
 		model.addAttribute("days", days);
 		
 		return "redirect:/invoice/"+invoice.getId();
+	}
+	
+	@GetMapping("/todaysInvoices")
+	public String todaysInvoices(Model model) {
+		List <Invoice> list = services.todaysInvoices();
+		model.addAttribute("invoices", list);
+		return "invoices";
+	}
+	
+	@GetMapping("/invoicesOnDate")
+	public String getInvoicesOnDate(Model model,@Param (value = "d")String d) {
+		List <Invoice> list = services.invoicesOnDate(d);
+		model.addAttribute("invoices", list);
+		return "invoices";
+	}
+	
+	@GetMapping("/invoicesOnPeriod")
+	public String getInvoicesOnPeriod(Model model,@Param (value = "d1")String d1,@Param (value = "d2")String d2) {
+		List <Invoice> list = services.invoicesOnPeriod(d1,d2);
+		model.addAttribute("invoices", list);
+		return "invoices";
 	}
 	
 }

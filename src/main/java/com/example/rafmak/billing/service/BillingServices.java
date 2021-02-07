@@ -110,7 +110,5 @@ public class BillingServices {
     		
     		return bills;
     	}
-    
-  
-		
+    	
 }

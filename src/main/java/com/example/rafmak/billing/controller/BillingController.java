@@ -87,12 +87,6 @@ public class BillingController {
 		     return "newBill";
 	}
 	
-	@GetMapping("findBillByDailyCounter")
-	public String findBillByDC(@Param(value = "id")Integer id,LocalDate date) {
-		BillProductsList list = services.findBillByCounter(id, date);
-		return "redirect:/bill/"+list.getId();
-	}
-	
 	@PostMapping("/createProduct/{bid}/{id}")
 	public String addToList(BillingProducts bprod,@PathVariable("bid")Integer bid,@PathVariable(value = "id")String id,@Param(value = "priceType")String priceType) {
 		BillProductsList list = bplRepository.findById(bid).get();
@@ -197,6 +191,12 @@ public class BillingController {
 			}
 		  bplRepository.save(list);
 		    return "redirect:/bill/"+list.getId();
+	}
+	
+	@GetMapping("findBillByDailyCounter")
+	public String findBillByDC(@Param(value = "id")Integer id,LocalDate date) {
+		BillProductsList list = services.findBillByCounter(id, date);
+		return "redirect:/bill/"+list.getId();
 	}
 	
 	@GetMapping("/todaysBills")

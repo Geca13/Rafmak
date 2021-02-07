@@ -138,7 +138,7 @@ public class InvoiceController {
 				 product.setTotalQty(product.getTotalQty() + billingProducts.getQty());
 				 
 				 productRepository.save(product);
-				 productService.newQtyToProduct(product, + billingProducts.getQty(), LocalDate.now(),product.getTotalQty());
+				 productService.newQtyToProduct(product, + billingProducts.getQty(), LocalDate.now(),product.getTotalQty(),"Returned from Invoce update or deletion for invoice id: " + invoice.getId()+" for company: "+ invoice.getCompany().getCompanyName());
 				 }
 				    
 				    if(mpRepository.existsById(billingProducts.getPid())) {
@@ -146,7 +146,7 @@ public class InvoiceController {
 				    	product.setTotalQty(product.getTotalQty()+ billingProducts.getQty());
 				    	product.setTotalWorth(product.getTotalWorth()+ billingProducts.getItemTotal());
 				    	mpRepository.save(product);
-				    	productService.newQtyToMeasuredProduct(product, + billingProducts.getQty(), LocalDate.now(), product.getTotalQty());
+				    	productService.newQtyToMeasuredProduct(product, + billingProducts.getQty(), LocalDate.now(), product.getTotalQty(),"Returned from Invoce update or deletion for invoice id: " + invoice.getId()+" for company: "+ invoice.getCompany().getCompanyName());
 				    }
 			}
 			 
@@ -227,7 +227,7 @@ public class InvoiceController {
 			 product.setTotalQty(product.getTotalQty() - billingProducts.getQty());
 			 
 			 productRepository.save(product);
-			 productService.newQtyToProduct(product, - billingProducts.getQty(), LocalDate.now(),product.getTotalQty());
+			 productService.newQtyToProduct(product, - billingProducts.getQty(), LocalDate.now(),product.getTotalQty(), "Sold on Invoice id: " + invoice1.getId() + " for Company: "+ invoice1.getCompany().getCompanyName());
 			 }
 			    
 			    if(mpRepository.existsById(billingProducts.getPid())) {
@@ -235,7 +235,7 @@ public class InvoiceController {
 			    	product.setTotalQty(product.getTotalQty()- billingProducts.getQty());
 			    	product.setTotalWorth(product.getTotalWorth()-billingProducts.getItemTotal());
 			    	mpRepository.save(product);
-			    	productService.newQtyToMeasuredProduct(product, - billingProducts.getQty(), LocalDate.now(), product.getTotalQty());
+			    	productService.newQtyToMeasuredProduct(product, - billingProducts.getQty(), LocalDate.now(), product.getTotalQty(), "Sold on Invoice id: " + invoice1.getId() + " for Company: "+ invoice1.getCompany().getCompanyName());
 			    }
 		}
 		  invoiceRepository.save(invoice1);
@@ -248,10 +248,7 @@ public class InvoiceController {
 		  invoiceRepository.save(invoice1);
 			  
 		    return "redirect:/";
-		    
-		
-		
-	}
+		    }
 	
 	@GetMapping("/removeProductFromInvoice/{bid}/{id}")
 	public String removeProductFromInvoice(@PathVariable("bid")Integer bid,@PathVariable(value = "id")String id) {

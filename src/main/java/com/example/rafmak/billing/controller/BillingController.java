@@ -151,14 +151,21 @@ public class BillingController {
 		BillProductsList list = bplRepository.findById(id).get();
 		  list.setTime(LocalDate.now());
 		  list.setPrinted(true);
-		  for (BillingProducts billingProducts : list.getProducts()) {
-			  
+		  
+		   bplRepository.save(list);
+		   bill.setList(list);
+		   bill.setCreated(LocalDate.now());
+		   bill.setTax(list.getTax());
+		   bill.setTotal(list.getTotal());
+		   billRepository.save(bill);
+		   for (BillingProducts billingProducts : list.getProducts()) {
+				  
 			    if(productRepository.existsById(billingProducts.getPid())) {
 				 Product product = productRepository.findById(billingProducts.getPid());
 			 product.setTotalQty(product.getTotalQty() - billingProducts.getQty());
 			 
 			 productRepository.save(product);
-			 productService.newQtyToProduct(product, - billingProducts.getQty(), LocalDate.now(),product.getTotalQty());
+			 productService.newQtyToProduct(product, - billingProducts.getQty(), LocalDate.now(),product.getTotalQty(), "Sold on bill: " + bill.getId());
 			 }
 			    
 			    if(mpRepository.existsById(billingProducts.getPid())) {
@@ -166,15 +173,9 @@ public class BillingController {
 			    	product.setTotalQty(product.getTotalQty()- billingProducts.getQty());
 			    	product.setTotalWorth(product.getTotalWorth()-billingProducts.getItemTotal());
 			    	mpRepository.save(product);
-			    	productService.newQtyToMeasuredProduct(product, - billingProducts.getQty(), LocalDate.now(), product.getTotalQty());
+			    	productService.newQtyToMeasuredProduct(product, - billingProducts.getQty(), LocalDate.now(), product.getTotalQty(),"Sold on bill: " + bill.getId());
 			    }
 		}
-		   bplRepository.save(list);
-		   bill.setList(list);
-		   bill.setCreated(LocalDate.now());
-		   bill.setTax(list.getTax());
-		   bill.setTotal(list.getTotal());
-		   billRepository.save(bill);
 		   
 		    return "redirect:/";
 	}

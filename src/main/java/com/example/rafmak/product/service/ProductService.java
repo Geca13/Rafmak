@@ -51,7 +51,7 @@ public class ProductService {
 		newProduct.setTotalQty(product.getTotalQty());
 		productRepository.save(newProduct);
 		
-		newQtyToProduct(newProduct, product.getTotalQty(), LocalDate.now(),newProduct.getTotalQty());
+		newQtyToProduct(newProduct, product.getTotalQty(), LocalDate.now(),newProduct.getTotalQty(), "Import");
 	
 		 if(categoryRepository.existsByCategoryName(product.getCategory().getCategoryName())) {
 			Category cat = categoryRepository.findByCategoryName(product.getCategory().getCategoryName());
@@ -80,8 +80,8 @@ public class ProductService {
 		    mpRepository.save(newMeasuredProduct);
 		    
 		    productRepository.save(product);
-		    newQtyToProduct(product, -1.00, LocalDate.now(),product.getTotalQty());
-		    newQtyToMeasuredProduct(newMeasuredProduct, Double.parseDouble(product.getMesurmentSize()), LocalDate.now(), newMeasuredProduct.getTotalQty());
+		    newQtyToProduct(product, -1.00, LocalDate.now(),product.getTotalQty() ,"Qty on first import");
+		    newQtyToMeasuredProduct(newMeasuredProduct, Double.parseDouble(product.getMesurmentSize()), LocalDate.now(), newMeasuredProduct.getTotalQty(),"Added from Product on first creation");
 	         	return mpRepository.save(newMeasuredProduct);
 	}
 	public MeasuredProduct createGroupMeasuredProduct(MeasuredProduct product) {
@@ -111,7 +111,7 @@ public class ProductService {
 		Product product = productRepository.findById(id);
 		 product.setTotalQty(product.getTotalQty()+history.getQty());
 		 productRepository.save(product);
-		 newQtyToProduct(product, history.getQty(),LocalDate.now(),product.getTotalQty());
+		 newQtyToProduct(product, history.getQty(),LocalDate.now(),product.getTotalQty(),"New Arrived QTY");
 		       return qhRepository.save(history);
 	}
 	
@@ -138,8 +138,8 @@ public class ProductService {
 					mp.setPriceOnPack(mp.getTotalWorth()/mp.getTotalQty());
 					product.setTotalQty(product1.getTotalQty()-number);
 					productRepository.save(product1);
-					newQtyToProduct(product1, -number, LocalDate.now() ,product1.getTotalQty());
-				    newQtyToMeasuredProduct(mp, number * Double.parseDouble(product1.getMesurmentSize()), LocalDate.now(), mp.getTotalQty());
+					newQtyToProduct(product1, -number, LocalDate.now() ,product1.getTotalQty(),"Added to measured product");
+				    newQtyToMeasuredProduct(mp, number * Double.parseDouble(product1.getMesurmentSize()), LocalDate.now(), mp.getTotalQty(),"Added from Product");
 
 					return mpRepository.save(mp);
 				}
@@ -153,8 +153,8 @@ public class ProductService {
 		
 		product.setTotalQty(product.getTotalQty()-number);
 		productRepository.save(product);
-		newQtyToProduct(product, -number, LocalDate.now() ,product.getTotalQty());
-	    newQtyToMeasuredProduct(mp, number * Double.parseDouble(product.getMesurmentSize()), LocalDate.now(), mp.getTotalQty());
+		newQtyToProduct(product, -number, LocalDate.now() ,product.getTotalQty(),"Added to measured product");
+	    newQtyToMeasuredProduct(mp, number * Double.parseDouble(product.getMesurmentSize()), LocalDate.now(), mp.getTotalQty(),"Added from Product");
 
 		return mpRepository.save(mp);
 	}
@@ -175,13 +175,13 @@ public class ProductService {
 		return mpqhRepository.findAll();
 	}
 	
-	public  void newQtyToProduct(Product product,Double qty,LocalDate date, Double newQty) {
-		QtyHistory qh = new QtyHistory( product, qty, date,newQty);
+	public  void newQtyToProduct(Product product,Double qty,LocalDate date, Double newQty, String changeMadeFrom) {
+		QtyHistory qh = new QtyHistory( product, qty, date, newQty, changeMadeFrom);
 		  qhRepository.save(qh);
 	}
 	
-	public void newQtyToMeasuredProduct(MeasuredProduct measuredProduct, Double qty, LocalDate date, Double newQty) {
-		MeasuredProductQtyHistory history = new MeasuredProductQtyHistory(measuredProduct, qty, date, newQty);
+	public void newQtyToMeasuredProduct(MeasuredProduct measuredProduct, Double qty, LocalDate date, Double newQty, String changeMadeFrom) {
+		MeasuredProductQtyHistory history = new MeasuredProductQtyHistory(measuredProduct, qty, date, newQty,changeMadeFrom);
 		mpqhRepository.save(history);
 	}
 	

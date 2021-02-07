@@ -73,6 +73,10 @@
       <th scope="col">
      Changing history date
       </th>
+      
+      <th scope="col">
+     Changed from:
+      </th>
              
        
       
@@ -87,6 +91,7 @@
       <td th:text="${qty.qty}"></td>
       <td th:text="${qty.newMPQty}"></td>  
       <td th:text="${#temporals.format(qty.date, 'yyyy-MM-dd')}"></td> 
+      <td th:text="${qty.changeMadeFrom}"></td>  
  
       </tr>
     

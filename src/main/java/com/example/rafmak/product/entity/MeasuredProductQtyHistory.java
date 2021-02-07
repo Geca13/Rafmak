@@ -32,13 +32,16 @@ public class MeasuredProductQtyHistory {
 	private LocalDate date;
 	
 	private Double newMPQty;
+	
+	private String changeMadeFrom;
 
-	public MeasuredProductQtyHistory(MeasuredProduct measuredProduct, Double qty, LocalDate date, Double newMPQty) {
+	public MeasuredProductQtyHistory(MeasuredProduct measuredProduct, Double qty, LocalDate date, Double newMPQty , String changeMadeFrom) {
 		super();
 		this.measuredProduct = measuredProduct;
 		this.qty = qty;
 		this.date = date;
 		this.newMPQty = newMPQty;
+		this.changeMadeFrom = changeMadeFrom;
 	}
 	
 	

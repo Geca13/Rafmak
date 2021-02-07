@@ -21,6 +21,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class QtyHistory {
 	
+	public QtyHistory(Product product, Double qty, LocalDate date, Double newQty, String changeMadeFrom) {
+		super();
+		this.product = product;
+		this.qty = qty;
+		this.date = date;
+		this.newQty = newQty;
+		this.changeMadeFrom = changeMadeFrom;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -34,14 +43,8 @@ public class QtyHistory {
 	
 	private Double newQty;
 	
-	
+	private String changeMadeFrom;
 
-	public QtyHistory(Product product, Double qty, LocalDate date, Double newQty) {
-		super();
-		this.product = product;
-		this.qty = qty;
-		this.date = date;
-		this.newQty = newQty;
-	}
+	
 	
 }

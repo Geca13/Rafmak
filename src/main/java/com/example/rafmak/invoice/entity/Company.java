@@ -44,6 +44,8 @@ public class Company {
 	
 	private Double totalOnAllInvoices;
 	
+	private Double totalPayed;
+	
 	@OneToMany
 	private List<ExpiredDateInvoices> expiredInvoices;
 	

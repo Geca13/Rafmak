@@ -43,13 +43,10 @@ public class PaymentController {
 		newPayment.setDate(LocalDate.now());
 		newPayment.setSum(payment.getSum());
 		paymentRepository.save(newPayment);
-		company.setHasTotalDebt(company.getHasTotalDebt()-payment.getSum());
-		company.setDeptOverdue(company.getDeptOverdue()-payment.getSum());
-		if(company.getDeptOverdue() < payment.getSum()) {
-			company.setDeptOverdue(0.00);
-		}
+		company.setTotalPayed(company.getTotalPayed()+payment.getSum());
 		companyRepository.save(company);
-		
+		company.setHasTotalDebt(company.getTotalOnAllInvoices()-company.getTotalPayed());
+		companyRepository.save(company);
 		return "redirect:/";
 		
 	}

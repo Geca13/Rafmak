@@ -40,7 +40,7 @@ public class InvoiceServices {
 	    newCustomer.setDeptOverdue(0.00);
 	    newCustomer.setHasTotalDebt(0.00);
 	    newCustomer.setTotalOnAllInvoices(0.00);
-	    
+	    newCustomer.setTotalPayed(0.00);
 		return companyRepository.save(newCustomer);
 	}
 	
@@ -91,15 +91,23 @@ public class InvoiceServices {
 		}
 	}
 	
+	
 	public void calculateLateDateDebt() {
 		List<Company>companies = companyRepository.findAll();
 		
 		 for (Company company : companies) {
 		  Double sum = 0.00;
+		  Double dept = 0.00;
 		   List<ExpiredDateInvoices> invoices = ediRepository.findByCompany(company);
 			for (ExpiredDateInvoices invoice : invoices) {
 			  sum = sum + invoice.getTotal();
-			    company.setDeptOverdue(sum);
+			  if(sum > company.getTotalPayed()) {
+				  dept = sum-company.getTotalPayed();
+				  company.setDeptOverdue(dept);
+				 } else {
+					 dept = 0.00;
+					 company.setDeptOverdue(dept);
+				 }
 					companyRepository.save(company);
 			}
 		} 

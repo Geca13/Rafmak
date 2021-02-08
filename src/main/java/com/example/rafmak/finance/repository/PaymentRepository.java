@@ -3,9 +3,9 @@ package com.example.rafmak.finance.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.rafmak.finance.entity.OverdueInvoices;
+import com.example.rafmak.finance.entity.Payment;
 
 @Repository
-public interface OverdueInvoicesRepository extends JpaRepository<OverdueInvoices, Integer> {
+public interface PaymentRepository extends JpaRepository<Payment, Integer> {
 
 }

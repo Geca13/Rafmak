@@ -16,5 +16,7 @@ public interface BillProductsListRepository extends JpaRepository<BillProductsLi
 	
 	List<BillProductsList> findByUserAndPrintedAndTime(Users user,Boolean printed, LocalDate time);
 	
+	List<BillProductsList> findByPrintedAndTime(Boolean printed, LocalDate time);
+	
 
 }

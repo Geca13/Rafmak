@@ -17,6 +17,7 @@ import com.example.rafmak.billing.repository.BillProductsListRepository;
 import com.example.rafmak.billing.repository.BillRepository;
 import com.example.rafmak.billing.repository.BillingProductsRepository;
 import com.example.rafmak.billing.service.BillingServices;
+import com.example.rafmak.finance.repository.DailyFiscalReportRepository;
 import com.example.rafmak.product.entity.MeasuredProduct;
 import com.example.rafmak.product.entity.Product;
 import com.example.rafmak.product.repository.MeasuredProductRepository;
@@ -45,12 +46,18 @@ public class BillingController {
 	ProductService productService;
 	@Autowired
 	BillRepository billRepository;
+	@Autowired
+	DailyFiscalReportRepository dailyRepository;
 	
 	@PostMapping("/createBill")
 	public String createBill(@AuthenticationPrincipal UsersDetails userD) {
 		String userEmail = userD.getUsername();
         Users user = userRepository.findByEmail(userEmail);
 		BillProductsList bill = new BillProductsList();
+		if(dailyRepository.existsByDate(LocalDate.now())) {
+		      return "index?theDayIsClosed";
+	   }
+		
 		bill.setUser(user);
 		bill.setTime(LocalDate.now());
 		bill.setPrinted(false);

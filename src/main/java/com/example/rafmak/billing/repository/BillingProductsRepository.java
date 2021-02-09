@@ -7,5 +7,9 @@ import com.example.rafmak.billing.entity.BillingProducts;
 
 @Repository
 public interface BillingProductsRepository extends JpaRepository<BillingProducts, String> {
+	
+	Boolean existsByPid(String pid);
+	
+	BillingProducts findByPid(String pid);
 
 }

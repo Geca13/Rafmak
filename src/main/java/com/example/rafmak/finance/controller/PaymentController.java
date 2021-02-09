@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -20,6 +21,7 @@ import com.example.rafmak.finance.entity.DailyFiscalReport;
 import com.example.rafmak.finance.entity.DailyMaterialReport;
 import com.example.rafmak.finance.entity.Payment;
 import com.example.rafmak.finance.repository.DailyFiscalReportRepository;
+import com.example.rafmak.finance.repository.DailyMaterialReportRepository;
 import com.example.rafmak.finance.repository.PaymentRepository;
 import com.example.rafmak.invoice.entity.Company;
 import com.example.rafmak.invoice.repository.CompanyRepository;
@@ -44,7 +46,10 @@ public class PaymentController {
 	BillingProductsRepository bpRepository;
 	
 	@Autowired
-	DailyFiscalReportRepository dailyRepository;
+	DailyFiscalReportRepository fisRepository;
+	
+	@Autowired
+	DailyMaterialReportRepository matRepository;
 	
 	@GetMapping("/paymentFrom/{id}")
 	public String paymentsForms(Model model , @PathVariable("id")Integer id) {
@@ -74,15 +79,15 @@ public class PaymentController {
 	}
 	
 	@PostMapping("/createFiscalReport")
-	public String createFisReport(Model model) {
+	public String createFisReport(Model model,@ModelAttribute("report1") DailyFiscalReport report1) {
 		
 		List<BillProductsList> list = bplRepository.findByPrintedAndTime(false, LocalDate.now());
 		   if(!list.isEmpty()) {
-			   return "index?unpaidBillsError"; 
+			   return "redirect:/?unpaidBillsError"; 
 		   }
 		   
-		   if(dailyRepository.existsByDate(LocalDate.now())) {
-			      return "index?dailyReportExist";
+		   if(fisRepository.existsByDate(LocalDate.now())) {
+			      return "redirect:/?dailyReportExist";
 		   }
 		DailyFiscalReport report = new DailyFiscalReport();
 		Double total = 0.00;
@@ -97,28 +102,39 @@ public class PaymentController {
 		report.setTotal(total);
 		report.setTotalDayBills(bills.size());
 		
-		dailyRepository.save(report);
+		fisRepository.save(report);
 		
 		 return "redirect:/";
 	}
 	
 	@PostMapping("/createMaterialsReport")
-	public String createMatReport(Model model) {
+	public String createMatReport(Model model,@ModelAttribute("report1") DailyMaterialReport report1) {
 		
 		DailyMaterialReport report = new DailyMaterialReport();
 		Double total = 0.00;
 		Double tax = 0.00;
 		List<BillProductsList> lists = bplRepository.findByPrintedAndTime(true, LocalDate.now());
 		for (BillProductsList billProductsList : lists) {
+			
+			total = total + billProductsList.getTotal();
+			report.setTotal(total);
+			tax = tax + billProductsList.getTax();
+			report.setTax(tax);
+			
 			for (BillingProducts product : billProductsList.getProducts()) {
 				report.getProducts().add(product);
 				Double qty = 0.00;
+				Double itemTotal = 0.00;
 				if(report.getProducts().contains(product)) {
 					qty = qty + product.getQty();
 					product.setQty(qty);
+					itemTotal = itemTotal+product.getItemTotal();
+					
 				}
 				
 			}
+			report.setDate(LocalDate.now());
+			matRepository.save(report);
 		}
 		
 		return "redirect:/";

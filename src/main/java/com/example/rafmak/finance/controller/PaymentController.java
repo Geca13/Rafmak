@@ -1,6 +1,7 @@
 package com.example.rafmak.finance.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +21,18 @@ import com.example.rafmak.billing.repository.BillingProductsRepository;
 import com.example.rafmak.finance.entity.DailyFiscalReport;
 import com.example.rafmak.finance.entity.DailyMaterialReport;
 import com.example.rafmak.finance.entity.Payment;
+import com.example.rafmak.finance.entity.ReportProduct;
 import com.example.rafmak.finance.repository.DailyFiscalReportRepository;
 import com.example.rafmak.finance.repository.DailyMaterialReportRepository;
 import com.example.rafmak.finance.repository.PaymentRepository;
+import com.example.rafmak.finance.repository.ReportProductRepository;
 import com.example.rafmak.invoice.entity.Company;
 import com.example.rafmak.invoice.repository.CompanyRepository;
 
 @Controller
 public class PaymentController {
 	
-
-	@Autowired
+    @Autowired
 	PaymentRepository paymentRepository;
 	
 	@Autowired
@@ -50,6 +52,9 @@ public class PaymentController {
 	
 	@Autowired
 	DailyMaterialReportRepository matRepository;
+	
+	@Autowired
+	ReportProductRepository reportRepository;
 	
 	@GetMapping("/paymentFrom/{id}")
 	public String paymentsForms(Model model , @PathVariable("id")Integer id) {
@@ -111,31 +116,63 @@ public class PaymentController {
 	public String createMatReport(Model model,@ModelAttribute("report1") DailyMaterialReport report1) {
 		
 		DailyMaterialReport report = new DailyMaterialReport();
+	
 		Double total = 0.00;
 		Double tax = 0.00;
+		matRepository.save(report);
 		List<BillProductsList> lists = bplRepository.findByPrintedAndTime(true, LocalDate.now());
 		for (BillProductsList billProductsList : lists) {
 			
 			total = total + billProductsList.getTotal();
 			report.setTotal(total);
 			tax = tax + billProductsList.getTax();
-			report.setTax(tax);
-			
-			for (BillingProducts product : billProductsList.getProducts()) {
-				report.getProducts().add(product);
-				Double qty = 0.00;
-				Double itemTotal = 0.00;
-				if(report.getProducts().contains(product)) {
-					qty = qty + product.getQty();
-					product.setQty(qty);
-					itemTotal = itemTotal+product.getItemTotal();
+			report.setTax(tax); 
+		}
+		
+		List<ReportProduct> products = new ArrayList<>();
+		
+			List<BillingProducts> prods = bpRepository.findByDate(LocalDate.now());
+				for (BillingProducts product : prods) {
+					if(reportRepository.existsByPidAndPrice(product.getPid(),product.getPrice())) {
+						ReportProduct rep = reportRepository.findByPid(product.getPid());
+						rep.setQty(rep.getQty()+product.getQty());
+						rep.setItemTax(rep.getItemTax()+product.getItemTax());
+						rep.setItemTotal(rep.getItemTotal()+product.getItemTotal());
+						reportRepository.save(rep);
+					}else if(reportRepository.existsByPidAndDescription(product.getPid(),"Akril")) {
+						ReportProduct rep = reportRepository.findByPidAndDescription(product.getPid(),"Akril");
+						rep.setQty(rep.getQty()+product.getQty());
+						rep.setItemTax(rep.getItemTax()+product.getItemTax());
+						rep.setItemTotal(rep.getItemTotal()+product.getItemTotal());
+						reportRepository.save(rep);
+					}else if(reportRepository.existsByPidAndDescription(product.getPid(),"Base")) {
+						ReportProduct rep = reportRepository.findByPidAndDescription(product.getPid(),"Base");
+						rep.setQty(rep.getQty()+product.getQty());
+						rep.setItemTax(rep.getItemTax()+product.getItemTax());
+						rep.setItemTotal(rep.getItemTotal()+product.getItemTotal());
+						reportRepository.save(rep);
+					}else {
+					ReportProduct repProduct = new ReportProduct();
+					repProduct.setPid(product.getPid());
 					
+					repProduct.setDescription(product.getDescription());
+					repProduct.setPrice(product.getPrice());
+					repProduct.setItemTax(product.getItemTax());
+					repProduct.setItemTotal(product.getItemTotal());
+					repProduct.setQty(product.getQty());
+					reportRepository.save(repProduct);
+				 
+					products.add(repProduct);
+					
+					}
 				}
-				
-			}
+			
+	
+			report.setProducts(products);
+			
 			report.setDate(LocalDate.now());
 			matRepository.save(report);
-		}
+		
 		
 		return "redirect:/";
 	}

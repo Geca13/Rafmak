@@ -29,7 +29,7 @@ public class DailyMaterialReport {
 	private Integer id;
 	
 	@ManyToMany
-	private List<BillingProducts> products;
+	private List<ReportProduct> products;
 	
 	private Double total;
 	

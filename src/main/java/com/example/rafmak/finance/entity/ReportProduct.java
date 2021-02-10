@@ -1,9 +1,9 @@
-package com.example.rafmak.billing.entity;
-
+package com.example.rafmak.finance.entity;
 
 import java.time.LocalDate;
-
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -15,12 +15,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BillingProducts {
+public class ReportProduct {
 	
 	@Id
-	private String id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 	
-	private String pid;
+    private String pid;
 	
 	private String description;
 	
@@ -31,7 +32,5 @@ public class BillingProducts {
 	private Double itemTotal;
 	
 	private Double itemTax;
-	
-	private LocalDate date;
-	
+
 }

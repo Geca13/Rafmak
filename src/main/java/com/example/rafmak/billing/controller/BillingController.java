@@ -110,6 +110,7 @@ public class BillingController {
 			      bprod1.setItemTotal(bprod.getItemTotal()); 
 			      bprod1.setPrice(bprod.getItemTotal()/bprod.getQty());
 			      bprod1.setItemTax(bprod1.getItemTotal() * 0.1525);
+			      bprod1.setDate(LocalDate.now());
 			          bpRepository.save(bprod1);
 	        } else {
 	          bprod1.setId(String.valueOf(products.size()+1));
@@ -119,11 +120,13 @@ public class BillingController {
 		      bprod1.setPrice(product.getPrice());
 		      bprod1.setItemTotal(product.getPrice() * bprod.getQty()); 
 		      bprod1.setItemTax(bprod1.getItemTotal() * 0.1525);
+		      bprod1.setDate(LocalDate.now());
 		          bpRepository.save(bprod1);
 	        }
 		}else {
 			Product product = productRepository.findById(id);
 			  bprod1.setId(String.valueOf(products.size()+1));
+			  bprod1.setDate(LocalDate.now());
 		      bprod1.setPid(product.getId());
 	          bprod1.setDescription(product.getDescription());
 	          bprod1.setQty(bprod.getQty());

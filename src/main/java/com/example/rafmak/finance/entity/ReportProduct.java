@@ -32,5 +32,7 @@ public class ReportProduct {
 	private Double itemTotal;
 	
 	private Double itemTax;
+	
+	private LocalDate date;
 
 }

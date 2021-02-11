@@ -23,6 +23,8 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
 	
 	List<Invoice>findByCompanyAndArrival(Company company, LocalDate arrived);
 	
+	List<Invoice> findByCompanyId(Integer id);
+	
 	
 	
 }

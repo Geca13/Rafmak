@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import com.example.rafmak.billing.entity.Bill;
 import com.example.rafmak.billing.entity.BillingProducts;
 import com.example.rafmak.billing.repository.BillingProductsRepository;
 import com.example.rafmak.invoice.entity.Company;
@@ -303,6 +301,15 @@ public class InvoiceController {
 		List <Invoice> list = services.invoicesOnPeriod(d1,d2);
 		model.addAttribute("invoices", list);
 		return "invoices";
+	}
+	
+	@GetMapping("/invoicesFromCompany/{id}")
+	public String findInvoicesByCompany(Model model, @PathVariable("id")Integer id) {
+		
+		List<Invoice> invoices = services.invoicesByCompany(id);
+		model.addAttribute("invoices", invoices);
+		
+		    return "invoicesByCompany";
 	}
 	
 }

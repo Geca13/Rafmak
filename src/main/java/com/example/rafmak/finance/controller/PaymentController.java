@@ -133,20 +133,22 @@ public class PaymentController {
 		
 			List<BillingProducts> prods = bpRepository.findByDate(LocalDate.now());
 				for (BillingProducts product : prods) {
-					if(reportRepository.existsByPidAndPrice(product.getPid(),product.getPrice())) {
-						ReportProduct rep = reportRepository.findByPid(product.getPid());
+					if(reportRepository.existsByPidAndPriceAndDate(product.getPid(),product.getPrice(),LocalDate.now())) {
+						ReportProduct rep = reportRepository.findByPidAndPriceAndDate(product.getPid(),product.getPrice(),LocalDate.now());
 						rep.setQty(rep.getQty()+product.getQty());
 						rep.setItemTax(rep.getItemTax()+product.getItemTax());
 						rep.setItemTotal(rep.getItemTotal()+product.getItemTotal());
 						reportRepository.save(rep);
-					}else if(reportRepository.existsByPidAndDescription(product.getPid(),"Akril")) {
-						ReportProduct rep = reportRepository.findByPidAndDescription(product.getPid(),"Akril");
+					}else if(reportRepository.existsByPidAndDescriptionAndDate(product.getPid(),"Akril",LocalDate.now())) {
+						ReportProduct rep = reportRepository.findByPidAndDescriptionAndDate(product.getPid(),"Akril",LocalDate.now());
 						rep.setQty(rep.getQty()+product.getQty());
 						rep.setItemTax(rep.getItemTax()+product.getItemTax());
 						rep.setItemTotal(rep.getItemTotal()+product.getItemTotal());
 						reportRepository.save(rep);
-					}else if(reportRepository.existsByPidAndDescription(product.getPid(),"Base")) {
-						ReportProduct rep = reportRepository.findByPidAndDescription(product.getPid(),"Base");
+						rep.setPrice(rep.getItemTotal()/rep.getQty());
+						reportRepository.save(rep);
+					}else if(reportRepository.existsByPidAndDescriptionAndDate(product.getPid(),"Base",LocalDate.now())) {
+						ReportProduct rep = reportRepository.findByPidAndDescriptionAndDate(product.getPid(),"Base",LocalDate.now());
 						rep.setQty(rep.getQty()+product.getQty());
 						rep.setItemTax(rep.getItemTax()+product.getItemTax());
 						rep.setItemTotal(rep.getItemTotal()+product.getItemTotal());
@@ -160,6 +162,7 @@ public class PaymentController {
 					repProduct.setItemTax(product.getItemTax());
 					repProduct.setItemTotal(product.getItemTotal());
 					repProduct.setQty(product.getQty());
+					repProduct.setDate(LocalDate.now());
 					reportRepository.save(repProduct);
 				 
 					products.add(repProduct);

@@ -149,12 +149,13 @@ public class InvoiceServices {
     		
     		return invoices;
     	}
-
-}
-	   
-	
-   
-	
-   
+    
+    public List<Invoice> invoicesByCompany(Integer id){
+    	Company company = companyRepository.findById(id).get();
+    	List<Invoice> invoices = invoiceRepository.findByCompanyId(company.getId());
+    		
+    		return invoices;
+		}
+	}
 
 

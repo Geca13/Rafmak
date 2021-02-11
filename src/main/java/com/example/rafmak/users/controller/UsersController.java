@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.rafmak.billing.entity.Bill;
-import com.example.rafmak.invoice.entity.Invoice;
+import com.example.rafmak.billing.service.BillingServices;
 import com.example.rafmak.invoice.repository.InvoiceRepository;
 import com.example.rafmak.invoice.service.InvoiceServices;
 import com.example.rafmak.users.entity.Address;
@@ -51,6 +50,8 @@ public class UsersController {
 	InvoiceRepository invoiceRepository ;
 	@Autowired
 	InvoiceServices invoiceServices;
+	@Autowired
+	BillingServices services;
 	
 	
 	@GetMapping("/login")

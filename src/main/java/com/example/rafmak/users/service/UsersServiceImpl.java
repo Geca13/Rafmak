@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.rafmak.billing.entity.Bill;
 import com.example.rafmak.billing.entity.BillProductsList;
 import com.example.rafmak.billing.repository.BillProductsListRepository;
+import com.example.rafmak.billing.repository.BillRepository;
 import com.example.rafmak.invoice.entity.Invoice;
 import com.example.rafmak.invoice.repository.InvoiceRepository;
 import com.example.rafmak.users.entity.Role;
@@ -43,6 +45,8 @@ public class UsersServiceImpl implements UsersService {
 	InvoiceRepository invoiceRepository;
 	@Autowired
 	BillProductsListRepository bplRepository;
+	@Autowired
+	BillRepository billRepository;
 	
 	@Autowired
 	private UsersRepository usersRepository;
@@ -190,19 +194,24 @@ public class UsersServiceImpl implements UsersService {
 		return invoices.size();
 	}
 	
+	public List<Invoice> getTodaysInvoicesByUser(Users user) {
+		List<Invoice> invoices = invoiceRepository.findByUserAndIssued(user, LocalDate.now());
+		return invoices;
+	}
+	
 	public Integer getPayedBillsTotalNumberByUser(Users user) {
-		List<BillProductsList> bills = bplRepository.findByUserAndPrintedAndTime(user, true,LocalDate.now());
+		List<BillProductsList> bills = bplRepository.findByUserAndPrintedAndCreated(user, true,LocalDate.now());
 		return bills.size();
 	}
 	
 	public Integer getUnpayedBillsTotalNumberByUser(Users user) {
-		List<BillProductsList> bills = bplRepository.findByUserAndPrintedAndTime(user, false,LocalDate.now());
+		List<BillProductsList> bills = bplRepository.findByUserAndPrintedAndCreated(user, false,LocalDate.now());
 		return bills.size();
 	}
 	
 	public Double getPayedBillsTotalByDayByUser(Users user) {
 		  Double payedBillsTotalSum = 0.00;
-			List<BillProductsList> bills = bplRepository.findByUserAndPrintedAndTime(user, true,LocalDate.now());
+			List<BillProductsList> bills = bplRepository.findByUserAndPrintedAndCreated(user, true,LocalDate.now());
 			for (BillProductsList billProductsList : bills) {
 				payedBillsTotalSum = payedBillsTotalSum + billProductsList.getTotal();
 			}
@@ -211,23 +220,23 @@ public class UsersServiceImpl implements UsersService {
 	
 	public Double getUnpayedBillsTotalByDayByUser(Users user) {
 		  Double unPayedBillsTotalSum = 0.00;
-			List<BillProductsList> bills = bplRepository.findByUserAndPrintedAndTime(user, false,LocalDate.now());
+			List<BillProductsList> bills = bplRepository.findByUserAndPrintedAndCreated(user, false,LocalDate.now());
 			for (BillProductsList billProductsList : bills) {
 				unPayedBillsTotalSum = unPayedBillsTotalSum + billProductsList.getTotal();
 			}
 		    return unPayedBillsTotalSum;
 		}
 	
-	public List<BillProductsList> payedBills(Users user){
+	public List<Bill> payedBills(Users user){
 		
-		List<BillProductsList> bills = bplRepository.findByUserAndPrintedAndTime(user, true,LocalDate.now());
+		List<Bill> bills = billRepository.findByCreatedAndUser(LocalDate.now(), user);
 		
 		return bills;
 	}
 	
-public List<BillProductsList> unPayedBills(Users user){
+    public List<BillProductsList> unPayedBills(Users user){
 		
-		List<BillProductsList> bills = bplRepository.findByUserAndPrintedAndTime(user, false ,LocalDate.now());
+		List<BillProductsList> bills = bplRepository.findByUserAndPrintedAndCreated(user, false ,LocalDate.now());
 		
 		return bills;
 	}

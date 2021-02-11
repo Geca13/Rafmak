@@ -41,7 +41,7 @@ public class BillProductsList {
 	
 	private Double tax;
 	
-	private LocalDate time;
+	private LocalDate created;
 	
 	private Boolean printed;
 	

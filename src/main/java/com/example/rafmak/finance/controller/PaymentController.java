@@ -86,7 +86,7 @@ public class PaymentController {
 	@PostMapping("/createFiscalReport")
 	public String createFisReport(Model model,@ModelAttribute("report1") DailyFiscalReport report1) {
 		
-		List<BillProductsList> list = bplRepository.findByPrintedAndTime(false, LocalDate.now());
+		List<BillProductsList> list = bplRepository.findByPrintedAndCreated(false, LocalDate.now());
 		   if(!list.isEmpty()) {
 			   return "redirect:/?unpaidBillsError"; 
 		   }
@@ -120,7 +120,7 @@ public class PaymentController {
 		Double total = 0.00;
 		Double tax = 0.00;
 		matRepository.save(report);
-		List<BillProductsList> lists = bplRepository.findByPrintedAndTime(true, LocalDate.now());
+		List<BillProductsList> lists = bplRepository.findByPrintedAndCreated(true, LocalDate.now());
 		for (BillProductsList billProductsList : lists) {
 			
 			total = total + billProductsList.getTotal();

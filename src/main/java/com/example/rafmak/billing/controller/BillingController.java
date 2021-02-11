@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import com.example.rafmak.billing.repository.BillRepository;
 import com.example.rafmak.billing.repository.BillingProductsRepository;
 import com.example.rafmak.billing.service.BillingServices;
 import com.example.rafmak.finance.repository.DailyFiscalReportRepository;
+import com.example.rafmak.invoice.entity.Invoice;
 import com.example.rafmak.product.entity.MeasuredProduct;
 import com.example.rafmak.product.entity.Product;
 import com.example.rafmak.product.repository.MeasuredProductRepository;
@@ -64,7 +66,7 @@ public class BillingController {
 	   }
 		
 		bill.setUser(user);
-		bill.setTime(LocalDate.now());
+		bill.setCreated(LocalDate.now());
 		bill.setPrinted(false);
 		bill.setDailyBillCounter(services.dailyBillCounter());
 		bplRepository.save(bill);
@@ -164,7 +166,7 @@ public class BillingController {
 	public String printBill(@PathVariable("id")Integer id) {
 		Bill bill = new Bill();
 		BillProductsList list = bplRepository.findById(id).get();
-		  list.setTime(LocalDate.now());
+		  list.setCreated(LocalDate.now());
 		  list.setPrinted(true);
 		  
 		   bplRepository.save(list);
@@ -172,6 +174,7 @@ public class BillingController {
 		   bill.setCreated(LocalDate.now());
 		   bill.setTax(list.getTax());
 		   bill.setTotal(list.getTotal());
+		   bill.setUser(list.getUser());
 		   billRepository.save(bill);
 		   for (BillingProducts billingProducts : list.getProducts()) {
 				  
@@ -225,13 +228,34 @@ public class BillingController {
 	}
 	
 	@GetMapping("/todaysPayedBillsByUser")
-	public String todaysBillsByLoggedInUser(Model model,@AuthenticationPrincipal UsersDetails userD) {
+	public String todaysPayedBillsByLoggedInUser(Model model,@AuthenticationPrincipal UsersDetails userD) {
 		String userEmail = userD.getUsername();
         Users user = userRepository.findByEmail(userEmail);
-		List<BillProductsList> list = usersServiceImpl.payedBills(user);
+		List<Bill> list = usersServiceImpl.payedBills(user);
 		model.addAttribute("bills", list);
+		
 		return "bills";
 	}
+	
+	@GetMapping("/todaysUnPayedBillsByUser")
+	public String todaysUnpayedBillsByLoggedInUser(Model model,@AuthenticationPrincipal UsersDetails userD) {
+		String userEmail = userD.getUsername();
+        Users user = userRepository.findByEmail(userEmail);
+		List<BillProductsList> list = usersServiceImpl.unPayedBills(user);
+		model.addAttribute("bills", list);
+		
+		return "billingLists";
+	}
+	
+	@GetMapping("/todaysInvoicesByUser")
+	public String todaysInvoicesByLoggedInUser(Model model,@AuthenticationPrincipal UsersDetails userD) {
+		String userEmail = userD.getUsername();
+        Users user = userRepository.findByEmail(userEmail);
+		List<Invoice> list = usersServiceImpl.getTodaysInvoicesByUser(user);
+		model.addAttribute("invoices", list);
+		return "invoices";
+	}
+	
 	
 	
 	@GetMapping("/billsOnDate")
@@ -246,6 +270,15 @@ public class BillingController {
 		List <Bill> list = services.billsOnPeriod(d1,d2);
 		model.addAttribute("bills", list);
 		return "bills";
+	}
+	
+	@GetMapping("/deleteList/{id}")
+	public String deleteBillingList(@PathVariable("id")Integer id) {
+		
+		services.deleteList(id);
+		
+		return "redirect:/todaysUnPayedBillsByUser";
+		
 	}
 	
 }

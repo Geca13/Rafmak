@@ -12,11 +12,11 @@ import com.example.rafmak.users.entity.Users;
 @Repository
 public interface BillProductsListRepository extends JpaRepository<BillProductsList, Integer> {
 	
-	BillProductsList findByDailyBillCounterAndTime(Integer id,LocalDate date);
+	BillProductsList findByDailyBillCounterAndCreated(Integer id,LocalDate date);
 	
-	List<BillProductsList> findByUserAndPrintedAndTime(Users user,Boolean printed, LocalDate time);
+	List<BillProductsList> findByUserAndPrintedAndCreated(Users user,Boolean printed, LocalDate time);
 	
-	List<BillProductsList> findByPrintedAndTime(Boolean printed, LocalDate time);
+	List<BillProductsList> findByPrintedAndCreated(Boolean printed, LocalDate time);
 	
 
 }

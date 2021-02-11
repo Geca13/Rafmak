@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.rafmak.billing.entity.Bill;
 import com.example.rafmak.billing.entity.BillProductsList;
+import com.example.rafmak.billing.entity.BillingProducts;
 import com.example.rafmak.billing.repository.BillProductsListRepository;
 import com.example.rafmak.billing.repository.BillRepository;
 import com.example.rafmak.billing.repository.BillingProductsRepository;
@@ -69,8 +70,8 @@ public class BillingServices {
 		
 		BillProductsList lastList = bplRepository.findById(lists.size()).get();
 		BillProductsList list = new BillProductsList();
-		list.setTime(today);
-		if (!today.equals(lastList.getTime())) {
+		list.setCreated(today);
+		if (!today.equals(lastList.getCreated())) {
 			list.setDailyBillCounter(1);
 		}else {
 			list.setDailyBillCounter(lastList.getDailyBillCounter()+1);
@@ -82,9 +83,41 @@ public class BillingServices {
 	
 	public BillProductsList findBillByCounter(Integer id , LocalDate date) {
 		LocalDate d = LocalDate.now();
-		BillProductsList list = bplRepository.findByDailyBillCounterAndTime(id, d);
+		BillProductsList list = bplRepository.findByDailyBillCounterAndCreated(id, d);
 		
 		   return list;
+	}
+	
+	public void deleteList(Integer id) {
+		
+		BillProductsList list = bplRepository.findById(id).get();
+		
+		for (BillingProducts product : list.getProducts()) {
+			product.setDate(null);
+			product.setDescription(null);
+			product.setItemTax(null);
+			product.setItemTotal(null);
+			product.setPid(null);
+			product.setPrice(null);
+			product.setQty(null);
+			bpRepository.save(product);
+		}
+		list.setProducts(null);
+		list.setUser(null);
+		bplRepository.save(list);
+		
+	}
+	
+	public void deleteBillingProducts() {
+		
+		List<BillingProducts> products = bpRepository.findAll();
+		for (BillingProducts product : products) {
+			
+			if(product.getDate()== null && product.getDescription().equals(null) && product.getItemTax() == null && product.getItemTotal( )== null && product.getPid().equals(null) && product.getPrice() == null && product.getQty()== null) {
+				bpRepository.deleteById(product.getId());;
+			}
+		}
+		
 	}
 	
 	public List<Bill> todaysBills(){
@@ -114,5 +147,7 @@ public class BillingServices {
     		
     		return bills;
     	}
+    
+    
     	
 }

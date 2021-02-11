@@ -26,6 +26,7 @@ import com.example.rafmak.product.service.ProductService;
 import com.example.rafmak.users.entity.Users;
 import com.example.rafmak.users.repository.UsersRepository;
 import com.example.rafmak.users.service.UsersDetails;
+import com.example.rafmak.users.service.UsersServiceImpl;
 
 @Controller
 public class BillingController {
@@ -48,6 +49,10 @@ public class BillingController {
 	BillRepository billRepository;
 	@Autowired
 	DailyFiscalReportRepository dailyRepository;
+	@Autowired
+	UsersServiceImpl usersServiceImpl;
+	
+	
 	
 	@PostMapping("/createBill")
 	public String createBill(@AuthenticationPrincipal UsersDetails userD) {
@@ -218,6 +223,16 @@ public class BillingController {
 		model.addAttribute("bills", list);
 		return "bills";
 	}
+	
+	@GetMapping("/todaysPayedBillsByUser")
+	public String todaysBillsByLoggedInUser(Model model,@AuthenticationPrincipal UsersDetails userD) {
+		String userEmail = userD.getUsername();
+        Users user = userRepository.findByEmail(userEmail);
+		List<BillProductsList> list = usersServiceImpl.payedBills(user);
+		model.addAttribute("bills", list);
+		return "bills";
+	}
+	
 	
 	@GetMapping("/billsOnDate")
 	public String getBillsOnDate(Model model,@Param (value = "d")String d) {

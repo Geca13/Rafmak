@@ -47,6 +47,107 @@
 
 <br><br>
 
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="card" style="width: 18rem;">
+  <img th:src="*{'data:image/png;base64,'+{user.image}}"class="card-img-top" src="..." alt="Card image cap">
+  <div class="card-body">
+   <table class="table table-striped"  >
+  
+      <tr>
+        
+        <td><b th:text="${user.firstName + ' ' + user.lastName}"></b></td>
+      </tr>
+      
+       </table>
+  </div>
+</div>
+    </div>
+    <div class="col-5">
+      <table class="table table-striped"  >
+  
+      <tr>
+        <th>Total number of Invoices</th>
+        <td><b th:text="${invoicesTotal}"></b></td>
+      </tr>
+      
+       </table>
+       <table class="table table-striped"  >
+  
+      <tr>
+        <th>Total sum on Invoices</th>
+        <td><b th:text="${invoicesTotalSum}"></b></td>
+      </tr>
+      
+       </table>
+       
+       <table class="table table-striped"  >
+  
+      <tr>
+        <th>Number of payed bills</th>
+        <td><b th:text="${numberPayedBills}"></b></td>
+      </tr>
+      
+       </table>
+       
+       <table class="table table-striped"  >
+  
+      <tr>
+        <th>Number of unpayed bills</th>
+        <td><b th:text="${numberUnPayedBills}"></b></td>
+      </tr>
+      
+       </table>
+       
+       <table class="table table-striped"  >
+  
+      <tr>
+        <th>Payed bills sum</th>
+        <td><b th:text="${payedBillsTotalSum}"></b></td>
+      </tr>
+      
+       </table>
+       
+       <table class="table table-striped"  >
+  
+      <tr>
+        <th>Unpayed bills sum</th>
+        <td><b th:text="${unpayedBillsTotalSum}"></b></td>
+      </tr>
+      
+       </table>
+    </div>
+    <div class="col">
+      
+      
+<a href="/" th:href="@{/billsPage}"class="btn btn-primary btn-lg">Bills</a>
+<br><br>
+<a href="/" th:href="@{/invoicesPage}"class="btn btn-primary btn-lg">Invoices</a>
+<br><br>
+<a href="/" th:href="@{/administration}"class="btn btn-primary btn-lg">Administration</a>
+<br><br>
+
+      
+      
+      
+      
+    </div>
+  </div>
+ 
+</div>
+
+
+
+
+
+
+
+
+
 <div class="container">
   <div class="row">
     <div class="col-sm">
@@ -181,67 +282,7 @@
     
     <div class="col-sm">
      
-    <div class="card" style="width: 18rem;">
-  <img th:src="*{'data:image/png;base64,'+{user.image}}"class="card-img-top" src="..." alt="Card image cap">
-  <div class="card-body">
-    <table class="table table-striped"  >
-  
-      <tr>
-        <th>Total</th>
-        <td><b th:text="${invoicesTotal}"></b></td>
-      </tr>
-      
-       </table>
-       <table class="table table-striped"  >
-  
-      <tr>
-        <th>Total</th>
-        <td><b th:text="${invoicesTotalSum}"></b></td>
-      </tr>
-      
-       </table>
-       
-       <table class="table table-striped"  >
-  
-      <tr>
-        <th>Number of payed bills</th>
-        <td><b th:text="${numberPayedBills}"></b></td>
-      </tr>
-      
-       </table>
-       
-       <table class="table table-striped"  >
-  
-      <tr>
-        <th>Number of unpayed bills</th>
-        <td><b th:text="${numberUnPayedBills}"></b></td>
-      </tr>
-      
-       </table>
-       
-       <table class="table table-striped"  >
-  
-      <tr>
-        <th>Payed bills sum</th>
-        <td><b th:text="${payedBillsTotalSum}"></b></td>
-      </tr>
-      
-       </table>
-       
-       <table class="table table-striped"  >
-  
-      <tr>
-        <th>Unpayed bills sum</th>
-        <td><b th:text="${unpayedBillsTotalSum}"></b></td>
-      </tr>
-      
-       </table>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
-  </div>
-</div>
-     
-     
+ 
 </div>
     </div>
   </div>

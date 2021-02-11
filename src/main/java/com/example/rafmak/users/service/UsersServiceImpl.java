@@ -218,4 +218,18 @@ public class UsersServiceImpl implements UsersService {
 		    return unPayedBillsTotalSum;
 		}
 	
+	public List<BillProductsList> payedBills(Users user){
+		
+		List<BillProductsList> bills = bplRepository.findByUserAndPrintedAndTime(user, true,LocalDate.now());
+		
+		return bills;
+	}
+	
+public List<BillProductsList> unPayedBills(Users user){
+		
+		List<BillProductsList> bills = bplRepository.findByUserAndPrintedAndTime(user, false ,LocalDate.now());
+		
+		return bills;
+	}
+	
 }

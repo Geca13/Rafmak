@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.rafmak.billing.entity.Bill;
 import com.example.rafmak.invoice.entity.Invoice;
 import com.example.rafmak.invoice.repository.InvoiceRepository;
 import com.example.rafmak.invoice.service.InvoiceServices;
@@ -51,6 +52,7 @@ public class UsersController {
 	@Autowired
 	InvoiceServices invoiceServices;
 	
+	
 	@GetMapping("/login")
 	public String login(Model model ) {
 		
@@ -80,6 +82,7 @@ public class UsersController {
 		   
 		 return "index";
 	}
+	
 	@GetMapping("/addEmployee")
 	public String newEmployee(Model model,Users user,MultipartFile file ) {
 		
@@ -205,4 +208,5 @@ public class UsersController {
 		addressRepository.save(address1);
 		          return "redirect:/confirmAndPay/" + user.getId();
 	}		
+	
 }

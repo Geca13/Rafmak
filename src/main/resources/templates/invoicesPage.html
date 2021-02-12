@@ -14,7 +14,7 @@
     </style>
 </head>
 
-<body>
+<body style="background-image: linear-gradient(to right, rgb(0, 174, 255), rgb(168, 231, 199));">
 
 
 
@@ -51,7 +51,10 @@
 <a href="/"class="btn btn-primary btn-lg" th:href="@{/companies}">New Invoice</a>
  
   <br><br>
-  <h4>Find bills on Date:</h4>
+  
+  <a href="/" class="btn btn-primary btn-lg" th:href="@{/todaysInvoices}">Today's Invoices</a>
+  <br><br><br>
+  <h4>Find invoices on Date:</h4>
   <form class="form-inline" action="#" th:action="@{/invoicesOnDate}" th:object="${invoice}" method="get">
   <div class="form-group mb-2">
     <input type="text" th:name="d" class="form-control" id="inputEmail4" placeholder="Enter Date" >
@@ -61,7 +64,7 @@
 </form>
   <br><br>
   
- <h4>Find bills in Period</h4>
+ <h4>Find invoices in Period</h4>
 <form class="form-inline" action="#" th:action="@{/invoicesOnPeriod}" th:object="${invoice}" method="get">
   <div class="form-group mb-2">
     <input type="text" th:name="d1" class="form-control" id="inputEmail4" placeholder="Enter Start Date" >

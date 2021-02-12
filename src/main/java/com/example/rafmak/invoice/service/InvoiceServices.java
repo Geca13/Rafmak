@@ -217,6 +217,36 @@ public class InvoiceServices {
     	invoice.setProducts(null);
 		return invoiceRepository.save(invoice);
     }
-	}
+    
+    public void deleteCustomer(Integer id) {
+    	
+    	Company company = companyRepository.findById(id).get();
+    	company.setExpiredInvoices(null);
+    	companyRepository.save(company);
+    	List<Invoice> invoices = invoiceRepository.findByCompany(company);
+    	for (Invoice invoice : invoices) {
+			invoice.setProducts(null);
+			invoice.setUser(null);
+			invoice.setCompany(null);
+			invoiceRepository.save(invoice);
+			invoiceRepository.delete(invoice);
+		}
+    	List<ExpiredDateInvoices> expiredInvoices = ediRepository.findByCompany(company);
+    	for (ExpiredDateInvoices invoice : expiredInvoices) {
+			invoice.setCompany(null);
+			invoice.setUser(null);
+			
+			ediRepository.save(invoice);
+			ediRepository.delete(invoice);
+			
+		}
+    	companyRepository.save(company);
+    	companyRepository.delete(company);
+    	
+    }
+    
+}
+
+    
 
 

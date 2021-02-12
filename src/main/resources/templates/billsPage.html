@@ -14,7 +14,7 @@
     </style>
 </head>
 
-<body>
+<body style="background-image: linear-gradient(to right, rgb(0, 174, 255), rgb(168, 231, 199));">
 
 
 
@@ -36,6 +36,8 @@
 </nav>
 <div class="container">
 
+
+
 <div th:if="${param.dailyReportExist}">
       <div class="alert alert-info">The report for today was already printed.</div>
      </div>
@@ -43,31 +45,20 @@
      <div th:if="${param.unpaidBillsError}">
       <div class="alert alert-info">There are opened bills in the system for today.</div>
      </div>
-
-
-<br><br>
+<div class="row">
+    <div class="col">
+      
+      <br><br>
 
 <form action="#" th:action="@{/createBill}" th:object="${bill}" method="post">
 
 <button type="submit" class="btn btn-primary btn-lg">Create Bill</button>
   
   </form>
+ <br>
+<a href="/" class="btn btn-primary btn-lg" th:href="@{/todaysBills}">Today's Bills</a>
   
-  
-  <br><br>
-  
-  <form action="#" th:action="@{/createFiscalReport}" th:object="${report1}" method="post">
-
-<button type="submit" class="btn btn-primary btn-lg">Create Fiscal Report</button>
-  
-  </form>
-  <br><br>
-  <form action="#" th:action="@{/createMaterialsReport}" th:object="${report1}" method="post">
-
-<button type="submit" class="btn btn-primary btn-lg">Create Material Report</button>
-  
-  </form>
-  <br><br>
+  <br><br><br>
   <h4>Find bills on Date:</h4>
   <form class="form-inline" action="#" th:action="@{/billsOnDate}" th:object="${bill}" method="get">
   <div class="form-group mb-2">
@@ -89,7 +80,29 @@
   <button type="submit" class="btn btn-primary mb-2">Search</button>
 </form>
 
+
 <br><br>
+      
+    </div>
+    <div class="col">
+      
+     <br><br>
+  
+  <form action="#" th:action="@{/createFiscalReport}" th:object="${report1}" method="post">
+
+<button type="submit" class="btn btn-primary btn-lg">Create Fiscal Report</button>
+  
+  </form>
+  <br>
+  <form action="#" th:action="@{/createMaterialsReport}" th:object="${report1}" method="post">
+
+  <button type="submit" class="btn btn-primary btn-lg">Create Material Report</button>
+  
+  </form>     
+    </div>
+  </div>
+<hr>
+
 </div>
 
 

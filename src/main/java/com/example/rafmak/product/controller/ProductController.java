@@ -157,4 +157,11 @@ public class ProductController {
 	         return "measuredProductHistoryPage";
 	}
 	
+	@GetMapping("/qtyHistoryByDates")
+	public String productsHistory(@Param(value = "start")String start,@Param(value = "end")  String end) {
+		productService.productsHistoryOnPeriod(start, end);
+        return "redirect:/productsQtyHistory";
+
+	}
+	
 }

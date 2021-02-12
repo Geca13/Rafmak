@@ -3,7 +3,6 @@ package com.example.rafmak.finance.controller;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
 import com.example.rafmak.billing.entity.Bill;
 import com.example.rafmak.billing.entity.BillProductsList;
 import com.example.rafmak.billing.entity.BillingProducts;
@@ -93,8 +91,7 @@ public class PaymentController {
 			}
 		}
 		   
-		   
-		   if(fisRepository.existsByDate(LocalDate.now())) {
+		    if(fisRepository.existsByDate(LocalDate.now())) {
 			      return "redirect:/billsPage?dailyReportExist";
 		   }
 		DailyFiscalReport report = new DailyFiscalReport();
@@ -173,12 +170,10 @@ public class PaymentController {
 					}
 				}
 			
-	
-			report.setProducts(products);
+	        report.setProducts(products);
 			
 			report.setDate(LocalDate.now());
 			matRepository.save(report);
-		
 		
 		return "redirect:/billsPage";
 	}

@@ -10,11 +10,13 @@
     integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <style>
   
+  
+   
    
     </style>
 </head>
 
-<body>
+<body style="background-image: linear-gradient(to right, rgb(0, 174, 255), rgb(168, 231, 199));">
 
 
 
@@ -68,6 +70,7 @@
 </div>
     </div>
     <div class="col-5">
+    <hr>
       <table class="table table-striped"  >
   
       <tr>
@@ -142,42 +145,12 @@
       
     </div>
   </div>
- 
-</div>
+ <hr>
 
-
-
-
-
-
-
-
-
-<div class="container">
   <div class="row">
     <div class="col-sm">
-      <a href="/" th:href="@{/addEmployee}">Create new Employee</a>
-<br>
-<a href="/" th:href="@{/addProduct}">Create new Product</a>
-<br>
-<a href="/" th:href="@{/products}">All Products</a>
-<br>
-<a href="/" th:href="@{/productsQtyHistory}">Products Qty History</a>
-<br>
-<a href="/" th:href="@{/allMesuredProducts}">All Measured Products</a>
-<br>
-<a href="/" th:href="@{/measuredProductsQtyHistory}">Measured Products Qty History</a>
-<br>
-<a href="/" th:href="@{/createPaintMix}">New PaintMix</a>
-<br>
-<a href="/" th:href="@{/createNewCustomer}">New Customer</a>
-<br>
-<a href="/" th:href="@{/createCustomMP}">Custom measured products</a>
-<br>
-<a href="/" th:href="@{/todaysBills}">Today's Bills</a>
-<br>
-<a href="/" th:href="@{/todaysInvoices}">Today's Bills</a>
-<br>
+      
+
 
   
   <br>
@@ -201,38 +174,9 @@
   
     
     <br>
-     <form action="#" th:action="@{/invoicesOnDate}" th:object="${bill}" method="get">
-
-<div class="form-group row">
-    <label for="inputProductProce" class="col-sm-2 col-form-label">Enter Date:</label>
-    <div class="col-sm-10">
-      <input type="text" th:name="d" class="form-control" id="inputEmail4" >
-    </div>
-  </div>
-
-<button type="submit" class="btn btn-info col-2">Find</button>
-  
-  </form>
+    
   <br>
-  <form action="#" th:action="@{/invoicesOnPeriod}" th:object="${bill}" method="get">
-  
-  <div class="form-group row">
-    <label for="inputProductProce" class="col-sm-2 col-form-label">Enter Start Date:</label>
-    <div class="col-sm-10">
-      <input type="text" th:name="d1" class="form-control" id="inputEmail4" >
-    </div>
-  </div>
-  
-  <div class="form-group row">
-    <label for="inputProductProce" class="col-sm-2 col-form-label">Enter End Date:</label>
-    <div class="col-sm-10">
-      <input type="text" th:name="d2" class="form-control" id="inputEmail4" >
-    </div>
-  </div>
-
-<button type="submit" class="btn btn-info col-2">Find</button>
-  
-  </form>
+ 
     
      
     </div>
@@ -249,7 +193,7 @@
 
 
 
-<h1>HELOOOO</h1>
+
 
 
 

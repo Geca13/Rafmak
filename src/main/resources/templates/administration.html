@@ -14,7 +14,7 @@
     </style>
 </head>
 
-<body>
+<body style="background-image: linear-gradient(to right, rgb(0, 174, 255), rgb(168, 231, 199));">
 
 
 
@@ -36,20 +36,49 @@
 </nav>
 <div class="container">
 
-<div th:if="${param.dailyReportExist}">
-      <div class="alert alert-info">The report for today was already printed.</div>
-     </div>
-     
-     <div th:if="${param.unpaidBillsError}">
-      <div class="alert alert-info">There are opened bills in the system for today.</div>
-     </div>
+<div class="row">
+    <div class="col">
+
 <br><br>
+<a href="/" class="btn btn-primary btn-lg" th:href="@{/products}">All Products</a>
+<br><br>
+<a href="/" class="btn btn-primary btn-lg" th:href="@{/productsQtyHistory}">Products Qty History</a>
+<br><br>
+<a href="/" class="btn btn-primary btn-lg" th:href="@{/allMesuredProducts}">All Measured Products</a>
+<br><br>
+<a href="/" class="btn btn-primary btn-lg" th:href="@{/measuredProductsQtyHistory}">Measured Products Qty History</a>
+<br><br>
+<a href="/" class="btn btn-primary btn-lg" th:href="@{/createNewCustomer}">New Customer</a>
+<br><br>
+<a href="/" class="btn btn-primary btn-lg" th:href="@{/allCompanies}">All Companies</a>
+
+     
+     
+     
+     
+    </div>
+    <div class="col">
+      <br><br>
+<a href="/" class="btn btn-primary btn-lg" th:href="@{/addEmployee}">Create new Employee</a>
+<br><br>
+<a href="/" class="btn btn-primary btn-lg" th:href="@{/addProduct}">Create new Product</a>
+<br>
+<br>
+<a href="/" class="btn btn-primary btn-lg" th:href="@{/createPaintMix}">New PaintMix</a>
+<br><br>
+<a href="/" class="btn btn-primary btn-lg" th:href="@{/createCustomMP}">Custom measured products</a>
+      
+    </div>
+  </div>
+
+
+
 
 </div>
 
 
 
-<h1>HELOOOO</h1>
+
 
 
 

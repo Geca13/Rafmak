@@ -71,6 +71,14 @@ public class InvoiceController {
 		return "companyList";
 	}
 	
+	@GetMapping("/allCompanies")
+	public String allCompanies(Model model,@Param(value = "search") String search) {
+		List<Company> companies = services.findCompany(search);
+		services.calculateLateDateDebt();
+		model.addAttribute("companies", companies);
+		return "allCompanies";
+	}
+	
 	@GetMapping("/createInvoice/{id}")
 	public String createInvoice(@AuthenticationPrincipal UsersDetails userD,@PathVariable("id")Integer id) {
 		String userEmail = userD.getUsername();
@@ -309,7 +317,7 @@ public class InvoiceController {
 		List<Invoice> invoices = services.invoicesByCompany(id);
 		model.addAttribute("invoices", invoices);
 		
-		    return "invoicesByCompany";
+		    return "invoices";
 	}
 	
 	@GetMapping("/invoicesPage")
@@ -322,7 +330,12 @@ public class InvoiceController {
 	public String deleteInvoice(@PathVariable("id")Integer id) {
 		 services.deleteInvoice(id);
 		return "redirect:/companies";
-		
+	}
+	
+	@GetMapping("/deleteCustomer/{id}")
+	public String deleteCustomer(@PathVariable("id")Integer id) {
+		 services.deleteCustomer(id);
+		return "redirect:/allCompanies";
 	}
 	
 }

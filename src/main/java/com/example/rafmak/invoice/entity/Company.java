@@ -32,6 +32,8 @@ public class Company {
 	
 	private String email;
 	
+	private String contactPerson;
+	
 	private String streetAddress;
 	
 	private String zipCode;

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.example.rafmak.billing.entity.Bill;
 import com.example.rafmak.product.entity.Category;
 import com.example.rafmak.product.entity.Manufacturer;
 import com.example.rafmak.product.entity.MeasuredProduct;
@@ -184,5 +186,17 @@ public class ProductService {
 		MeasuredProductQtyHistory history = new MeasuredProductQtyHistory(measuredProduct, qty, date, newQty,changeMadeFrom);
 		mpqhRepository.save(history);
 	}
+	
+    public List<QtyHistory> productsHistoryOnPeriod(String start,String end){
+		
+    	LocalDate d1 = LocalDate.parse(start);
+    	LocalDate d2 = LocalDate.parse(end);
+        	if(end.isEmpty()) {
+        		d2 = LocalDate.now();
+        }
+    		List<QtyHistory> products = qhRepository.findByDateBetween(d1,d2);
+    		
+    		return products;
+    	}
 	
 }

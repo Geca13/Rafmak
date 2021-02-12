@@ -312,4 +312,17 @@ public class InvoiceController {
 		    return "invoicesByCompany";
 	}
 	
+	@GetMapping("/invoicesPage")
+	   public String openInvoicesPage(Model model ) {
+			
+		return "invoicesPage";
+	}
+	
+	@GetMapping("/deleteInvoice/{id}")
+	public String deleteInvoice(@PathVariable("id")Integer id) {
+		 services.deleteInvoice(id);
+		return "redirect:/companies";
+		
+	}
+	
 }

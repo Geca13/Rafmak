@@ -16,7 +16,7 @@
 
 <body>
 
-<div class="container">
+
 
 <nav class="navbar navbar-dark bg-dark">
   <a class="navbar-brand" ><span sec:authentication="principal.username">User</span></a>
@@ -39,7 +39,7 @@
     </div>
   </div>
 </nav>
-
+<div class="container">
 <div th:if="${error != null}">
      <div class="alert alert-info">[[${error}]]</div>
     </div>
@@ -54,7 +54,10 @@
      <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=productId&sortDir=' + ${reverseSortDir}}">Id</a> 
       </th>
       <th scope="col">
-      <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=productName&sortDir=' + ${reverseSortDir}}">Date</a>
+      <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=productName&sortDir=' + ${reverseSortDir}}">Company</a>
+       </th>
+       <th scope="col">
+      <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=productName&sortDir=' + ${reverseSortDir}}">Issued Date</a>
        </th>
       <th scope="col">
       <a th:href="@{'/pagess/' + ${currentPage} + '?sortField=productPrice&sortDir=' + ${reverseSortDir}}">Products</a> 
@@ -66,6 +69,7 @@
   <tbody>
     <tr th:each="invoice : ${invoices}">
       <td th:text="${invoice.id}"></td>
+      <td th:text="${invoice.company.companyName}"></td>
       <td th:text="${#temporals.format(invoice.issued, 'yyyy-MM-dd')}"></td> 
       
       <td> 
@@ -85,6 +89,9 @@
       <th scope="col">
       QTY
       </th>
+      <th scope="col">
+      Item total
+      </th>
      </tr>
   </thead>
   <tbody>
@@ -92,13 +99,17 @@
       <td th:text="${product.pid}"></td>
       <td th:text="${product.description}"></td>
       <td th:text="${product.price}"></td>
-      <td th:text="${product.qty}"></td>    
+      <td th:text="${product.qty}"></td>   
+      <td th:text="${product.itemTotal}"></td>   
     </tr>
     
   </tbody>
 </table>
      <h6>Total</h6>
     <p class="card-text" th:text = "${invoice.total}"></p>
+      </td>
+      <td>
+       <a th:href="@{/deleteInvoice/{id}(id=${invoice?.id})}" class="btn btn-outline-danger">Delete</a> 
       </td>
     </tr>
  </tbody>

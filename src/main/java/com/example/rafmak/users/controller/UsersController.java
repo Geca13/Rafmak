@@ -210,4 +210,11 @@ public class UsersController {
 		          return "redirect:/confirmAndPay/" + user.getId();
 	}		
 	
+	@GetMapping("/administration")
+	public String openAdministration(Model model ) {
+			
+			
+		return "administration";
+		}
+	
 }

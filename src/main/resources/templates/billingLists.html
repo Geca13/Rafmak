@@ -108,8 +108,9 @@
        <a th:href="@{/deleteList/{id}(id=${bill?.id})}" class="btn btn-outline-danger">Delete</a> 
       </td>
       <td>
-      
-       <a th:href="@{/print/{id}(id=${bill?.id})}" class="btn btn-outline-danger">Print</a> 
+      <form action="#" th:action="@{/print/{id}(id=${bill.id})}"  th:object="${bill}"class="form-horizontal" id="price" method="post" > 
+       <button type="submit" class="btn btn-outline-danger">PRINT</button>
+       </form>
       </td>
     </tr>
  </tbody>

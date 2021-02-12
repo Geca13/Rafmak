@@ -25,8 +25,5 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
 	
 	List<Invoice> findByCompanyId(Integer id);
 	
-	
-	
-	
-	
+
 }

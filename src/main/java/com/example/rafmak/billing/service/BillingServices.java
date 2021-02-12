@@ -106,6 +106,8 @@ public class BillingServices {
 		list.setUser(null);
 		bplRepository.save(list);
 		
+		
+		
 	}
 	
 	public void deleteBillingProducts() {

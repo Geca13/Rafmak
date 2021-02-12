@@ -87,12 +87,15 @@ public class PaymentController {
 	public String createFisReport(Model model,@ModelAttribute("report1") DailyFiscalReport report1) {
 		
 		List<BillProductsList> list = bplRepository.findByPrintedAndCreated(false, LocalDate.now());
-		   if(!list.isEmpty()) {
-			   return "redirect:/?unpaidBillsError"; 
-		   }
+		for (BillProductsList billProductsList : list) {
+			if(!billProductsList.getProducts().isEmpty()) {
+				return "redirect:/billsPage?unpaidBillsError"; 
+			}
+		}
+		   
 		   
 		   if(fisRepository.existsByDate(LocalDate.now())) {
-			      return "redirect:/?dailyReportExist";
+			      return "redirect:/billsPage?dailyReportExist";
 		   }
 		DailyFiscalReport report = new DailyFiscalReport();
 		Double total = 0.00;
@@ -109,7 +112,7 @@ public class PaymentController {
 		
 		fisRepository.save(report);
 		
-		 return "redirect:/";
+		 return "redirect:/billsPage";
 	}
 	
 	@PostMapping("/createMaterialsReport")
@@ -177,7 +180,7 @@ public class PaymentController {
 			matRepository.save(report);
 		
 		
-		return "redirect:/";
+		return "redirect:/billsPage";
 	}
 	
 	

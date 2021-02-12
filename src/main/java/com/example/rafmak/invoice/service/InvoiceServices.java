@@ -7,12 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.rafmak.billing.entity.Bill;
+import com.example.rafmak.billing.entity.BillingProducts;
+import com.example.rafmak.billing.repository.BillingProductsRepository;
 import com.example.rafmak.invoice.entity.Company;
 import com.example.rafmak.invoice.entity.ExpiredDateInvoices;
 import com.example.rafmak.invoice.entity.Invoice;
 import com.example.rafmak.invoice.repository.CompanyRepository;
 import com.example.rafmak.invoice.repository.ExpiredDateInvoicesRepository;
 import com.example.rafmak.invoice.repository.InvoiceRepository;
+import com.example.rafmak.product.entity.MeasuredProduct;
+import com.example.rafmak.product.entity.Product;
+import com.example.rafmak.product.repository.MeasuredProductRepository;
+import com.example.rafmak.product.repository.ProductRepository;
+import com.example.rafmak.product.service.ProductService;
 
 @Service
 public class InvoiceServices {
@@ -25,6 +32,18 @@ public class InvoiceServices {
 	
 	@Autowired
 	ExpiredDateInvoicesRepository ediRepository;
+	
+	@Autowired
+	BillingProductsRepository bpRepository;
+	
+	@Autowired
+	ProductRepository productRepository;
+	
+	@Autowired
+	MeasuredProductRepository mpRepository;
+	
+	@Autowired
+	ProductService productService;
 	
 	public Company saveNewCustomer(Company company) {
 		Company newCustomer = new Company();
@@ -156,6 +175,48 @@ public class InvoiceServices {
     		
     		return invoices;
 		}
+    
+    public Invoice deleteInvoice(Integer id) {
+    	Invoice invoice = invoiceRepository.findById(id).get();
+    	for (BillingProducts products : invoice.getProducts()) {
+    		if(productRepository.existsById(products.getPid())) {
+				 Product product = productRepository.findById(products.getPid());
+			 product.setTotalQty(product.getTotalQty() + products.getQty());
+			 
+			 productRepository.save(product);
+			 productService.newQtyToProduct(product, + products.getQty(), LocalDate.now(),product.getTotalQty(), "Return from Invoice id: " + invoice.getId() + " from Company: "+ invoice.getCompany().getCompanyName());
+			 }
+			    
+			    if(mpRepository.existsById(products.getPid())) {
+			    	MeasuredProduct product = mpRepository.findById(products.getPid());
+			    	product.setTotalQty(product.getTotalQty() + products.getQty());
+			    	product.setTotalWorth(product.getTotalWorth()+ products.getItemTotal());
+			    	mpRepository.save(product);
+			    	productService.newQtyToMeasuredProduct(product, + products.getQty(), LocalDate.now(), product.getTotalQty(), "Return from Invoice id: " + invoice.getId() + " from Company: "+ invoice.getCompany().getCompanyName());
+			    }
+    	}
+    	invoice.setCompany(null);
+    	invoice.setTax(0.00);
+    	invoice.setTotal(0.00);
+    	invoice.setUser(null);
+    	invoice.setPrinted(false);
+    	
+    	
+    	
+		for (BillingProducts products : invoice.getProducts()) {    
+    		products.setDate(null);
+			products.setDescription(null);
+			products.setItemTax(null);
+			products.setItemTotal(null);
+			products.setPid(null);
+			products.setPrice(null);
+			products.setQty(null);
+			bpRepository.save(products);
+			    }
+    	
+    	invoice.setProducts(null);
+		return invoiceRepository.save(invoice);
+    }
 	}
 
 

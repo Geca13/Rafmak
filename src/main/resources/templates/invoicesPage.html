@@ -43,13 +43,37 @@
      <div th:if="${param.unpaidBillsError}">
       <div class="alert alert-info">There are opened bills in the system for today.</div>
      </div>
+
+
 <br><br>
 
+<br>
+<a href="/"class="btn btn-primary btn-lg" th:href="@{/companies}">New Invoice</a>
+ 
+  <br><br>
+  <h4>Find bills on Date:</h4>
+  <form class="form-inline" action="#" th:action="@{/invoicesOnDate}" th:object="${invoice}" method="get">
+  <div class="form-group mb-2">
+    <input type="text" th:name="d" class="form-control" id="inputEmail4" placeholder="Enter Date" >
+  </div>
+  
+  <button type="submit" class="btn btn-primary mb-2">Search</button>
+</form>
+  <br><br>
+  
+ <h4>Find bills in Period</h4>
+<form class="form-inline" action="#" th:action="@{/invoicesOnPeriod}" th:object="${invoice}" method="get">
+  <div class="form-group mb-2">
+    <input type="text" th:name="d1" class="form-control" id="inputEmail4" placeholder="Enter Start Date" >
+  </div>
+  <div class="form-group mx-sm-3 mb-2">
+    <input type="text" th:name="d2" class="form-control" id="inputEmail4" placeholder="Enter End Date" >
+  </div>
+  <button type="submit" class="btn btn-primary mb-2">Search</button>
+</form>
+
+<br><br>
 </div>
-
-
-
-<h1>HELOOOO</h1>
 
 
 

@@ -53,29 +53,7 @@ public class MainController {
 	}
 	
 	
-	@GetMapping("/billsPage")
-    public String openBillsPage(Model model ) {
-		
-		
-		
-		return "billsPage";
-	}
 	
-	@GetMapping("/invoicesPage")
-   public String openInvoicesPage(Model model ) {
-		
-		
-		
-		return "invoicesPage";
-	}
-	
-	@GetMapping("/administration")
-	   public String openAdministration(Model model ) {
-			
-			
-			
-			return "administration";
-		}
 
 }
  

@@ -270,7 +270,7 @@ public class BillingController {
 		List <Bill> list = services.billsOnPeriod(d1,d2);
 		model.addAttribute("bills", list);
 		return "bills";
-	}
+	} 
 	
 	@GetMapping("/deleteList/{id}")
 	public String deleteBillingList(@PathVariable("id")Integer id) {
@@ -279,6 +279,14 @@ public class BillingController {
 		
 		return "redirect:/todaysUnPayedBillsByUser";
 		
+	}
+	
+	@GetMapping("/billsPage")
+    public String openBillsPage(Model model ) {
+		
+		
+		
+		return "billsPage";
 	}
 	
 }

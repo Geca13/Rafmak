@@ -1,6 +1,7 @@
 package com.example.rafmak.invoice.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -83,6 +84,18 @@ public class InvoiceController {
 	public String createInvoice(@AuthenticationPrincipal UsersDetails userD,@PathVariable("id")Integer id) {
 		String userEmail = userD.getUsername();
         Users user = userRepository.findByEmail(userEmail);
+		List<Invoice> emptyInvoices = new ArrayList<>();
+		List<Invoice> invoices = invoiceRepository.findAll();
+		
+		for (Invoice invoice : invoices) {
+			if(invoice.getProducts().isEmpty()) {
+				emptyInvoices.add(invoice);
+			}
+			
+		}
+		
+		if(emptyInvoices.isEmpty()) {
+		
         Company company = companyRepository.findById(id).get();
 		Invoice invoice = new Invoice();
 		invoice.setCompany(company);
@@ -95,6 +108,13 @@ public class InvoiceController {
 		invoiceRepository.save(invoice);
 		
 		     return "redirect:/invoice/"+invoice.getId();
+		}else {
+			Invoice oldInvoice = invoiceRepository.findById(emptyInvoices.get(0).getId()).get();
+			oldInvoice.setCompany(companyRepository.findById(id).get());
+			oldInvoice.setUser(user);
+			invoiceRepository.save(oldInvoice);
+			return "redirect:/invoice/" + emptyInvoices.get(0).getId();
+		}
     }
 	
 	@GetMapping("/invoice/{bid}")
@@ -220,11 +240,9 @@ public class InvoiceController {
 	public String printInvoice(@PathVariable("id")Integer id,@ModelAttribute("invoice") Invoice invoice) {
 		Invoice invoice1 = invoiceRepository.findById(id).get();
 		
-		
 		  invoice1.setIssued(LocalDate.now());
 		  invoice1.setShippingId(invoice.getId());
 		  invoice1.setComment(invoice.getComment());
-		  
 		  
 		  for (BillingProducts billingProducts : invoice1.getProducts()) {
 			  

@@ -1,6 +1,7 @@
 package com.example.rafmak.billing.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -58,8 +59,20 @@ public class BillingController {
 	
 	@PostMapping("/createBill")
 	public String createBill(@AuthenticationPrincipal UsersDetails userD) {
+		
 		String userEmail = userD.getUsername();
         Users user = userRepository.findByEmail(userEmail);
+       
+        List<BillProductsList> todaysList = new ArrayList<>();
+        List<BillProductsList> lists = bplRepository.findByCreated(LocalDate.now());
+        for (BillProductsList list : lists) {
+			if(list.getProducts().isEmpty()) {
+				todaysList.add(list);
+			}
+		}
+        
+        if(todaysList.isEmpty()) {
+        
 		BillProductsList bill = new BillProductsList();
 		if(dailyRepository.existsByDate(LocalDate.now())) {
 		      return "index?theDayIsClosed";
@@ -68,11 +81,19 @@ public class BillingController {
 		bill.setUser(user);
 		bill.setCreated(LocalDate.now());
 		bill.setPrinted(false);
+		bill.setTax(0.00);
+		bill.setTotal(0.00);
 		bill.setDailyBillCounter(services.dailyBillCounter());
 		bplRepository.save(bill);
 		     return "redirect:/bill/"+bill.getId();
+	}else {
+		BillProductsList bill = bplRepository.findById(todaysList.get(0).getId()).get();
+		bill.setUser(user);
+		bplRepository.save(bill);
+		 return "redirect:/bill/"+todaysList.get(0).getId();
 	}
-	
+       
+	}
 	@GetMapping("/bill/{bid}")
 	public String findProducts(Model model,@PathVariable("bid")Integer bid,@Param(value = "id")String id) {
 		

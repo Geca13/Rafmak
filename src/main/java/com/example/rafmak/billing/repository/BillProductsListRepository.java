@@ -18,5 +18,5 @@ public interface BillProductsListRepository extends JpaRepository<BillProductsLi
 	
 	List<BillProductsList> findByPrintedAndCreated(Boolean printed, LocalDate time);
 	
-
+	List<BillProductsList> findByCreated(LocalDate date);
 }

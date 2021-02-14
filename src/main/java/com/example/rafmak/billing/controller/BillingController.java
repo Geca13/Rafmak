@@ -96,13 +96,15 @@ public class BillingController {
 	}
 	@GetMapping("/bill/{bid}")
 	public String findProducts(Model model,@PathVariable("bid")Integer bid,@Param(value = "id")String id) {
+		BillProductsList bill = bplRepository.findById(bid).get();
+		model.addAttribute("bill", bill);
 		
 		model.addAttribute("product", productRepository.findById(id));
 		if(productRepository.findById(id)==null) {
 		    model.addAttribute("product", mpRepository.findById(id));
+		    	
 		}
-		BillProductsList bill = bplRepository.findById(bid).get();
-		model.addAttribute("bill", bill);
+		
 		
 		List<BillingProducts> products = bill.getProducts();
 		model.addAttribute("products", products);
@@ -128,47 +130,66 @@ public class BillingController {
 		List<BillingProducts> products = bpRepository.findAll();
 		BillingProducts bprod1 = new BillingProducts();
 		
-		if(id.startsWith("*")) {
+          if(id.startsWith("*")) {
+			
 	        MeasuredProduct product = mpRepository.findById(id);
 	        if(product.getDescription().equals("Akril")|| product.getDescription().equals("Base")) {
 	        	  bprod1.setId(String.valueOf(products.size()+1));
 			      bprod1.setPid(product.getId());
 		          bprod1.setDescription(product.getDescription());
 			      bprod1.setQty(bprod.getQty()); 
+			      if(bprod.getQty() == null) {
+			    	  return "redirect:/bill/"+list.getId()+"?qtyError"; 
+	                     }
 			      bprod1.setItemTotal(bprod.getItemTotal()); 
+			      if(bprod.getItemTotal() == null) {
+			    	  return "redirect:/bill/"+list.getId()+"?priceError"; 
+	                     }
 			      bprod1.setPrice(bprod.getItemTotal()/bprod.getQty());
 			      bprod1.setItemTax(bprod1.getItemTotal() * 0.1525);
-			      bprod1.setDate(LocalDate.now());
 			          bpRepository.save(bprod1);
+			          
 	        } else {
 	          bprod1.setId(String.valueOf(products.size()+1));
 		      bprod1.setPid(product.getId());
 	          bprod1.setDescription(product.getDescription());
 		      bprod1.setQty(bprod.getQty());
+		      if(bprod.getQty() == null) {
+		    	  return "redirect:/bill/"+list.getId()+"?qtyError"; 
+                     }
 		      bprod1.setPrice(product.getPrice());
 		      bprod1.setItemTotal(product.getPrice() * bprod.getQty()); 
 		      bprod1.setItemTax(bprod1.getItemTotal() * 0.1525);
-		      bprod1.setDate(LocalDate.now());
 		          bpRepository.save(bprod1);
 	        }
 		}else {
 			Product product = productRepository.findById(id);
 			  bprod1.setId(String.valueOf(products.size()+1));
-			  bprod1.setDate(LocalDate.now());
 		      bprod1.setPid(product.getId());
+		      
 	          bprod1.setDescription(product.getDescription());
 	          bprod1.setQty(bprod.getQty());
+	          if(bprod.getQty() == null) {
+        	         bprod1.setQty(1.00);
+                  }
 	          if(priceType.isEmpty()  || priceType.equalsIgnoreCase("m")) {
 	        	  bprod1.setPrice(product.getPrice());
 	          }else if(priceType.equalsIgnoreCase("g")) {
 	        	  bprod1.setPrice(product.getPriceOnPack());
 	          }
+	          
 	          bpRepository.save(bprod1);
+	          
 		      bprod1.setItemTotal(bprod1.getQty() * bprod1.getPrice()); 
 		      bprod1.setItemTax(bprod1.getItemTotal() * 0.1525);
 		          bpRepository.save(bprod1);
-		}
+		          
+			}
+		
 		      list.getProducts().add(bprod1);
+		      if(bprod1.getId()== null) {
+		    	  return "redirect:/bill/"+list.getId()+"?invalidId";
+		      }
 		    Double total = 0.00;
 		    Double tax = 0.00;
 		 
@@ -187,6 +208,9 @@ public class BillingController {
 	public String printBill(@PathVariable("id")Integer id) {
 		Bill bill = new Bill();
 		BillProductsList list = bplRepository.findById(id).get();
+		if(list.getProducts().isEmpty()) {
+			return "redirect:/bill/"+list.getId()+"?noProductsInList";
+		}
 		  list.setCreated(LocalDate.now());
 		  list.setPrinted(true);
 		  

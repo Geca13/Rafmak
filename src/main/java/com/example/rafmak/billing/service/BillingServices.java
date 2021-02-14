@@ -78,6 +78,7 @@ public class BillingServices {
 		
 	}
 	
+	
 	public BillProductsList findBillByCounter(Integer id , LocalDate date) {
 		LocalDate d = LocalDate.now();
 		BillProductsList list = bplRepository.findByDailyBillCounterAndCreated(id, d);

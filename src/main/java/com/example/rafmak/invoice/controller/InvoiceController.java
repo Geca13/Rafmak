@@ -142,7 +142,6 @@ public class InvoiceController {
 		Company company = invoice.getCompany();
 		model.addAttribute("company", company);
 		
-		
 		 return "newInvoice";
 	}
 	
@@ -188,15 +187,25 @@ public class InvoiceController {
 			      bprod1.setPid(product.getId());
 		          bprod1.setDescription(product.getDescription());
 			      bprod1.setQty(bprod.getQty()); 
+			      if(bprod.getQty() == null) {
+			    	  return "redirect:/invoice/"+invoice.getId()+"?qtyError"; 
+	                     }
 			      bprod1.setItemTotal(bprod.getItemTotal()); 
+			      if(bprod.getItemTotal() == null) {
+			    	  return "redirect:/invoice/"+invoice.getId()+"?priceError"; 
+	                     }
 			      bprod1.setPrice(bprod.getItemTotal()/bprod.getQty());
 			      bprod1.setItemTax(bprod1.getItemTotal() * 0.1525);
 			          bpRepository.save(bprod1);
+			          
 	        } else {
 	          bprod1.setId(String.valueOf(products.size()+1));
 		      bprod1.setPid(product.getId());
 	          bprod1.setDescription(product.getDescription());
 		      bprod1.setQty(bprod.getQty());
+		      if(bprod.getQty() == null) {
+		    	  return "redirect:/invoice/"+invoice.getId()+"?qtyError"; 
+                     }
 		      bprod1.setPrice(product.getPrice());
 		      bprod1.setItemTotal(product.getPrice() * bprod.getQty()); 
 		      bprod1.setItemTax(bprod1.getItemTotal() * 0.1525);
@@ -208,6 +217,9 @@ public class InvoiceController {
 		      bprod1.setPid(product.getId());
 	          bprod1.setDescription(product.getDescription());
 	          bprod1.setQty(bprod.getQty());
+	          if(bprod.getQty() == null) {
+        	         bprod1.setQty(1.00);
+                  }
 	          if(priceType.isEmpty()  || priceType.equalsIgnoreCase("m")) {
 	        	  bprod1.setPrice(product.getPrice());
 	          }else if(priceType.equalsIgnoreCase("g")) {
@@ -219,6 +231,9 @@ public class InvoiceController {
 		      bprod1.setItemTotal(bprod1.getQty() * bprod1.getPrice()); 
 		      bprod1.setItemTax(bprod1.getItemTotal() * 0.1525);
 		          bpRepository.save(bprod1);
+		          
+		
+			
 		}
 		    invoice.getProducts().add(bprod1);
 		    Double total = 0.00;
@@ -239,7 +254,9 @@ public class InvoiceController {
 	@PostMapping("/printInvoice/{id}")
 	public String printInvoice(@PathVariable("id")Integer id,@ModelAttribute("invoice") Invoice invoice) {
 		Invoice invoice1 = invoiceRepository.findById(id).get();
-		
+		if(invoice1.getProducts().isEmpty()) {
+			return "redirect:/invoice/"+invoice1.getId()+"?noProductsInList";
+		}
 		  invoice1.setIssued(LocalDate.now());
 		  invoice1.setShippingId(invoice.getId());
 		  invoice1.setComment(invoice.getComment());

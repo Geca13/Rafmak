@@ -60,8 +60,18 @@
      <div class="alert alert-success">The bill is already printed and the item can't be removed</div>
     </div>
     
-    <div th:if="${param.beated}">
-     <div class="alert alert-info">It looks like we dont have the asked quantity anyMore , someone got it right in front of your nose while you were doing the checkout process, if you had more then 1 try lowering the quantity to see if there is still something left... </div>
+     <div th:if="${param.invalidId}">
+     <div class="alert alert-danger">The product doesn't exist</div>
+    </div>
+    
+    <div th:if="${param.noProductsInList}">
+     <div class="alert alert-danger">You can't print empty bill</div>
+    </div>
+    <div th:if="${param.qtyError}">
+     <div class="alert alert-danger">You didn't enter value in the quantity </div>
+    </div>
+    <div th:if="${param.priceError}">
+     <div class="alert alert-danger">You didn't enter the value of the color product... </div>
     </div>
 
 <div class="row">

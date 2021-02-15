@@ -113,7 +113,7 @@
     
       <td><a th:href="@{/createMeasuredProduct/{id}(id=${product.id})}">Set as Store Product</a></td>
       <td><a th:href="@{/addQuantity/{id}(id=${product.id})}">Set qty</a></td>
-      <td><a th:href="@{/deleteProduct/{id}(id=${product.id})}">Delete</a></td>
+      <td th:unless = "${product?.description eq null}"><a th:href="@{/deleteProduct/{id}(id=${product.id})}">Delete</a></td>
       <td><a th:href="@{/updateProduct/{id}(id=${product.id})}">Update</a></td>
       
       

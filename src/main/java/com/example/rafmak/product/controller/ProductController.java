@@ -16,6 +16,7 @@ import com.example.rafmak.product.entity.Product;
 import com.example.rafmak.product.entity.QtyHistory;
 import com.example.rafmak.product.repository.CategoryRepository;
 import com.example.rafmak.product.repository.ManufacturerRepository;
+import com.example.rafmak.product.repository.MeasuredProductQtyHistoryRepository;
 import com.example.rafmak.product.repository.MeasuredProductRepository;
 import com.example.rafmak.product.repository.ProductRepository;
 import com.example.rafmak.product.repository.QtyHistoryRepository;
@@ -36,7 +37,8 @@ public class ProductController {
 	MeasuredProductRepository mpRepository;
 	@Autowired
 	QtyHistoryRepository qhRepository;
-	
+	@Autowired
+	MeasuredProductQtyHistoryRepository mpqhRepository;
 	@GetMapping("/products")
 	public String getAllProducts(Model model, @Param(value = "id")Integer id) {
 		  model.addAttribute("manufacturers", manufacturerRepository.findAll());
@@ -77,7 +79,21 @@ public class ProductController {
 	public String saveUpdatedProduct(@ModelAttribute("product")Product product, @PathVariable("id") String id) {
 		
 		productService.updateProduct(id, product);
-		       return "redirect:/";
+		       return "redirect:/products";
+	}
+	
+	@GetMapping("updateMProduct/{id}")
+	public String updateMProductForm(Model model ,@PathVariable("id")String id) {
+		model.addAttribute("product", mpRepository.findById(id));
+		
+		return "updateMProduct";
+	}
+	
+	@PostMapping("/updateMProduct/{id}")
+	public String saveUpdatedMProduct(@ModelAttribute("product")MeasuredProduct product, @PathVariable("id") String id) {
+		
+		productService.updateMProduct(id, product);
+		return "redirect:/allMesuredProducts";
 	}
 	
 	@GetMapping("/addQuantity/{id}")
@@ -184,16 +200,32 @@ public class ProductController {
 
 	}
 	
-	@GetMapping("deleteProduct/{id}")
+	@GetMapping("/deleteProduct/{id}")
 	public String deleteProductButKeepTheId(@PathVariable("id") String id) {
 		Product product = productRepository.findById(id);
-		if(product.getTotalQty() > 0) {
+		 
+		 if(product.getTotalQty() > 0) {
 			return "redirect:/products?cantDelete";
 		}
-		productService.deleteProduct(id);
+		productService.deleteProduct( id);
 		
 		return "redirect:/products";
 		
+	}
+	@GetMapping("/deleteMProduct/{id}")
+	public String deleteMesuredProduct(@PathVariable("id")String id) {
+		
+   	    MeasuredProduct product = mpRepository.findById(id);
+		 if(product.getTotalQty() > 0) {
+		    	return "redirect:/allMesuredProducts?cantDelete";
+		 }
+		 List<MeasuredProductQtyHistory> history =mpqhRepository.findAllByMeasuredProductId(product.getId());
+		 for (MeasuredProductQtyHistory measuredProductQtyHistory : history) {
+			 mpqhRepository.delete(measuredProductQtyHistory);
+		}
+		 
+	         mpRepository.delete(product);
+				return "redirect:/allMesuredProducts";
 	}
 	
 	

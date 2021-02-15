@@ -43,6 +43,10 @@
 <div th:if="${error != null}">
      <div class="alert alert-info">[[${error}]]</div>
     </div>
+    
+    <div th:if="${param.cantDelete}">
+      <div class="alert alert-info">The product still have available qty and it can't be deleted.</div>
+     </div>
   
   <h1>Products list</h1>
   
@@ -82,8 +86,8 @@
       
        
       <td><a th:href="@{/addQtyToMP/{id}(id=${product.id})}">Set qty</a></td>
-      
-      
+      <td><a th:href="@{/updateMProduct/{id}(id=${product.id})}">Update</a></td>
+      <td><a  th:href="@{/deleteMProduct/{id}(id=${product.id})}">Delete</a></td>
       
       
     </tr>

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.example.rafmak.billing.entity.Bill;
 import com.example.rafmak.product.entity.Category;
@@ -77,10 +78,8 @@ public class ProductService {
 		product1.setPriceOnPack(product.getPriceOnPack());
 		product1.setDiscPrice(product.getPriceOnPack() * 0.9);
 		
-		
-		return productRepository.save(product1);
-		
-	}
+	      return productRepository.save(product1);
+		}
 	
 	public MeasuredProduct createNewMesuredProduct(String id) {
 		
@@ -101,6 +100,17 @@ public class ProductService {
 		    newQtyToMeasuredProduct(newMeasuredProduct, Double.parseDouble(product.getMesurmentSize()), LocalDate.now(), newMeasuredProduct.getTotalQty(),"Added from Product on first creation");
 	         	return mpRepository.save(newMeasuredProduct);
 	}
+	
+    public MeasuredProduct updateMProduct(String id, MeasuredProduct product) {
+		
+    	MeasuredProduct product1 = mpRepository.findById(id);
+		  product1.setDescription(product.getDescription());
+	      product1.setPrice(product.getPrice());
+		  product1.setPriceOnPack(product1.getPrice());
+		
+               return mpRepository.save(product1);
+		}
+	
 	public MeasuredProduct createGroupMeasuredProduct(MeasuredProduct product) {
 		
 		MeasuredProduct newMeasuredProduct = new MeasuredProduct();
@@ -113,6 +123,8 @@ public class ProductService {
 	      
             	return mpRepository.save(newMeasuredProduct);
     }
+	
+     
 	
 	public PaintMix createNewPaintMix(PaintMix mix) {
 		
@@ -215,6 +227,7 @@ public class ProductService {
     	}
     public void deleteProduct(String id) {
     	Product product = productRepository.findById(id);
+    	
     	product.setCategory(null);
     	product.setDescription(null);
     	product.setDiscPrice(null);
@@ -223,7 +236,12 @@ public class ProductService {
     	product.setPrice(null);
     	product.setPriceOnPack(null);
     	product.setTotalQty(null);
+    	List<QtyHistory> history = qhRepository.findAllByProductId(id);
+    	for (QtyHistory qtyHistory : history) {
+    		qhRepository.delete(qtyHistory);
+		}
     	productRepository.save(product);
+		
     	
     }
 	

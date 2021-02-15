@@ -40,9 +40,27 @@
   </div>
 </nav>
 
-<div th:if="${error != null}">
-     <div class="alert alert-info">[[${error}]]</div>
+<div th:if="${param.cantDelete}">
+      <div class="alert alert-info">The product still have available qty and it can't be deleted.</div>
+     </div>
+
+
+    <form th:action="@{/products}">
+    <div class="form-row align-items-center">
+    <div class="col-auto my-1">
+      <label class="mr-sm-2" for="inlineFormCustomSelect">Select Category </label>
+      <select  name="id"  class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+        <option ></option>
+        <option th:each="man : ${manufacturers}"
+        th:value="${man.id}"
+        th:text="${man.manufacturerName}"/>
+      </select>
     </div>
+    <div class="col-auto my-1">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </div>
+
   
   <h1>Products list</h1>
   
@@ -84,19 +102,19 @@
   </thead>
   <tbody>
     <tr th:each="product : ${listProducts}">
-      <td th:text="${product.id}"></td>
-      <td th:text="${product.description}"></td>
-      <td th:text="${product.price}"></td>
-      <td th:text="${product.mesurmentSize}"></td>
-      <td th:text="${product.manufacturer.manufacturerName}"></td>  
-      <td th:text="${product.category.categoryName}"></td> 
-      <td th:text="${product.totalQty}"></td> 
+      <td th:text="${product?.id}"></td>
+      <td th:text="${product?.description}"></td>
+      <td th:text="${product?.price}"></td>
+      <td th:text="${product?.mesurmentSize}"></td>
+      <td th:text="${product?.manufacturer?.manufacturerName}"></td>  
+      <td th:text="${product?.category?.categoryName}"></td> 
+      <td th:text="${product?.totalQty}"></td> 
        
     
       <td><a th:href="@{/createMeasuredProduct/{id}(id=${product.id})}">Set as Store Product</a></td>
       <td><a th:href="@{/addQuantity/{id}(id=${product.id})}">Set qty</a></td>
-      
-      
+      <td><a th:href="@{/deleteProduct/{id}(id=${product.id})}">Delete</a></td>
+      <td><a th:href="@{/updateProduct/{id}(id=${product.id})}">Update</a></td>
       
       
     </tr>
@@ -105,7 +123,7 @@
     
   </tbody>
 </table>
-
+</form>
  <div th:if = "${totalPages > 1}">
  
     <div class = "row col-sm-10">

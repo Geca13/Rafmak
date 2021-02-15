@@ -141,6 +141,9 @@ public class BillingController {
 			      if(bprod.getQty() == null) {
 			    	  return "redirect:/bill/"+list.getId()+"?qtyError"; 
 	                     }
+			      if(bprod.getQty() > product.getTotalQty()) {
+		        	  return "redirect:/bill/"+list.getId()+"?invalidQty";
+		          }
 			      bprod1.setItemTotal(bprod.getItemTotal()); 
 			      if(bprod.getItemTotal() == null) {
 			    	  return "redirect:/bill/"+list.getId()+"?priceError"; 
@@ -157,6 +160,9 @@ public class BillingController {
 		      if(bprod.getQty() == null) {
 		    	  return "redirect:/bill/"+list.getId()+"?qtyError"; 
                      }
+		      if(bprod.getQty() > product.getTotalQty()) {
+	        	  return "redirect:/bill/"+list.getId()+"?invalidQty";
+	          }
 		      bprod1.setPrice(product.getPrice());
 		      bprod1.setItemTotal(product.getPrice() * bprod.getQty()); 
 		      bprod1.setItemTax(bprod1.getItemTotal() * 0.1525);
@@ -172,10 +178,15 @@ public class BillingController {
 	          if(bprod.getQty() == null) {
         	         bprod1.setQty(1.00);
                   }
-	          if(priceType.isEmpty()  || priceType.equalsIgnoreCase("m")) {
+	          if(bprod.getQty() > product.getTotalQty()) {
+	        	  return "redirect:/bill/"+list.getId()+"?invalidQty";
+	          }
+	          if(priceType.isEmpty() || priceType.equalsIgnoreCase("m")) {
 	        	  bprod1.setPrice(product.getPrice());
 	          }else if(priceType.equalsIgnoreCase("g")) {
 	        	  bprod1.setPrice(product.getPriceOnPack());
+	          }else {
+	        	  return "redirect:/bill/"+list.getId()+"?invalidPriceType";
 	          }
 	          
 	          bpRepository.save(bprod1);

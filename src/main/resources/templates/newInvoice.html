@@ -56,8 +56,12 @@
 <div class="container">
 <br>
 
-<div th:if="${param.invalidId}">
-     <div class="alert alert-danger">The product doesn't exist </div>
+<div th:if="${param.invalidPriceType}">
+     <div class="alert alert-danger">The price type doesn't exist, you entered wrong letter.</div>
+    </div>
+    
+    <div th:if="${param.invalidQty}">
+     <div class="alert alert-danger">Please check your inventory the selected product  has less then you need it maybe even out!!!</div>
     </div>
     
     <div th:if="${param.qtyError}">
@@ -89,7 +93,13 @@
   
   </form>
   
+  <table class="table table-striped"  >
   
+      <tr>
+       <td><h6 th:text="${invoice.arrival}"></h6></td>
+      </tr>
+      
+  </table>
   </div>
   
   
@@ -108,13 +118,7 @@
   
   </form>
   
-  <table class="table table-striped"  >
   
-      <tr>
-       <td><h1 th:text="${days}"></h1></td>
-      </tr>
-      
-  </table>
   
   </div>
   
@@ -194,25 +198,25 @@
        <div class="form-group col-md-2">
     <label for="inputProductProce" class="col-sm-2 col-form-label">Qty</label>
     <div class="col-sm-10">
-      <input type="text" th:field="*{qty}" class="form-control" id="inputProductPrice">
+      <input type="text" th:field="*{qty}" th:disabled = "${product?.description eq null}" class="form-control" id="inputProductPrice">
     </div>
   </div>
   
   <div class="form-group col-md-2">
     <label for="inputProductProce" class="col-sm-2 col-form-label">M/G</label>
     <div class="col-sm-8">
-      <input type="text" th:name="priceType" class="form-control" id="inputProductPrice">
+      <input type="text" th:name="priceType" th:disabled = "${product?.description eq null}" class="form-control" id="inputProductPrice">
     </div>
   </div>
   
   <div class="form-group col-md-2">
     <label for="inputProductProce" class="col-sm-2 col-form-label">Price</label>
     <div class="col-sm-12">
-      <input type="text" th:field="*{itemTotal}" class="form-control" id="inputProductPrice">
+      <input type="text" th:field="*{itemTotal}"th:disabled = "${product?.description eq null}" class="form-control" id="inputProductPrice">
     </div>
   </div>
    
-   <button type="submit" class="btn btn-info col-2 d-none">+ Add</button>
+   <button type="submit" th:disabled = "${product?.id eq null}" class="btn btn-info col-2 d-none">+ Add</button>
   </div>
   
    </form>

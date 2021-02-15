@@ -190,6 +190,9 @@ public class InvoiceController {
 			      if(bprod.getQty() == null) {
 			    	  return "redirect:/invoice/"+invoice.getId()+"?qtyError"; 
 	                     }
+			      if(bprod.getQty() > product.getTotalQty()) {
+		        	  return "redirect:/invoice/"+invoice.getId()+"?invalidQty";
+		          }
 			      bprod1.setItemTotal(bprod.getItemTotal()); 
 			      if(bprod.getItemTotal() == null) {
 			    	  return "redirect:/invoice/"+invoice.getId()+"?priceError"; 
@@ -206,6 +209,9 @@ public class InvoiceController {
 		      if(bprod.getQty() == null) {
 		    	  return "redirect:/invoice/"+invoice.getId()+"?qtyError"; 
                      }
+		      if(bprod.getQty() > product.getTotalQty()) {
+	        	  return "redirect:/invoice/"+invoice.getId()+"?invalidQty";
+	          }
 		      bprod1.setPrice(product.getPrice());
 		      bprod1.setItemTotal(product.getPrice() * bprod.getQty()); 
 		      bprod1.setItemTax(bprod1.getItemTotal() * 0.1525);
@@ -220,12 +226,17 @@ public class InvoiceController {
 	          if(bprod.getQty() == null) {
         	         bprod1.setQty(1.00);
                   }
+	          if(bprod.getQty() > product.getTotalQty()) {
+	        	  return "redirect:/invoice/"+invoice.getId()+"?invalidQty";
+	          }
 	          if(priceType.isEmpty()  || priceType.equalsIgnoreCase("m")) {
 	        	  bprod1.setPrice(product.getPrice());
 	          }else if(priceType.equalsIgnoreCase("g")) {
 	        	  bprod1.setPrice(product.getPriceOnPack());
 	          }else if(priceType.equalsIgnoreCase("d")) {
 	        	  bprod1.setPrice(product.getDiscPrice());
+	          }else {
+	        	  return "redirect:/invoice/"+invoice.getId()+"?invalidPriceType";
 	          }
 	          bpRepository.save(bprod1);
 		      bprod1.setItemTotal(bprod1.getQty() * bprod1.getPrice()); 

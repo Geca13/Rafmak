@@ -57,6 +57,8 @@ public class Users {
 	@Size(max = 45)
 	private String token;
 	
+	private Double salary;
+	
 	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "users_roles" , joinColumns = @JoinColumn(name = "users_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -67,7 +69,7 @@ public class Users {
 		this.password = password;
 	}
 
-    public Users(@Email String email, String password, String firstName, String lastName, Integer age, LocalDate date,
+    public Users(@Email String email, String password, String firstName, String lastName, Integer age, LocalDate date, Double salary,
 		Set<Role> roles) {
 	super();
 	this.email = email;
@@ -76,6 +78,7 @@ public class Users {
 	this.lastName = lastName;
 	this.age = age;
 	this.date = date;
+	this.salary = salary;
 	this.roles = roles;
 }
 	

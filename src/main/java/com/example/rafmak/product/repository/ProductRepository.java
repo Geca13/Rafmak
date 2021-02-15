@@ -19,4 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 	boolean existsByDescription(String description);
 	
 	List<Product> findAllByDescription(String description);
+	
+	List<Product> findAllByManufacturerId(Integer id);
+	
 }

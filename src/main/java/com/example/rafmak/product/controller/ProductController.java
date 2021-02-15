@@ -38,9 +38,15 @@ public class ProductController {
 	QtyHistoryRepository qhRepository;
 	
 	@GetMapping("/products")
-	public String getAllProducts(Model model) {
-		
+	public String getAllProducts(Model model, @Param(value = "id")Integer id) {
+		  model.addAttribute("manufacturers", manufacturerRepository.findAll());
 	      model.addAttribute("listProducts", productRepository.findAll());
+	      if(id !=null) {
+	    	  model.addAttribute("listProducts", productRepository.findAllByManufacturerId(id));
+	    	  
+
+	    	  
+	      }
 		       return "all_products";
 	}
 	
@@ -57,6 +63,20 @@ public class ProductController {
 	public String saveNewProduct(@ModelAttribute("product")Product product) {
 		
 		productService.saveProduct(product);
+		       return "redirect:/";
+	}
+	
+	@GetMapping("updateProduct/{id}")
+	public String updateProductForm(Model model ,@PathVariable("id")String id) {
+		model.addAttribute("product", productRepository.findById(id));
+		
+		return "updateProductForm";
+	}
+	
+	@PostMapping("/updateProduct/{id}")
+	public String saveUpdatedProduct(@ModelAttribute("product")Product product, @PathVariable("id") String id) {
+		
+		productService.updateProduct(id, product);
 		       return "redirect:/";
 	}
 	
@@ -163,5 +183,19 @@ public class ProductController {
         return "redirect:/productsQtyHistory";
 
 	}
+	
+	@GetMapping("deleteProduct/{id}")
+	public String deleteProductButKeepTheId(@PathVariable("id") String id) {
+		Product product = productRepository.findById(id);
+		if(product.getTotalQty() > 0) {
+			return "redirect:/products?cantDelete";
+		}
+		productService.deleteProduct(id);
+		
+		return "redirect:/products";
+		
+	}
+	
+	
 	
 }

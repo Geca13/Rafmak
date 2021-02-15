@@ -101,6 +101,7 @@ public class UsersServiceImpl implements UsersService {
         Role role = roleRepository.findByRole(RoleName.ROLE_EMPLOYEE);
          user1.setRoles( Collections.singleton(role));
 		 user1.setDate(LocalDate.now());
+		 user1.setSalary(0.00);
 		 String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 	       if(fileName.contains("..")) {
 	       	System.out.println("not a valid file");

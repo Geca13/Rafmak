@@ -66,6 +66,8 @@ public class RafmakApplication {
 				categoryRepository.save(new Category(3,"Thinners"));
 				categoryRepository.save(new Category(4,"Akril"));	
 				categoryRepository.save(new Category(5,"Base"));
+				categoryRepository.save(new Category(6,"Tools"));
+				
 				
 				
 				

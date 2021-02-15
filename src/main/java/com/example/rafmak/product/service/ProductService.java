@@ -67,6 +67,21 @@ public class ProductService {
 		      return productRepository.save(newProduct);
 	}
 	
+	public Product updateProduct(String id, Product product) {
+		
+		Product product1 = productRepository.findById(id);
+		
+		product1.setDescription(product.getDescription());
+		product1.setMesurmentSize(product.getMesurmentSize());
+		product1.setPrice(product.getPrice());
+		product1.setPriceOnPack(product.getPriceOnPack());
+		product1.setDiscPrice(product.getPriceOnPack() * 0.9);
+		
+		
+		return productRepository.save(product1);
+		
+	}
+	
 	public MeasuredProduct createNewMesuredProduct(String id) {
 		
 		Product product = productRepository.findById(id);
@@ -198,5 +213,18 @@ public class ProductService {
     		
     		return products;
     	}
+    public void deleteProduct(String id) {
+    	Product product = productRepository.findById(id);
+    	product.setCategory(null);
+    	product.setDescription(null);
+    	product.setDiscPrice(null);
+    	product.setManufacturer(null);
+    	product.setMesurmentSize(null);
+    	product.setPrice(null);
+    	product.setPriceOnPack(null);
+    	product.setTotalQty(null);
+    	productRepository.save(product);
+    	
+    }
 	
 }

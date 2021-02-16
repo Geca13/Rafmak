@@ -15,6 +15,37 @@
 
 
 <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-warning">
+        <a class="navbar-brand" href="#">RAFMAK</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto topnav">
+            
+             <li class="nav-item ">
+                    <a class="nav-link" href="#" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a th:href="@{/products}" class="nav-item nav-link" >Products</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/companies}" class="nav-item nav-link" > Invoice</a>
+                </li>
+                
+                <li class="nav-item">
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a th:href="@{/administration}" class="nav-item nav-link" > Administration</a>
+               </div>
+                </li>
+                
+                <li class="nav-item">
+                    <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" > Logout</a>
+                </li>
+              </ul>
+        </div>
+     </nav>
 
 <div class="container">
 
@@ -81,10 +112,7 @@
        <th scope="col"> 
       
        </th>
-       
-       
-      
-    </tr>
+      </tr>
   </thead>
   <tbody>
     <tr th:each="users : ${listUsers}">
@@ -96,15 +124,11 @@
       <td th:text="${#temporals.format(users.date, 'yyyy-MM-dd')}"></td> 
        <td> <img th:src="*{'data:image/png;base64,'+{users.image}}" style="width:200px"></td> 
       
-      
-      
-      
-      
-      
-      
       <td>
-          <a th:href="@{/users/profile/{id}(id=${users.id})}" class="btn btn-outline-success">See orders</a>
-   <!--        <a th:href="@{/deleteProduct/{id}(id=${product.id})}" class="btn btn-outline-danger">Delete</a> --> 
+          <a th:href="@{/billsByEmployee/{id}(id=${users.id})}" class="btn btn-outline-success">Todays bills</a>
+           <a th:href="@{/unPaidbillsByEmployee/{id}(id=${users.id})}" class="btn btn-outline-danger">Unpaid Bills</a> 
+           <a th:href="@{/profile/{id}(id=${users.id})}" class="btn btn-outline-danger">See Profile</a> 
+           <a th:href="@{/terminate/{id}(id=${users.id})}" class="btn btn-outline-danger">Terminate</a>
       <td>
       
     </tr>

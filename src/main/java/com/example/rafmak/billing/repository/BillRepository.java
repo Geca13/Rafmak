@@ -10,6 +10,8 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
 	
 	List<Bill> findByCreated(LocalDate created);
 	
+	List<Bill> findByUser(Users user);
+	
 	List<Bill> findByCreatedAndUser(LocalDate created, Users user);
 	
 	List<Bill> findByCreatedBetween(LocalDate startDate,LocalDate endDate);

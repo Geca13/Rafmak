@@ -34,7 +34,7 @@ public class Users {
 	
 	@javax.persistence.Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer Id;
+	private Integer id;
 	
 	@Email
 	@NaturalId

@@ -14,7 +14,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.example.rafmak.billing.entity.Bill;
+import com.example.rafmak.billing.entity.BillProductsList;
+import com.example.rafmak.billing.repository.BillProductsListRepository;
+import com.example.rafmak.billing.repository.BillRepository;
 import com.example.rafmak.billing.service.BillingServices;
+import com.example.rafmak.invoice.entity.Invoice;
 import com.example.rafmak.invoice.repository.InvoiceRepository;
 import com.example.rafmak.invoice.service.InvoiceServices;
 import com.example.rafmak.users.entity.Address;
@@ -37,8 +43,6 @@ public class UsersController {
 	@Autowired
 	UsersServiceImpl usersServiceImpl;
 	@Autowired
-	AddressRepository addressRepository;
-	@Autowired
 	CountryRepository countryRepository;
 	@Autowired
 	RoleRepository roleRepository;
@@ -50,6 +54,10 @@ public class UsersController {
 	InvoiceServices invoiceServices;
 	@Autowired
 	BillingServices services;
+	@Autowired
+	BillRepository billRepository;
+	@Autowired
+	BillProductsListRepository bplRepository;
 	
 	
 	@GetMapping("/login")
@@ -106,9 +114,6 @@ public class UsersController {
 		return "redirect:/";
 		
 	}
-	
-	
-	
 	
 	@GetMapping("/users")
 	public String viewProductPage(Model model,@Param("search")String search) {
@@ -171,41 +176,71 @@ public class UsersController {
 		
 		String userEmail = userD.getUsername();
         Users user = userRepository.findByEmail(userEmail);
-        
+        model.addAttribute("user", user);
 		         return "profile" ;
 	}
 	
-	@GetMapping("/profile/{id}/newAddress")
-	public String setAddress(@PathVariable ("id") Integer id, @AuthenticationPrincipal UsersDetails userD, Model model,@ModelAttribute("address") Address address) {
-		
-	    Users user = userRepository.findById(id).get();
-	    List<Country> listCountry = countryRepository.findAll();
-         model.addAttribute("user", user);
-		 model.addAttribute("listCountry", listCountry);
-		         return "new_Address";
-	}
-	
-	@PostMapping("/profile/{id}/newAddress")
-	public String processCreationForm(@PathVariable("id")Integer id, Address address) {
+	@GetMapping("/profile/{id}")
+	public String profileViewByAdmin( Model model ,@PathVariable("id")Integer id) {
 		
 		Users user = userRepository.findById(id).get();
-		  Address  address1 = new Address();
-		  address1.setStreetName(address.getStreetName());
-		  address1.setStreetNumber(address.getStreetNumber());
-		  address1.setCity(address.getCity());
-		  address1.setZipCode(address.getZipCode());
-		  address1.setCountry(address.getCountry());
-		  address1.setUser(user);
+        model.addAttribute("user", user);
+		         return "profile" ;
+	}
+	
+	@GetMapping("/terminate/{id}")
+	public String terminateEmployee( Model model ,@PathVariable("id")Integer id) {
 		
-		addressRepository.save(address1);
-		          return "redirect:/confirmAndPay/" + user.getId();
-	}		
+		Users user = userRepository.findById(id).get();
+        user.setRoles(null);
+        userRepository.save(user);
+        List<Bill> bills = billRepository.findByUser(user);
+        for (Bill bill : bills) {
+			bill.setUser(null);
+			billRepository.save(bill);
+		}
+        List<BillProductsList> billsList = bplRepository.findByUser(user);
+        
+        for (BillProductsList billProductsList : billsList) {
+        	bplRepository.delete(billProductsList);
+		}
+        
+        List<Invoice> invoices = invoiceRepository.findByUser(user);
+        for (Invoice invoice : invoices) {
+			invoice.setUser(null);
+			invoiceRepository.save(invoice);
+		}
+		         return "redirect:/users" ;
+	}
 	
 	@GetMapping("/administration")
 	public String openAdministration(Model model ) {
 			
-			
-		return "administration";
+			return "administration";
 		}
+	
+	@GetMapping("/billsByEmployee/{id}")
+	public String getTodayBillsByEmployee(Model model ,@PathVariable("id")Integer id) {
+		
+		Users user = userRepository.findById(id).get();
+		List<Bill> list = usersServiceImpl.payedBills(user);
+		model.addAttribute("bills", list);
+		
+		return "bills";
+		
+	}
+	@GetMapping("/unPaidbillsByEmployee/{id}")
+	public String getTodayUnpaidBillsByEmployee(Model model , @PathVariable("id")Integer id) {
+		
+		Users user = userRepository.findById(id).get();
+		List<BillProductsList> bills = usersServiceImpl.unPayedBills(user);
+		model.addAttribute("bills", bills);
+		return "billingLists";
+		
+	}
+	
+	
+	
+	
 	
 }

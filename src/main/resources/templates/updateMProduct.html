@@ -14,27 +14,37 @@
 
 <body>
 
-<nav class="navbar navbar-dark bg-dark">
-  <a class="navbar-brand" ><span sec:authentication="principal.username">User</span></a>
-  <a class="navbar-brand" ><span sec:authentication="principal.authorities">User</span></a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-    <div class="navbar-nav">
-    <a class="nav-item nav-link" 
-         th:href="@{/profile}"
-                    sec:authentication="principal.username"
-    > Welcome <span >User</span></a>
-    
-   
-      
-      <a th:href="@{/products}" class="nav-item nav-link" >All Products</a>
-      <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
-      
-    </div>
-  </div>
-</nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-warning">
+        <a class="navbar-brand" href="#">RAFMAK</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto topnav">
+            
+             <li class="nav-item ">
+                    <a class="nav-link" href="#" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a th:href="@{/products}" class="nav-item nav-link" >Products</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/companies}" class="nav-item nav-link" > Invoice</a>
+                </li>
+                
+                <li class="nav-item">
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a th:href="@{/administration}" class="nav-item nav-link" > Administration</a>
+               </div>
+                </li>
+                
+                <li class="nav-item">
+                    <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" > Logout</a>
+                </li>
+              </ul>
+        </div>
+     </nav>
 
 <div class="container">
 

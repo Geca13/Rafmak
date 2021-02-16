@@ -13,6 +13,8 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
 
 	List<Invoice> findByUserAndIssued(Users user,LocalDate issued);
 	
+	List<Invoice> findByUser(Users user);
+	
 	List<Invoice> findByCompany(Company company);
 	
 	List<Invoice> findByArrival(LocalDate date);

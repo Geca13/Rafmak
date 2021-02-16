@@ -384,4 +384,22 @@ public class InvoiceController {
 		return "redirect:/allCompanies";
 	}
 	
+	@GetMapping("/updateCustomer/{id}")
+	public String updateCustomerForm(Model model,@PathVariable("id")Integer id) {
+		model.addAttribute("company", companyRepository.findById(id).get());
+		return "updateCustomerForm";
+	}
+	
+	@PostMapping("/updateCustomer/{id}")
+	public String updateCustomer(@PathVariable("id")Integer id,@ModelAttribute("company")Company company) {
+		 services.updateCustomer(id,company);
+		return "redirect:/allCompanies";
+	}
+	
+	@GetMapping("/getCustomer/{id}")
+	public String seeCustomerProfile(Model model,@PathVariable("id")Integer id) {
+		model.addAttribute("company", companyRepository.findById(id).get());
+		return "companyDetails";
+	}
+	
 }

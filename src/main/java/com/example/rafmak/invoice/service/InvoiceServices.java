@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.rafmak.billing.entity.BillingProducts;
 import com.example.rafmak.billing.repository.BillingProductsRepository;
+import com.example.rafmak.finance.entity.Payment;
+import com.example.rafmak.finance.repository.PaymentRepository;
 import com.example.rafmak.invoice.entity.Company;
 import com.example.rafmak.invoice.entity.ExpiredDateInvoices;
 import com.example.rafmak.invoice.entity.Invoice;
@@ -41,6 +43,9 @@ public class InvoiceServices {
 	MeasuredProductRepository mpRepository;
 	
 	@Autowired
+	PaymentRepository paymentRepository;
+	
+	@Autowired
 	ProductService productService;
 	
 	public Company saveNewCustomer(Company company) {
@@ -50,7 +55,7 @@ public class InvoiceServices {
 		newCustomer.setAccountNumber(company.getAccountNumber());
 		newCustomer.setPhoneNumber(company.getPhoneNumber());
 		newCustomer.setEmail(company.getEmail());
-		newCustomer.setEmail(company.getEmail());
+		newCustomer.setContactPerson(company.getContactPerson());
 		newCustomer.setStreetAddress(company.getStreetAddress());
 	    newCustomer.setZipCode(company.getZipCode());
 	    newCustomer.setCity(company.getCity());
@@ -236,11 +241,32 @@ public class InvoiceServices {
 			
 			ediRepository.save(invoice);
 			ediRepository.delete(invoice);
-			
+		}
+    	List<Payment> payments = paymentRepository.findByCompany(company);
+    	for (Payment payment : payments) {
+    		payment.setCompany(null);
+    		paymentRepository.save(payment);
+    		paymentRepository.delete(payment);
 		}
     	companyRepository.save(company);
     	companyRepository.delete(company);
+    		
+    }
+    
+    public void updateCustomer(Integer id,Company company) {
     	
+    	Company company1 = companyRepository.findById(id).get();
+    	
+    	company1.setCompanyName(company.getCompanyName());
+    	company1.setAccountNumber(company.getAccountNumber());
+    	company1.setPhoneNumber(company.getPhoneNumber());
+    	company1.setEmail(company.getEmail());
+    	company1.setContactPerson(company.getContactPerson());
+    	company1.setStreetAddress(company.getStreetAddress());
+    	company1.setZipCode(company.getZipCode());
+    	company1.setCity(company.getCity());
+    	
+    	companyRepository.save(company1);
     }
     
 }

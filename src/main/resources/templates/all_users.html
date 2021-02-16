@@ -41,7 +41,7 @@
 </nav>
   
   <h1>User list</h1>
-  <form th:action="@{/allUsers}">
+  <form th:action="@{/users}">
   
   <input type="hidden" name="sortField" th:value="${sortField}" />
   <input type="hidden" name="sortDir" th:value="${sortDir}" />
@@ -57,25 +57,25 @@
   <thead>
     <tr>
       <th scope="col">
-     <a th:href="@{'/pages/' + ${currentPage} + '?sortField=productId&sortDir=' + ${reverseSortDir}}">Id</a> 
+     Id
       </th>
       <th scope="col">
-      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=productName&sortDir=' + ${reverseSortDir}}">First Name</a>
+      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=firstName&sortDir=' + ${reverseSortDir}}">First Name</a>
        </th>
       <th scope="col">
-      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=productPrice&sortDir=' + ${reverseSortDir}}">Last Name</a> 
+      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=lastName&sortDir=' + ${reverseSortDir}}">Last Name</a> 
       </th>
       
       <th scope="col">
-      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=productOrigin&sortDir=' + ${reverseSortDir}}">Age</a> 
+      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=age&sortDir=' + ${reverseSortDir}}">Age</a> 
       </th>
       
       <th scope="col">
-      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=manufacturer&sortDir=' + ${reverseSortDir}}">Email</a> 
+      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=email&sortDir=' + ${reverseSortDir}}">Email</a> 
       </th>
       
       <th scope="col"> 
-      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=category&sortDir=' + ${reverseSortDir}}">Registered</a>
+      <a th:href="@{'/pages/' + ${currentPage} + '?sortField=date&sortDir=' + ${reverseSortDir}}">Started:</a>
        </th>
        
        <th scope="col"> 
@@ -87,7 +87,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr th:each="users : ${allUsers}">
+    <tr th:each="users : ${listUsers}">
       <td th:text="${users.id}"></td>
       <td th:text="${users.firstName}"></td>
       <td th:text="${users.lastName}"></td>

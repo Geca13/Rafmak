@@ -1,6 +1,5 @@
 package com.example.rafmak.users.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.example.rafmak.billing.service.BillingServices;
 import com.example.rafmak.invoice.repository.InvoiceRepository;
 import com.example.rafmak.invoice.service.InvoiceServices;
@@ -109,14 +107,7 @@ public class UsersController {
 		
 	}
 	
-	@GetMapping("/allUsers")
-	public String getAllUsers(Model model) {
-		
-		List<Users> allUsers = userRepository.findAll();
-		model.addAttribute("allUsers", allUsers);
-		
-		return "all_users";
-	}
+	
 	
 	
 	@GetMapping("/users")

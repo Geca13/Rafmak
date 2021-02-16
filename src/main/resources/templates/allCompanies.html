@@ -39,6 +39,7 @@
     </div>
   </div>
 </nav>
+<div class="container">
   
   <h1>Company list</h1>
   <form th:action="@{/allCompanies}">
@@ -58,16 +59,12 @@
     <tr>
       <th scope="col">Id</th>
       <th scope="col"> Company Name</th>
-      <th scope="col"> Address</th>
-      <th scope="col"> Acc. Number</th>
+      <th scope="col"> Location</th>
       <th scope="col"> Person</th>
       <th scope="col"> Phone No:</th>
-      <th scope="col"> Email:</th>
-      <th scope="col"> All Inv. Total</th>
-      <th scope="col"> Total payed</th>
-      <th scope="col"> Total Debt</th>
       <th scope="col"> Debt overdue</th>
       <th scope="col"> Action</th>
+     
       
     </tr>
   </thead>
@@ -75,60 +72,22 @@
     <tr th:each="company: ${companies}" >
       <td th:text="${company.id}"></td> 
       <td th:text="${company.companyName}"></td>
-      <td th:text="${company.streetAddress + ' ' + company.zipCode + ' ' + company.city }"></td>
-      <td th:text="${company.accountNumber}"></td>
+      <td th:text="${company.city}"></td>
       <td th:text="${company.contactPerson}"></td>
       <td th:text="${company.phoneNumber}"></td>
-      <td th:text="${company.email}"></td>
-      <td th:text="${company.totalOnAllInvoices}"></td>
-      <td th:text="${company.totalPayed}"></td>
-      <td th:text="${company.hasTotalDebt}"></td>
       <td th:text="${company.deptOverdue}"></td>
-     
       <td>
-       <a th:href="@{/createInvoice/{id}(id=${company?.id})}" class="btn btn-outline-danger">Update</a> 
+       <a th:href="@{/updateCustomer/{id}(id=${company?.id})}" class="btn btn-outline-danger">Update</a> 
        <a th:href="@{/deleteCustomer/{id}(id=${company?.id})}" class="btn btn-outline-danger">Delete</a>
+       <a th:href="@{/getCustomer/{id}(id=${company?.id})}" class="btn btn-outline-danger">Profile</a> 
+       <a th:href="@{/paymentFrom/{id}(id=${company?.id})}" class="btn btn-outline-danger">New Payment</a> 
       </td>
       
      
       
    </table>
 </form>
- <div th:if = "${totalPages > 1}">
- 
-    <div class = "row col-sm-10">
-     <div class = "row col-sm-2">
-     Total Rows: [[${totalItems}]]
-     </div>
-     
-     <div class = "row col-sm-2">
-        <a th:if="${currentPage > 1}" th:href="@{'/pages/' + ${currentPage - 1}+  '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${search != null ? '&search=' + search : ' ' }}">Previous</a>
-<span th:unless="${currentPage > 1}">Previous</span>
-</div>
-     <div class = "row col-sm-2">
-        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-           <a th:if="${currentPage != i}" th:href = "@{'/pages/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}+ ${search != null ? '&search=' + search : ' ' }}">[[${i}]]</a>
-           <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
-        </span>
-     
-     </div>
-     
-     <div class = "row col-sm-2">
-     
-     <a th:if="${currentPage < totalPages}" th:href="@{'/pages/' + ${currentPage + 1}+  '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${search != null ? '&search=' + search : ' ' }}">Next</a>
-         <span th:unless="${currentPage < totalPages}">Next</span> &nbsp; &nbsp;
-     </div>
-     
-     
-    
-    <div class = "row col-sm-2">
-     
-     <a th:if="${currentPage < totalPages}" th:href="@{'/pages/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}+ ${search != null ? '&search=' + search : ' ' }}">Last</a>
-         <span th:unless="${currentPage < totalPages}">Last</span> &nbsp; &nbsp;
-     </div>
-    
-    </div>
- 
+
  </div >
   
   

@@ -3,8 +3,6 @@ package com.example.rafmak.users.service;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.example.rafmak.users.entity.RoleName;
 import com.example.rafmak.users.entity.Users;
 
 public interface UsersService extends UserDetailsService {

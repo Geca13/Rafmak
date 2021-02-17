@@ -1,8 +1,12 @@
 package com.example.rafmak.invoice.controller;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,6 +31,7 @@ import com.example.rafmak.product.service.ProductService;
 import com.example.rafmak.users.entity.Users;
 import com.example.rafmak.users.repository.UsersRepository;
 import com.example.rafmak.users.service.UsersDetails;
+import com.lowagie.text.DocumentException;
 
 @Controller
 public class InvoiceController {
@@ -263,7 +268,7 @@ public class InvoiceController {
 	}
 	
 	@PostMapping("/printInvoice/{id}")
-	public String printInvoice(@PathVariable("id")Integer id,@ModelAttribute("invoice") Invoice invoice) {
+	public String printInvoice(@PathVariable("id")Integer id,@ModelAttribute("invoice") Invoice invoice,HttpServletResponse response) throws DocumentException, IOException {
 		Invoice invoice1 = invoiceRepository.findById(id).get();
 		if(invoice1.getProducts().isEmpty()) {
 			return "redirect:/invoice/"+invoice1.getId()+"?noProductsInList";
@@ -298,7 +303,7 @@ public class InvoiceController {
 		  companyRepository.save(company);
 		  invoice1.setPrinted(true);
 		  invoiceRepository.save(invoice1);
-			  
+		  services.exportToPdf(response, id);
 		    return "redirect:/";
 		    }
 	
@@ -400,6 +405,11 @@ public class InvoiceController {
 	public String seeCustomerProfile(Model model,@PathVariable("id")Integer id) {
 		model.addAttribute("company", companyRepository.findById(id).get());
 		return "companyDetails";
+	}
+	
+	@GetMapping("/export/{id}")
+	public void exportPdf(@PathVariable("id")Integer id, HttpServletResponse response) throws DocumentException, IOException {
+		services.exportToPdf(response, id);
 	}
 	
 }

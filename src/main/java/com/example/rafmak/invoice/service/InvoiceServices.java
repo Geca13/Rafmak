@@ -1,8 +1,14 @@
 package com.example.rafmak.invoice.service;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.rafmak.billing.entity.BillingProducts;
@@ -12,6 +18,7 @@ import com.example.rafmak.finance.repository.PaymentRepository;
 import com.example.rafmak.invoice.entity.Company;
 import com.example.rafmak.invoice.entity.ExpiredDateInvoices;
 import com.example.rafmak.invoice.entity.Invoice;
+import com.example.rafmak.invoice.entity.InvoicePdfExporter;
 import com.example.rafmak.invoice.repository.CompanyRepository;
 import com.example.rafmak.invoice.repository.ExpiredDateInvoicesRepository;
 import com.example.rafmak.invoice.repository.InvoiceRepository;
@@ -20,8 +27,10 @@ import com.example.rafmak.product.entity.Product;
 import com.example.rafmak.product.repository.MeasuredProductRepository;
 import com.example.rafmak.product.repository.ProductRepository;
 import com.example.rafmak.product.service.ProductService;
+import com.lowagie.text.DocumentException;
 
 @Service
+@Transactional
 public class InvoiceServices {
 	
 	@Autowired
@@ -269,8 +278,22 @@ public class InvoiceServices {
     	companyRepository.save(company1);
     }
     
-}
-
+    public void exportToPdf(HttpServletResponse response, Integer id) throws DocumentException, IOException {
+    	
+    	response.setContentType("aplication/pdf");
+    	
+    	DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+    	String headerKey = "Content - Disposition";
+    	String headerValue = "attachment; filename=invoice_ "+currentDateTime + " .pdf";
+    	
+    	response.setHeader(headerKey, headerValue);
+    	
+    	Invoice invoice = invoiceRepository.findById(id).get();
+    	
+    	InvoicePdfExporter exporter = new InvoicePdfExporter(invoice);
+    	
+    	exporter.export(response);
+    }
     
-
-
+}

@@ -15,6 +15,8 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 	
 	Users findByToken(String token);
 	
+	Boolean existsByEmail(String email);
+	
 	@Query("SELECT u FROM Users u WHERE CONCAT(u.firstName, ' ', u.lastName, ' ', u.email) LIKE %?1%")
 	Page<Users> findBySearch(String search, Pageable pageable);
 

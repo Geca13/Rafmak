@@ -5,11 +5,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Sort;
 import org.springframework.stereotype.Service;
 import com.example.rafmak.billing.entity.BillingProducts;
 import com.example.rafmak.billing.repository.BillingProductsRepository;
@@ -184,7 +186,15 @@ public class InvoiceServices {
     public List<Invoice> invoicesByCompany(Integer id){
     	Company company = companyRepository.findById(id).get();
     	List<Invoice> invoices = invoiceRepository.findByCompanyId(company.getId());
-    		
+    	invoices.sort(Comparator.comparing(Invoice::getId).reversed());
+    		return invoices;
+		}
+    
+    public List<Invoice> invoices(){
+    	
+    	List<Invoice> invoices = invoiceRepository.findAll();
+    	invoices.sort(Comparator.comparing(Invoice::getId).reversed());
+    	
     		return invoices;
 		}
     

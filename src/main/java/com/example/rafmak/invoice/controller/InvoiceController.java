@@ -371,6 +371,14 @@ public class InvoiceController {
 		    return "invoices";
 	}
 	
+	@GetMapping("/allInvoices")
+	public String findInvoices(Model model) {
+		List<Invoice> invoices = services.invoices();
+		model.addAttribute("invoices", invoices);
+		
+		    return "invoices";
+	}
+	
 	@GetMapping("/invoicesPage")
 	   public String openInvoicesPage(Model model ) {
 			

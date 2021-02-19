@@ -34,6 +34,7 @@ import com.example.rafmak.users.service.InvalidPasswordException;
 import com.example.rafmak.users.service.UsersDetails;
 import com.example.rafmak.users.service.UsersService;
 import com.example.rafmak.users.service.UsersServiceImpl;
+import com.example.rafmak.users.service.userWithThatEmailAlreadyExistsException;
 
 @Controller
 public class UsersController {
@@ -106,7 +107,7 @@ public class UsersController {
 		
 		try {
 			usersService.saveEmployee(user,file);
-		} catch (InvalidPasswordException e) {
+		} catch (InvalidPasswordException | userWithThatEmailAlreadyExistsException e) {
 			model.addAttribute("error", e.getMessage());
 			return "index";
 		}
@@ -210,6 +211,7 @@ public class UsersController {
 			invoice.setUser(null);
 			invoiceRepository.save(invoice);
 		}
+        userRepository.delete(user);
 		         return "redirect:/users" ;
 	}
 	

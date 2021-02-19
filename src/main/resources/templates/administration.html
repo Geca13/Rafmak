@@ -76,7 +76,7 @@
      
      
     </div>
-    <div class="col">
+    <div class="col" sec:authorize="hasRole('ROLE_ADMIN')">
       <br><br>
 <a href="/" class="btn btn-primary btn-lg" th:href="@{/addEmployee}">Create new Employee</a>
 <br><br>

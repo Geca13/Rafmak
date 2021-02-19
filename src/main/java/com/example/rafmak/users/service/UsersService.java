@@ -7,11 +7,9 @@ import com.example.rafmak.users.entity.Users;
 
 public interface UsersService extends UserDetailsService {
 	
-	Users saveAdmin(Users userDto) throws InvalidPasswordException;
+	Users saveAdmin(Users userDto) throws InvalidPasswordException, userWithThatEmailAlreadyExistsException;
 	
-	public Users saveEmployee(Users userDto,MultipartFile file) throws InvalidPasswordException;
-	
-	Users saveOwner(Users userDto) throws InvalidPasswordException;
+	public Users saveEmployee(Users userDto,MultipartFile file) throws InvalidPasswordException, userWithThatEmailAlreadyExistsException;
 	
 	public Page<Users> findPagina(Integer pageNumber, Integer pageSize,String sortField, String sortDirection, String search);
 

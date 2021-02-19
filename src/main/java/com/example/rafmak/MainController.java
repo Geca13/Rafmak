@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.rafmak.users.entity.Users;
 import com.example.rafmak.users.service.InvalidPasswordException;
 import com.example.rafmak.users.service.UsersService;
+import com.example.rafmak.users.service.userWithThatEmailAlreadyExistsException;
 
 @Controller
 @RequestMapping("/signUpForm")
@@ -44,7 +45,7 @@ public class MainController {
 		
 		try {
 			usersService.saveAdmin(userDto);
-		} catch (InvalidPasswordException e) {
+		} catch (InvalidPasswordException | userWithThatEmailAlreadyExistsException e) {
 			model.addAttribute("error", e.getMessage());
 			return "signUpForm";
 		}
@@ -52,9 +53,6 @@ public class MainController {
 		return  "redirect:/signUpForm?success" ;
 	}
 	
-	
-	
-
 }
  
 

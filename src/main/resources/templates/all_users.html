@@ -63,7 +63,7 @@
     > Welcome <span >User</span></a>
     
    
-      <a th:href="@{/profile/cart}" class="nav-item nav-link" > My Shopping Cart</a>
+      
       <a th:href="@{/products}" class="nav-item nav-link" >Products</a>
       <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item nav-link" >Logout</a>
       
@@ -128,7 +128,7 @@
           <a th:href="@{/billsByEmployee/{id}(id=${users.id})}" class="btn btn-outline-success">Todays bills</a>
            <a th:href="@{/unPaidbillsByEmployee/{id}(id=${users.id})}" class="btn btn-outline-danger">Unpaid Bills</a> 
            <a th:href="@{/profile/{id}(id=${users.id})}" class="btn btn-outline-danger">See Profile</a> 
-           <a th:href="@{/terminate/{id}(id=${users.id})}" class="btn btn-outline-danger">Terminate</a>
+           <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/terminate/{id}(id=${users.id})}" class="btn btn-outline-danger">Terminate</a>
       <td>
       
     </tr>

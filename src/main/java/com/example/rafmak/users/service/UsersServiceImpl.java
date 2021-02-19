@@ -67,11 +67,14 @@ public class UsersServiceImpl implements UsersService {
 	}
 
 	@Override
-	public Users saveAdmin(Users userDto) throws InvalidPasswordException {
+	public Users saveAdmin(Users userDto) throws InvalidPasswordException, userWithThatEmailAlreadyExistsException {
 		
 	    UsersServiceImpl validator = new UsersServiceImpl();
 		Users user = new Users();
 		 user.setEmail(userDto.getEmail());
+		 if(usersRepository.existsByEmail(userDto.getEmail())) {
+			 throw new userWithThatEmailAlreadyExistsException("The email is allready used , please click the forgot password link !!!");
+		 }
 		 user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 		    if(validator.validate(userDto.getPassword()) == false) {
 		    	throw new InvalidPasswordException("Your chosen password doesnt fit our creteria , it must contain at least 1 number, UpperCase and LowerCase letters and 1 special character");
@@ -86,11 +89,14 @@ public class UsersServiceImpl implements UsersService {
 	}
 	
 	@Override
-	public Users saveEmployee(Users user , MultipartFile file) throws InvalidPasswordException {
+	public Users saveEmployee(Users user , MultipartFile file) throws InvalidPasswordException, userWithThatEmailAlreadyExistsException {
 		
 		UsersServiceImpl validator = new UsersServiceImpl();
 		Users user1 = new Users();
 	     user1.setEmail(user.getEmail());
+	     if(usersRepository.existsByEmail(user.getEmail())) {
+			 throw new userWithThatEmailAlreadyExistsException("The email is allready used , please click the forgot password link !!!");
+		 }
 		 user1.setPassword(passwordEncoder.encode(user.getPassword()));
 		    if(validator.validate(user.getPassword()) == false) {
 		    	throw new InvalidPasswordException("Your chosen password doesnt fit our creteria , it must contain at least 1 number, UpperCase and LowerCase letters and 1 special character");
@@ -113,25 +119,6 @@ public class UsersServiceImpl implements UsersService {
 				e.printStackTrace();
 			}
 		      return usersRepository.save(user1);
-	}
-	
-	@Override
-	public Users saveOwner(Users userDto) throws InvalidPasswordException {
-		
-	    UsersServiceImpl validator = new UsersServiceImpl();
-		Users user = new Users();
-		 user.setEmail(userDto.getEmail());
-		 user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-		    if(validator.validate(userDto.getPassword()) == false) {
-		    	throw new InvalidPasswordException("Your chosen password doesnt fit our creteria , it must contain at least 1 number, UpperCase and LowerCase letters and 1 special character");
-		    }
-		 user.setFirstName(userDto.getFirstName());
-         user.setLastName(userDto.getLastName());
-         user.setAge(userDto.getAge());
-        Role role = roleRepository.findByRole(RoleName.ROLE_OWNER);
-         user.setRoles( Collections.singleton(role));
-		 user.setDate(LocalDate.now());
-		       return usersRepository.save(user);
 	}
 	
 	@Override

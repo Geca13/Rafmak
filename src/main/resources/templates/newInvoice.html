@@ -48,7 +48,9 @@
 
 <div class="container">
 <br>
-
+<div th:if="${error != null}">
+     <div class="alert alert-info">[[${error}]]</div>
+    </div>
 <div th:if="${param.invalidPriceType}">
      <div class="alert alert-danger">The price type doesn't exist, you entered wrong letter.</div>
     </div>
@@ -245,12 +247,12 @@
      </tr>
   </thead>
   <tbody>
-    <tr th:each="product: ${products}" >
-      <td th:text="${product.pid}"></td> 
-      <td th:text="${product.description}"></td>
-      <td th:text="${product.price}"></td>
-       <td th:text="${product.qty}"></td>
-      <td th:text="${product.itemTotal}"></td>
+    <tr th:each="productt: ${products}" >
+      <td th:text="${productt.pid}"></td> 
+      <td th:text="${productt.description}"></td>
+      <td th:text="${productt.price}"></td>
+       <td th:text="${productt.qty}"></td>
+      <td th:text="${productt.itemTotal}"></td>
     <td>
        <a th:href="@{/removeProductFromInvoice/{bid}/{id}(bid=${invoice.id},id=${product?.id})}" class="btn btn-outline-danger">Remove</a> 
       </td> 
@@ -294,13 +296,7 @@
        </div>
   </div>
    
-   
-   
-  
-       
-       
-       
-       <button type="submit" class="btn btn-info col-2">PRINT</button>
+   <button type="submit"  class="btn btn-info col-2">PRINT</button>
        
      </form>  
        

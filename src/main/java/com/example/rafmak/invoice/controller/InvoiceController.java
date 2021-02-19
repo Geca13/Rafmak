@@ -268,11 +268,13 @@ public class InvoiceController {
 	}
 	
 	@PostMapping("/printInvoice/{id}")
-	public String printInvoice(@PathVariable("id")Integer id,@ModelAttribute("invoice") Invoice invoice,HttpServletResponse response) throws DocumentException, IOException {
+	public void printInvoice(@PathVariable("id")Integer id,@ModelAttribute("invoice") Invoice invoice,HttpServletResponse response) throws DocumentException, IOException, emptyInvoiceException {
 		Invoice invoice1 = invoiceRepository.findById(id).get();
-		if(invoice1.getProducts().isEmpty()) {
-			return "redirect:/invoice/"+invoice1.getId()+"?noProductsInList";
-		}
+	//	if(invoice1.getProducts().isEmpty()) {
+		//return "redirect:/invoice/"+invoice1.getId()+"?noProductsInList";
+	//	}
+			
+		
 		  invoice1.setIssued(LocalDate.now());
 		  invoice1.setShippingId(invoice.getId());
 		  invoice1.setComment(invoice.getComment());
@@ -304,7 +306,7 @@ public class InvoiceController {
 		  invoice1.setPrinted(true);
 		  invoiceRepository.save(invoice1);
 		  services.exportToPdf(response, id);
-		    return "redirect:/";
+		//    return "redirect:/";
 		    }
 	
 	@GetMapping("/removeProductFromInvoice/{bid}/{id}")
